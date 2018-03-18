@@ -178,12 +178,13 @@ def button_watcher(done):
   """
   bt = ev3.Button()
   log.info("Configuring buttons:")
-  bt.on_up = play_leds
+  # the horrifying lambda-if-not-x-else-true runs play_leds upon button release
+  bt.on_up = lambda x: play_leds if not x else True
   log.info("  up:  play_leds")
-  bt.on_backspace = lambda x: done.set() # exit on backspace
+  bt.on_backspace = lambda x: done.set() if not x else True
   log.info("  esc:  exit")
 
-  bt.on_down = lambda x: toggle_event(color_speaker_on)
+  bt.on_down = lambda x: toggle_event(color_speaker_on) if not x else True
     # toggle operation of color speaker
   log.info("  down:  speak colors")
   while not done.is_set():
@@ -245,7 +246,7 @@ colorthread.start()
 buttonthread.start()
 
 log.info("Started TRACK3RWithClaw")
-#ev3.Sound.speak("I'm ready!")
+ev3.Sound.speak("I'm ready!")
 
 #trackerBasic.main(done)
 # our custom loop processing all speeds:
@@ -263,7 +264,7 @@ except (KeyboardInterrupt, Exception) as e:
     motor.stop()
 
 # hopefully it will be sufficient to start one
-#ev3.Sound.speak("Exiting!")
+ev3.Sound.speak("Exiting!")
 log.info("Exiting TRACK3RWithClaw")
 
 # release all threads to let them stop
