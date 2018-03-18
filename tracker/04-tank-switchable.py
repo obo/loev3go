@@ -164,7 +164,15 @@ def play_leds(self):
       led.brightness_pct = level
 
 
-def button_watcher(done, ):
+def toggle_event(evt):
+  if evt.is_set():
+    log.info("toggling off")
+    evt.clear()
+  else:
+    log.info("toggling on")
+    evt.set()
+
+def button_watcher(done):
   """
   This will respond to buttons pressed
   """
@@ -174,36 +182,44 @@ def button_watcher(done, ):
   log.info("  up:  play_leds")
   bt.on_backspace = lambda x: done.set() # exit on backspace
   log.info("  esc:  exit")
-  color_speaker = False
-  bt.on_down = lambda x:
-    if color_speaker:
-      
-  log.info("  esc:  exit")
+
+  bt.on_down = lambda x: toggle_event(color_speaker_on)
+    # toggle operation of color speaker
+  log.info("  down:  speak colors")
   while not done.is_set():
     bt.process()
     time.sleep(0.5)
 
 
-def color_speaker(done):
+def color_speaker(done, color_speaker_on):
   """
   This will poll color and say its name if changed.
   """
-  cl = ev3.ColorSensor()
-  assert cl.connected, "Connect a color sensor to any sensor port"
-  cl.mode='COL-COLOR'
-  colors=('unknown','black','blue','green','yellow','red','white','brown')
-  lastcolor=0
   while not done.is_set():
-    thiscolor = cl.value()
-    if thiscolor != lastcolor:
-      lastcolor = thiscolor
-      if thiscolor:
-        print(colors[thiscolor])
-        ev3.Sound.speak("This is "+colors[thiscolor]+".").wait()
-    time.sleep(0.5)
+    log.info("color_speaker ready")
+    color_speaker_on.wait() # wait until someone launches us
+    log.info("color_speaker starting")
+    cl = ev3.ColorSensor()
+    assert cl.connected, "Connect a color sensor to any sensor port"
+    cl.mode='COL-COLOR'
+    colors=('unknown','black','blue','green','yellow','red','white','brown')
+    lastcolor=0
+    while color_speaker_on.is_set() and not done.is_set():
+      thiscolor = cl.value()
+      if thiscolor != lastcolor:
+        lastcolor = thiscolor
+        if thiscolor:
+          print(colors[thiscolor])
+          ev3.Sound.speak("This is "+colors[thiscolor]+".").wait()
+      time.sleep(0.5)
+    log.info("color_speaker stopping")
 
 # The 'done' event will be used to signal the threads to stop:
 done = threading.Event()
+
+# global switches
+color_speaker_on = threading.Event()
+
 
 # We also need to catch SIGINT (keyboard interrup) and SIGTERM (termination
 # signal from brickman) and exit gracefully:
@@ -221,12 +237,11 @@ trackerSlow = TRACK3RWithClaw(channel=3, speed_sp=200)
 # Now that we have the worker functions defined, lets run those in separate
 # threads.
 #touchthread = threading.Thread(target=touch_leds,    args=(done,))
-colorthread = threading.Thread(target=color_speaker, args=(done,))
+colorthread = threading.Thread(target=color_speaker, args=(done, color_speaker_on))
 buttonthread = threading.Thread(target=button_watcher, args=(done,))
 
 #touchthread.start()
-#colorthread.start()
-#fastthread.start()
+colorthread.start()
 buttonthread.start()
 
 log.info("Started TRACK3RWithClaw")
@@ -251,8 +266,10 @@ except (KeyboardInterrupt, Exception) as e:
 #ev3.Sound.speak("Exiting!")
 log.info("Exiting TRACK3RWithClaw")
 
+# release all threads to let them stop
+color_speaker_on.set()
+
 done.set()
 #touchthread.join()
 colorthread.join()
-#fastthread.join()
 buttonthread.join()
