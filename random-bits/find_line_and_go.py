@@ -1,26 +1,120 @@
-#!/usr/bin/python3
-# from https://raw.githubusercontent.com/Klabbedi/ev3/master/Line_follow_2.py
+#!/usr/bin/python
+# based on
+#   https://raw.githubusercontent.com/Klabbedi/ev3/master/max_min_finder.py
+# Place robot approximately on the line, so that rotating left and right would
+# show it both sides of the line.
+# When the line is found, the robot will follow it.
 # coding: utf-8
 
+from time   import time, sleep
+from ev3dev.auto import *
 from time import sleep
 
-from ev3dev.auto import *
+debug = False
 
-# ------Input--------
-print('Setting input values')
-power = 60
-power = 20
-power = 40
-target = 55
-kp = float(0.65) # Proportional gain. Start value 1
-kp = float(0.95) # Proportional gain. Start value 1
-kd = 1           # Derivative gain. Start value 0
-ki = float(0.02) # Integral gain. Start value 0
-direction = -1
+print ("Rotating to left and right to find the line.")
+
+left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
+right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
+col = ColorSensor();         assert col.connected
+col.mode = 'RGB-RAW'
+
+speed = 30 # speed of each of the motors
+
+same_color_delta = 100 # all color diffs within this range treated as the same color
+distinct_color_delta = 300
+# when comparing two colors, they have to differ at least by this
+
+def get_color():
+  # sum of RGB
+  return col.value(0) + col.value(1) + col.value(2)
+
+def find_stable_color_on_one_side(direction, speed, distinct_from, same_color_time_span, max_time=1.0):
+  left_motor.run_direct(duty_cycle_sp=direction*speed)
+  right_motor.run_direct(duty_cycle_sp=direction*(-1)*speed)
+  last = get_color()
+  start_time = time.time()
+  end_time = start_time + max_time
+  col_start_time = start_time
+  found_color = -1
+  now = time.time()
+  while now < end_time:
+    curr = get_color()
+    if debug:
+      print("Curr: "+str(curr)+", Last: "+str(last)+", Found: "+str(found_color))
+    if distinct_from == -1 or abs(curr-distinct_from) > distinct_color_delta:
+      # only store the current color if distinct from the given color
+      if abs(curr - last) > same_color_delta:
+        last = curr
+        col_start_time = now
+      if now - col_start_time > same_color_time_span:
+        found_color = last
+        break
+    now = time.time()
+  left_motor.stop()
+  right_motor.stop()
+  # return back
+  back_time = time.time()-start_time
+  end_time = time.time() + back_time
+  left_motor.run_direct(duty_cycle_sp=(-1)*direction*speed)
+  right_motor.run_direct(duty_cycle_sp=(-1)*direction*(-1)*speed)
+  while time.time() <  end_time:
+    pass
+  left_motor.stop()
+  right_motor.stop()
+  print("Found: "+str(found_color))
+  return found_color
+  # print 'Max: ' + str(max_ref)
+  # print 'Min: ' + str(min_ref)
+
+
+same_color_time_span = 0.2
+max_time = 2.0
+slower = False # did we need to go slower?
+
+left_color = find_stable_color_on_one_side(+1, speed, -1, same_color_time_span, max_time)
+if left_color == --1:
+  # try searching slower:
+  left_color = find_stable_color_on_one_side(+1, speed/2, -1, same_color_time_span, max_time)
+  slower = True
+if left_color != -1:
+  # now search for the right color
+  right_color = find_stable_color_on_one_side(-1, speed, left_color, same_color_time_span, max_time)
+  if right_color == -1:
+    right_color = find_stable_color_on_one_side(-1, speed/2, left_color, same_color_time_span, max_time)
+  slower = True
+
+print("Left: "+str(left_color)+", Right: "+str(right_color)+", slower? "+str(slower))
+
+if left_color == -1 or right_color == -1:
+  print("Failed to find the line, stopping.")
+  exit()
+
+if left_color < right_color:
+  direction = -1
+  minRef = left_color
+  maxRef = right_color
+else:
+  direction = 1
+  minRef = right_color
+  maxRef = left_color
+# direction = -1
   # set to -1 for dark on the right hand side
 # identify the min and max with report-color-values.py
-minRef = 250 # sub of RGB for the dark *right* side of the line
-maxRef = 550 # sub of RGB for the light *left* side of the line
+# minRef = 250 # sub of RGB for the dark *right* side of the line
+# maxRef = 550 # sub of RGB for the light *left* side of the line
+
+
+# ------Input--------
+#power = 60
+#target = 55
+power = 20
+power = 40
+target = int(0.9*power)
+kp = float(0.65) # Proportional gain. Start value 1
+kp = float(1.95) # Proportional gain. Start value 1
+kd = 1           # Derivative gain. Start value 0
+ki = float(0.02) # Integral gain. Start value 0
 # -------------------
 
 # Connect two large motors on output ports B and C and check that
@@ -120,3 +214,4 @@ run(power, target, kp, kd, ki, direction, minRef, maxRef)
 print('Stopping motors')
 left_motor.stop()
 right_motor.stop()
+
