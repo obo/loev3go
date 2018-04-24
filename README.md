@@ -128,6 +128,16 @@ https://github.com/Klabbedi/ev3
 ...a better line follower, PID algorithm
 (but this will not work on red lines, because in reflected-light scanning, red led is used, so red is the same as white)
 
+http://pazhong.net/code/number_detect/number_detect.py
+... number detection and draw it on screen
+
+https://github.com/dlech/ev3dev-photo-booth
+
+and a similar tutorial in C++:
+https://github.com/FrankBau/raspi-repo-manifest/wiki/OpenCV
+
+http://www.ev3dev.org/docs/tutorials/using-ev3-lcd/
+
 ## Trying to get my old Logitech camera running
 
 lsusb
@@ -184,7 +194,7 @@ ssh robot@169.254.214.149
 
 On the robot:
   sudo /sbin/route add default gw 169.254.214.1
-  sudo echo "nameserver 1.1.1.1" > /etc/resolv.conf
+  echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 
 And on my laptop: (this may have not been necessary, not sure)
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -196,6 +206,9 @@ sudo modprobe ip_conntrack_ftp
 sudo iptables -t nat -A POSTROUTING -o wlp4s0 -j MASQUERADE
 ... to forward robot's network through my NB
 
+## Taking pictured from camera
+
+streamer -f jpeg -o image.jpeg
 
 ## Recording sound through USB camera
 
