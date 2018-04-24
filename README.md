@@ -168,3 +168,43 @@ The issue where I ask for help: https://github.com/ev3dev/ev3dev/issues/64
 
 This is what could possibly help:
  I installed the kernel options: gspca (in v4l) and USB audio (in alsa USB devices) and then inserted the corresponding modules: zc3xx and snd_usb_audio. 
+
+
+## Connecting via USB cable
+
+There is a tutorial: http://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/
+
+But it didn't really work for me.
+
+When brickman connected to wired connection and has shown me its IP address, I manually configured my NB for that network:
+
+ifconfig enp0s20f0u3 169.254.214.1
+ 
+ssh robot@169.254.214.149
+
+On the robot:
+  sudo /sbin/route add default gw 169.254.214.1
+  sudo echo "nameserver 1.1.1.1" > /etc/resolv.conf
+
+And on my laptop: (this may have not been necessary, not sure)
+echo 1 > /proc/sys/net/ipv4/ip_forward
+sudo modprobe ip_tables
+sudo modprobe ip_conntrack
+sudo modprobe ip_conntrack_irc
+sudo modprobe ip_conntrack_irc
+sudo modprobe ip_conntrack_ftp
+sudo iptables -t nat -A POSTROUTING -o wlp4s0 -j MASQUERADE
+... to forward robot's network through my NB
+
+
+## Recording sound through USB camera
+
+arecord -D plughw:1,0 -t wav --duration=5 test.wav
+... worked out of the box
+
+http://ofalcao.pt/blog/2017/lego-voice-control-ev3
+
+
+## OpenCV links
+
+https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
