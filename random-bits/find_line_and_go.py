@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # based on
 #   https://raw.githubusercontent.com/Klabbedi/ev3/master/max_min_finder.py
 # Place robot approximately on the line, so that rotating left and right would
@@ -16,7 +16,8 @@ print ("Rotating to left and right to find the line.")
 
 left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
 right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
-col = ColorSensor();         assert col.connected
+col = ColorSensor();
+assert col.connected
 col.mode = 'RGB-RAW'
 
 speed = 30 # speed of each of the motors

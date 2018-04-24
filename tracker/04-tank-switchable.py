@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 log.info("Starting TRACK3RWithClaw")
 
-
+silent = True
 
 class Tank(object):
   def __init__(self, left_motor, right_motor, polarity='normal', name='Tank',
@@ -246,7 +246,7 @@ colorthread.start()
 buttonthread.start()
 
 log.info("Started TRACK3RWithClaw")
-ev3.Sound.speak("I'm ready!")
+if not silent: ev3.Sound.speak("I'm ready!")
 
 #trackerBasic.main(done)
 # our custom loop processing all speeds:
@@ -264,7 +264,7 @@ except (KeyboardInterrupt, Exception) as e:
     motor.stop()
 
 # hopefully it will be sufficient to start one
-ev3.Sound.speak("Exiting!")
+if not silent: ev3.Sound.speak("Exiting!")
 log.info("Exiting TRACK3RWithClaw")
 
 # release all threads to let them stop
