@@ -45,7 +45,14 @@ m.run_timed(time_sp=1000,speed_sp=500)
 sudo apt-get update
 sudo apt-get install --only-upgrade python3-ev3dev
 
+## Populating fresh robot card
+
+git clone https://github.com/obo/lego.git
+bash lego/environment/setup_environment.sh
+
 ## Interesting Ideas from ev3dev Python Demos
+
+git clone https://github.com/ev3dev/ev3dev-lang-python-demo.git
 
 ev3dev-lang-python-demo/robots/R3PTAR/r3ptar.py
 ... ukazuje vicevlaknovost
