@@ -221,3 +221,5 @@ http://ofalcao.pt/blog/2017/lego-voice-control-ev3
 ## OpenCV links
 
 https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
+
+https://thecodacus.com/opencv-object-tracking-colour-detection-python/#.WuB4pta-lUA
