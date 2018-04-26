@@ -193,7 +193,9 @@ ifconfig enp0s20f0u3 169.254.214.1
 ssh robot@169.254.214.149
 
 On the robot:
-  sudo /sbin/route add default gw 169.254.214.1
+  sudo ifconfig
+  myip=$(sudo ifconfig | sed -n 's/.*inet \([0-9][0-9.]*\).*/\1/p' | grep -v 127.0.0.1)
+  sudo /sbin/route add default gw $(echo $myip | cut -d. -f1-3).1
   echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 
 And on my laptop: (this may have not been necessary, not sure)
@@ -205,6 +207,25 @@ sudo modprobe ip_conntrack_irc
 sudo modprobe ip_conntrack_ftp
 sudo iptables -t nat -A POSTROUTING -o wlp4s0 -j MASQUERADE
 ... to forward robot's network through my NB
+
+
+### Still some problems:
+
+[ 2540.370361] usb 1-1: new full-speed USB device number 2 using ohci-da8xx
+[ 2540.643482] usb 1-1: New USB device found, idVendor=046d, idProduct=08ae
+[ 2540.643546] usb 1-1: New USB device strings: Mfr=0, Product=2, SerialNumber=0
+[ 2540.643581] usb 1-1: Product: Camera         
+[ 2542.272748] Linux video capture interface: v2.00
+[ 2542.395353] gspca_main: v2.14.0 registered
+[ 2542.471259] gspca_main: gspca_zc3xx-2.14.0 probing 046d:08ae
+[ 2543.313943] input: gspca_zc3xx as /devices/platform/soc@1c00000/ohci-da8xx/usb1/1-1/input/input2
+[ 2543.344797] usbcore: registered new interface driver gspca_zc3xx
+[ 2544.366522] usbcore: registered new interface driver snd-usb-audio
+
+robot@ev3dev:~/lego$ streamer -f jpeg -o image.jpeg
+files / video: JPEG (JFIF) / audio: none
+fifo max fill: audio 0/0, video 1/16, convert 1/16  
+
 
 ## Taking pictured from camera
 
