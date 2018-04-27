@@ -244,3 +244,92 @@ http://ofalcao.pt/blog/2017/lego-voice-control-ev3
 https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
 
 https://thecodacus.com/opencv-object-tracking-colour-detection-python/#.WuB4pta-lUA
+
+## Connecting via wifi
+
+lsusb:
+Bus 001 Device 003: ID 083a:4505 Accton Technology Corp. SMCWUSB-G 802.11bg
+
+hwinfo --usb
+07: USB 00.0: 0000 Unclassified device
+  [Created at usb.122]
+  Unique ID: lfzD.wkm1Arvlfj3
+  Parent ID: ADDn._cOmnuCBvb4
+  SysFS ID: /devices/platform/soc@1c00000/ohci-da8xx/usb1/1-1/1-1.1/1-1.1:1.0
+  SysFS BusID: 1-1.1:1.0
+  Hardware Class: unknown
+  Model: "Accton SMCWUSB-G 802.11bg"
+  Hotplug: USB
+  Vendor: usb 0x083a "Accton"
+  Device: usb 0x4505 "SMCWUSB-G 802.11bg"
+  Revision: "48.10"
+  Speed: 12 Mbps
+  Module Alias: "usb:v083Ap4505d4810dcFFdscFFdpFFicFFisc00ip00in00"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #8 (Hub)
+
+ifconfig
+usb1: flags=-28669<UP,BROADCAST,MULTICAST,DYNAMIC>  mtu 1500
+        ether 22:16:53:5f:74:d2  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lsmod
+Module                  Size  Used by
+sr_mod                 12624  0
+cdrom                  28732  1 sr_mod
+snd_usb_audio         139864  0
+snd_hwdep               5257  1 snd_usb_audio
+snd_usbmidi_lib        19259  1 snd_usb_audio
+snd_rawmidi            19974  1 snd_usbmidi_lib
+snd_seq_device          4207  1 snd_rawmidi
+gspca_zc3xx            41388  0
+gspca_main             22080  1 gspca_zc3xx
+v4l2_common             4978  1 gspca_main
+videodev              127782  3 v4l2_common,gspca_zc3xx,gspca_main
+iptable_nat             1728  0
+nf_conntrack_ipv4       5927  1
+nf_defrag_ipv4          1634  1 nf_conntrack_ipv4
+nf_nat_ipv4             5140  1 iptable_nat
+nf_nat                 14692  1 nf_nat_ipv4
+nf_conntrack           87388  3 nf_conntrack_ipv4,nf_nat_ipv4,nf_nat
+libcrc32c               1100  2 nf_conntrack,nf_nat
+usb_f_rndis            15528  2
+usb_f_ecm               6278  2
+u_ether                12402  2 usb_f_ecm,usb_f_rndis
+ev3_uart_sensor_ld      7767  2
+ev3_uart_sensor        13506  1 ev3_uart_sensor_ld
+nxt_i2c_sensor         35440  1 ev3_uart_sensor
+servo_motor_class       6378  1 nxt_i2c_sensor
+hci_uart               16410  0
+serdev                  8117  1 hci_uart
+suart_emu              23989  0
+ev3_analog_sensor       5077  0
+uinput                  8046  0
+libcomposite           41550  16 usb_f_ecm,usb_f_rndis
+configfs               28703  4 usb_f_ecm,usb_f_rndis,libcomposite
+ip_tables              10235  1 iptable_nat
+x_tables               19232  1 ip_tables
+
+
+robot@ev3dev:~$ ev3dev-sysinfo -m
+<!-- Copy everything between these lines -->
+**System info (from `ev3dev-sysinfo`)**
+```
+Image file:         ev3dev-stretch-ev3-generic-2018-04-22
+Kernel version:     4.14.35-ev3dev-2.0.0-ev3
+Brickman:           0.10.0
+ev3devKit:          0.5.2
+Board:              board0
+BOARD_INFO_HW_REV=8
+BOARD_INFO_MODEL=LEGO MINDSTORMS EV3
+BOARD_INFO_ROM_REV=6
+BOARD_INFO_SERIAL_NUM=0016535F74D2
+BOARD_INFO_TYPE=main
+```
+<!-- Copy everything between these lines -->
+
+
+Blueman says Wifi: Not available
