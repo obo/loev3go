@@ -2,6 +2,7 @@
 # Functionality:
 #  IR channel 0: normal tank
 #  IR channel 1: fast tank
+#  IR channel 2: slow tank
 #  backspace -> exit
 #  down -> toggle color saying
 #  up -> follow the current color
@@ -26,7 +27,7 @@ log.info("Starting TRACK3RWithClaw")
 silent = True
 
 class Tank(object):
-  def __init__(self, left_motor, right_motor, polarity='normal', name='Tank',
+  def __init__(self, left_motor, right_motor, polarity='inversed', name='Tank',
                speed_sp=400):
     self.left_motor = ev3.LargeMotor(left_motor)
     self.right_motor = ev3.LargeMotor(right_motor)
@@ -59,7 +60,7 @@ class Tank(object):
 
 class RemoteControlledTank(Tank):
 
-  def __init__(self, left_motor, right_motor, polarity='normal', channel=1, speed_sp=400):
+  def __init__(self, left_motor, right_motor, polarity='inversed', channel=1, speed_sp=400):
     Tank.__init__(self, left_motor, right_motor, polarity, speed_sp=speed_sp)
     log.info("Getting remote control for channel "+str(channel))
     self.remote = ev3.RemoteControl(channel=channel)

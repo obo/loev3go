@@ -128,3 +128,6 @@ _T=20180318_00:39:45_2509	 ./04-tank-switchable.py
 _T=20180318_00:41:42_2509	 vim 04-tank-switchable.py
 _T=20180318_00:42:21_2509	 ./04-tank-switchable.py
 _T=20180318_00:44:46_2509	 vim 04-tank-switchable.py
+_T=20180426_22:56:27_625	 ls
+_T=20180426_22:56:56_625	 vim 04-tank-switchable.py.err.log
+_T=20180426_22:57:00_625	 rm 04-tank-switchable.py.err.log
