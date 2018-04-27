@@ -14,8 +14,9 @@ debug = False
 
 print ("Rotating to left and right to find the line.")
 
-left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
-right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
+left_motor = LargeMotor(OUTPUT_C);  assert left_motor.connected
+right_motor = LargeMotor(OUTPUT_B); assert right_motor.connected
+polarity = -1
 col = ColorSensor();
 assert col.connected
 col.mode = 'RGB-RAW'
@@ -31,8 +32,8 @@ def get_color():
   return col.value(0) + col.value(1) + col.value(2)
 
 def find_stable_color_on_one_side(direction, speed, distinct_from, same_color_time_span, max_time=1.0):
-  left_motor.run_direct(duty_cycle_sp=direction*speed)
-  right_motor.run_direct(duty_cycle_sp=direction*(-1)*speed)
+  left_motor.run_direct(duty_cycle_sp=polarity*direction*speed)
+  right_motor.run_direct(duty_cycle_sp=polarity*direction*(-1)*speed)
   last = get_color()
   start_time = time.time()
   end_time = start_time + max_time
@@ -57,8 +58,8 @@ def find_stable_color_on_one_side(direction, speed, distinct_from, same_color_ti
   # return back
   back_time = time.time()-start_time
   end_time = time.time() + back_time
-  left_motor.run_direct(duty_cycle_sp=(-1)*direction*speed)
-  right_motor.run_direct(duty_cycle_sp=(-1)*direction*(-1)*speed)
+  left_motor.run_direct(duty_cycle_sp=polarity*(-1)*direction*speed)
+  right_motor.run_direct(duty_cycle_sp=polarity*(-1)*direction*(-1)*speed)
   while time.time() <  end_time:
     pass
   left_motor.stop()

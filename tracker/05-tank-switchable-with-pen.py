@@ -124,11 +124,20 @@ class TRACK3RWithPen(TRACK3R):
 
     def __init__(self, medium_motor=OUTPUT_A, left_motor=OUTPUT_B, right_motor=OUTPUT_C, speed_sp=400, channel=1):
         TRACK3R.__init__(self, medium_motor, left_motor, right_motor, speed_sp=speed_sp, channel=channel)
-        self.remote.on_beacon = self.move_pen
         self.pen_down = True
+        self.remote.on_change = self.handle_changed_buttons
+        # self.remote.on_beacon = self.toggle_pen
+        # we can't use the on_beacon because beacon gets dropped whenever we move
 
-    def move_pen(self, state):
-        print("Current pen state:", self.pen_down)
+    def handle_changed_buttons(self, changed_buttons):
+      # The goal is to run toggle_pen only when beacon event happens *alone*
+      # print("Changed buttons: ", changed_buttons)
+      if len(changed_buttons) == 1 and changed_buttons[0][0] == 'beacon':
+        self.toggle_pen()
+
+
+    def toggle_pen(self):
+        # print("Current pen state:", self.pen_down)
         if self.pen_down:
             self.medium_motor.run_to_rel_pos(speed_sp=200, position_sp=-75, stop_action="hold")
         else:
