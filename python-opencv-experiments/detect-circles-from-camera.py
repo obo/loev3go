@@ -1,18 +1,25 @@
-
-
-
-
+#!/usr/bin/env python
 
 # from https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/
 # import the necessary packages
 import numpy as np
 import cv2
 
+dev_video = 1
 
+def gr2bgr(image):
+  return cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
 
 def detect_circles(image):
   gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-  show = gray
+  equ = cv2.equalizeHist(gray)
+  clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+  cla = clahe.apply(gray)
+
+  # what to show:
+  A = image
+  B = gr2bgr(equ)
+  C = gr2bgr(cla)
   
   # detect circles in the image
   #circles = cv2.HoughCircles(gray, cv2.cv.CV_HOUGH_GRADIENT, 1.2, 100)
@@ -22,7 +29,7 @@ def detect_circles(image):
   if circles is not None:
     # convert the (x, y) coordinates and radius of the circles to integers
     circles = np.round(circles[0, :]).astype("int")
-    output = show.copy()
+    output = image.copy()
    
     # loop over the (x, y) coordinates and radius of the circles
     for (x, y, r) in circles:
@@ -31,12 +38,16 @@ def detect_circles(image):
       # corresponding to the center of the circle
       cv2.circle(output, (x, y), r, (0, 255, 0), 4)
       cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
-    return np.hstack([show, output])
+    D = output
   else:
-    return np.hstack([show, show])
+    D = image
+  return np.vstack([
+    np.hstack([A, B]),
+    np.hstack([C, D])
+  ])
 
 # open video capture
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(dev_video)
  
 while(True):
     # Capture frame-by-frame

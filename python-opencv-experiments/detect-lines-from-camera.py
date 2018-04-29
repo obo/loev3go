@@ -27,7 +27,7 @@ def detect_lines(img):
   #return np.hstack([edges, img])
 
 # open video capture
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
  
 while(True):
     # Capture frame-by-frame
