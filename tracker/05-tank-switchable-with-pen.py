@@ -139,9 +139,9 @@ class TRACK3RWithPen(TRACK3R):
     def toggle_pen(self):
         # print("Current pen state:", self.pen_down)
         if self.pen_down:
-            self.medium_motor.run_to_rel_pos(speed_sp=200, position_sp=-75, stop_action="hold")
+            self.medium_motor.run_to_rel_pos(speed_sp=20, position_sp=-75, stop_action="hold")
         else:
-            self.medium_motor.run_to_rel_pos(speed_sp=200, position_sp=75, stop_action="hold")
+            self.medium_motor.run_to_rel_pos(speed_sp=20, position_sp=75, stop_action="hold")
         self.pen_down = not self.pen_down
 
 

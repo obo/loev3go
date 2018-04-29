@@ -14,9 +14,9 @@ debug = False
 
 print ("Rotating to left and right to find the line.")
 
-left_motor = LargeMotor(OUTPUT_C);  assert left_motor.connected
-right_motor = LargeMotor(OUTPUT_B); assert right_motor.connected
-polarity = -1
+left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
+right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
+polarity = 1
 col = ColorSensor();
 assert col.connected
 col.mode = 'RGB-RAW'
