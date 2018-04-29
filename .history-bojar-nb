@@ -196,3 +196,6 @@ _T=20180430_00:27:05_28244	 git pull
 _T=20180430_00:27:08_28244	 git stash apply
 _T=20180430_00:27:22_28244	 git commit -a
 _T=20180430_00:27:28_28244	 git pull; git stash apply
+_T=20180430_00:28:00_28244	 git commit .history-bojar-nb
+_T=20180430_00:28:06_28244	 git pull
+_T=20180430_00:28:10_28244	 git stash apply
