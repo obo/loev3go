@@ -332,4 +332,23 @@ BOARD_INFO_TYPE=main
 <!-- Copy everything between these lines -->
 
 
-Blueman says Wifi: Not available
+Brickman says Wifi: Not available
+
+
+## connmanctl to connect to wifi:
+
+http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/
+
+## Mouse input?
+
+ls /dev/input/by-id/
+should say: usb-0461_USB_Optical_Mouse-event-mouse
+
+Following mouse is implemented here:
+follow_mouse:
+  https://github.com/cavenel/ev3-print3rbot/blob/master/writer.py
+
+## LCD
+
+sudo openvt -s -w -- sudo --user <user> -- COMMAND
+...this should allow me to run the COMMAND with access to the screen
