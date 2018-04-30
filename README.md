@@ -352,3 +352,21 @@ follow_mouse:
 
 sudo openvt -s -w -- sudo --user <user> -- COMMAND
 ...this should allow me to run the COMMAND with access to the screen
+
+## QR code reader:
+
+https://www.learnopencv.com/barcode-and-qr-code-scanner-using-zbar-and-opencv/
+
+http://aishack.in/tutorials/scanning-qr-codes-2/
+
+https://gist.github.com/mohankumargupta/243aeb6787123cc17f1c10338bd4a82f
+...this seems to be all combined into one script
+
+## Simplest white balance:
+
+https://gist.github.com/tomykaira/94472e9f4921ec2cf582
+paper+code: http://www.ipol.im/pub/art/2011/llmps-scb/?utm_source=doi
+
+## USB Camera button
+
+https://unix.stackexchange.com/questions/398660/detecting-usb-camera-button-event
