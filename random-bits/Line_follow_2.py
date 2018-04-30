@@ -83,6 +83,41 @@ def steering2(course, power):
                         power_left = power + ((power * course) / 100)
         return (int(power_left), int(power_right))
 
+def steering3(course, power):
+        """
+        Computes how fast each motor in a pair should turn to achieve the
+        specified steering.
+        Compared to steering2, this alows pivoting.
+        Input:
+                course [-100, 100]:
+                * -100 means turn left as fast as possible (running left
+                * backwards)
+                * -50  means quick turn, left stopped
+                *  0   means drive in a straight line, and
+                *  50  means quick turn, right stopped
+                *  100  means turn right as fast as possible (right backwards)
+                * If >100 power_right = -power
+                * If <100 power_left = power        
+        power: the power that should be applied to the outmost motor (the one
+                rotating faster). The power of the other motor will be computed
+                automatically.
+        Output:
+                a tuple of power values for a pair of motors.
+        Example:
+                for (motor, power) in zip((left_motor, right_motor), steering(50, 90)):
+                        motor.run_forever(speed_sp=power)
+        """
+        abscourse = min(abs(course), 100)
+        outer = power
+        inner = (abscourse - 50)/50*power
+        if course >= 0:
+          power_left = outer
+          power_right = inner
+        else:
+          power_right = outer
+          power_left = inner
+        return (int(power_left), int(power_right))
+
 def run(power, target, kp, kd, ki, direction, minRef, maxRef):
         """
         PID controlled line follower algoritm used to calculate left and right motor power.
@@ -110,7 +145,7 @@ def run(power, target, kp, kd, ki, direction, minRef, maxRef):
                 lastError = error
                 integral = float(0.5) * integral + error
                 course = (kp * error + kd * derivative +ki * integral) * direction
-                for (motor, pow) in zip((left_motor, right_motor), steering2(course, power)):
+                for (motor, pow) in zip((left_motor, right_motor), steering3(course, power)):
                         motor.duty_cycle_sp = pow
                 sleep(0.01) # Aprox 100Hz
 
