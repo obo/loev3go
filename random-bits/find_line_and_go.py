@@ -16,7 +16,7 @@ print ("Rotating to left and right to find the line.")
 
 left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
 right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
-polarity = 1
+polarity = -1
 col = ColorSensor();
 assert col.connected
 col.mode = 'RGB-RAW'
@@ -207,7 +207,7 @@ def run(power, target, kp, kd, ki, direction, minRef, maxRef):
                 integral = float(0.5) * integral + error
                 course = (kp * error + kd * derivative +ki * integral) * direction
                 for (motor, pow) in zip((left_motor, right_motor), steering2(course, power)):
-                        motor.duty_cycle_sp = pow
+                        motor.duty_cycle_sp = polarity*pow
                 sleep(0.01) # Aprox 100Hz
 
 run(power, target, kp, kd, ki, direction, minRef, maxRef)
