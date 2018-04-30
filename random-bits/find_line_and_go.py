@@ -121,18 +121,6 @@ else:
 # maxRef = 550 # sub of RGB for the light *left* side of the line
 
 
-# ------Input--------
-#power = 60
-#target = 55
-power = 20
-power = 40
-target = int(0.9*power)
-kp = float(0.65) # Proportional gain. Start value 1
-kp = float(1.95) # Proportional gain. Start value 1
-kd = 1           # Derivative gain. Start value 0
-ki = float(0.02) # Integral gain. Start value 0
-# -------------------
-
 
 # Adding button so it would be possible to break the loop using
 # one of the buttons on the brick
@@ -208,6 +196,7 @@ def steering3(course, power):
         else:
           power_right = outer
           power_left = inner
+        print("Course:", course, ", Left:", power_left, ", Right: ", power_right)
         return (int(power_left), int(power_right))
 
 def run(power, target, kp, kd, ki, direction, minRef, maxRef):
@@ -237,9 +226,28 @@ def run(power, target, kp, kd, ki, direction, minRef, maxRef):
                 lastError = error
                 integral = float(0.5) * integral + error
                 course = (kp * error + kd * derivative +ki * integral) * direction
-                for (motor, pow) in zip((left_motor, right_motor), steering3(course, power)):
+                for (motor, pow) in zip((left_motor, right_motor), steering(course, power)):
                         motor.duty_cycle_sp = polarity*pow
                 sleep(0.01) # Aprox 100Hz
+
+
+
+# ------Input--------
+#power = 60
+#target = 55
+power = 20
+power = 40
+target = int(0.9*power)
+steering = steering2
+kp = float(0.65) # Proportional gain. Start value 1
+kp = float(1.95) # Proportional gain. Start value 1
+kd = 1           # Derivative gain. Start value 0
+ki = float(0.02) # Integral gain. Start value 0
+# -------------------
+
+#steering=steering3
+#kp=float(4)
+
 
 run(power, target, kp, kd, ki, direction, minRef, maxRef)
 
