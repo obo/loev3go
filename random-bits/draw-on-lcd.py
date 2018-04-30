@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # from http://www.ev3dev.org/docs/tutorials/using-ev3-lcd/
+# When remote-controlling, run using:
+#  sudo openvt -s -w -- sudo --user robot -- ./draw-on-lcd.py
 
 # Hard coding these values is not a good idea because the values could
 # change. But, since this is an example, we want to keep it short.
@@ -10,6 +12,7 @@ SIZE = 3072 # bytes
 
 import os
 import array
+from time import sleep
 
 
 def main():
@@ -36,8 +39,12 @@ def main():
     f = os.open('/dev/fb0', os.O_RDWR)
     s = array.array('B', buf).tostring()
     os.write(f, s)
+    print("Written. Sleeping")
+    sleep(3)
     os.close(f)
 
 if __name__ == '__main__':
     main()
+    print("Closed. Sleeping")
+    sleep(3)
 
