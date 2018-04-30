@@ -332,4 +332,41 @@ BOARD_INFO_TYPE=main
 <!-- Copy everything between these lines -->
 
 
-Blueman says Wifi: Not available
+Brickman says Wifi: Not available
+
+
+## connmanctl to connect to wifi:
+
+http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/
+
+## Mouse input?
+
+ls /dev/input/by-id/
+should say: usb-0461_USB_Optical_Mouse-event-mouse
+
+Following mouse is implemented here:
+follow_mouse:
+  https://github.com/cavenel/ev3-print3rbot/blob/master/writer.py
+
+## LCD
+
+sudo openvt -s -w -- sudo --user <user> -- COMMAND
+...this should allow me to run the COMMAND with access to the screen
+
+## QR code reader:
+
+https://www.learnopencv.com/barcode-and-qr-code-scanner-using-zbar-and-opencv/
+
+http://aishack.in/tutorials/scanning-qr-codes-2/
+
+https://gist.github.com/mohankumargupta/243aeb6787123cc17f1c10338bd4a82f
+...this seems to be all combined into one script
+
+## Simplest white balance:
+
+https://gist.github.com/tomykaira/94472e9f4921ec2cf582
+paper+code: http://www.ipol.im/pub/art/2011/llmps-scb/?utm_source=doi
+
+## USB Camera button
+
+https://unix.stackexchange.com/questions/398660/detecting-usb-camera-button-event
