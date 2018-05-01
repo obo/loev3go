@@ -119,7 +119,7 @@ class TRACK3R(RemoteControlledTank):
         self.medium_motor.reset()
 
 
-pen_down = False
+pen_down = True
 
 class TRACK3RWithPen(TRACK3R):
 
@@ -138,13 +138,13 @@ class TRACK3RWithPen(TRACK3R):
 
     def toggle_pen(self):
         global pen_down
-        # print("Current pen state:", pen_down)
+        print("Current pen state:", pen_down)
         if pen_down:
             # lift pen
             self.medium_motor.run_to_rel_pos(speed_sp=80, position_sp=30, stop_action="hold")
         else:
             # put pen
-            self.medium_motor.run_to_rel_pos(speed_sp=80, position_sp=30, stop_action="hold")
+            self.medium_motor.run_to_rel_pos(speed_sp=80, position_sp=-30, stop_action="hold")
         pen_down = not pen_down
 
 
