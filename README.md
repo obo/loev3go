@@ -353,6 +353,10 @@ follow_mouse:
 sudo openvt -s -w -- sudo --user <user> -- COMMAND
 ...this should allow me to run the COMMAND with access to the screen
 
+https://sites.google.com/site/ev3python/learn_ev3_python/screen
+
+My issue: https://github.com/ev3dev/ev3dev-lang-python/issues/463
+
 ## QR code reader:
 
 https://www.learnopencv.com/barcode-and-qr-code-scanner-using-zbar-and-opencv/
@@ -370,3 +374,65 @@ paper+code: http://www.ipol.im/pub/art/2011/llmps-scb/?utm_source=doi
 ## USB Camera button
 
 https://unix.stackexchange.com/questions/398660/detecting-usb-camera-button-event
+
+## Beacon Seeker
+
+see random-bits/report-beacon-location.py
+
+0 -128  ... means that no beacon is found
+0 1     ... means that we are really really close
+
+11 54   ... means that at "angle" 11, 54 "cm"
+
+Note that it can't distinguish front and back, so we will have to realize that
+when we try to roll towards but get further, we probably need to rotate...
+
+Or put differently, we should first stabilize the angle and only then focus on the distance.
+
+## Steering
+
+steering3 doesn't work at all, ignores the change.
+
+Course: 295.63783698408236 , Left: 40 , Right:  40.0
+Course: 278.2177484737596 , Left: 40 , Right:  40.0
+Course: 285.1530424270078 , Left: 40 , Right:  40.0
+Course: 285.3336692939426 , Left: 40 , Right:  40.0
+Course: 280.5610942447775 , Left: 40 , Right:  40.0
+Course: 264.02855443500306 , Left: 40 , Right:  40.0
+Course: 253.69647100177943 , Left: 40 , Right:  40.0
+Course: 246.29642562886042 , Left: 40 , Right:  40.0
+Course: 153.73717076689826 , Left: 40 , Right:  40.0
+Course: 148.49593456078 , Left: 40 , Right:  40.0
+Course: 160.43838775570993 , Left: 40 , Right:  40.0
+Course: 203.88310612648385 , Left: 40 , Right:  40.0
+Course: 162.86323496452164 , Left: 40 , Right:  40.0
+Course: 118.7518368606886 , Left: 40 , Right:  40.0
+Course: -27.32580003400672 , Left: -18.139359972794622 , Right:  40
+Course: -193.01178484332874 , Left: 40.0 , Right:  40
+Course: -208.61163282385814 , Left: 40.0 , Right:  40
+Course: -199.13916193295287 , Left: 40.0 , Right:  40
+Course: -167.95320071053493 , Left: 40.0 , Right:  40
+Course: -145.75692942290914 , Left: 40.0 , Right:  40
+Course: -150.46866580834674 , Left: 40.0 , Right:  40
+Course: -166.23221224603807 , Left: 40.0 , Right:  40
+Course: -172.32239497128228 , Left: 40.0 , Right:  40
+Course: -206.31446988052232 , Left: 40.0 , Right:  40
+Course: -235.97961153989553 , Left: 40.0 , Right:  40
+Course: -229.70066500212323 , Left: 40.0 , Right:  40
+Course: -213.9761825924693 , Left: 40.0 , Right:  40
+Course: -203.31686643334615 , Left: 40.0 , Right:  40
+Course: -193.18282078522884 , Left: 40.0 , Right:  40
+Course: -184.6898381805486 , Left: 40.0 , Right:  40
+
+## Testing new design of pen holder
+
+>>> import ev3dev.ev3 as ev3
+>>> from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
+>>> from ev3dev.helper import MediumMotor
+>>> m=MediumMotor(OUTPUT_A)
+>>> m.run_to_rel_pos(speed_sp=80, position_sp=-30, stop_action="hold")
+...put pen
+>>> m.run_to_rel_pos(speed_sp=80, position_sp=30, stop_action="hold")
+...lift pen
+
+

@@ -119,12 +119,12 @@ class TRACK3R(RemoteControlledTank):
         self.medium_motor.reset()
 
 
+pen_down = False
 
 class TRACK3RWithPen(TRACK3R):
 
     def __init__(self, medium_motor=OUTPUT_A, left_motor=OUTPUT_B, right_motor=OUTPUT_C, speed_sp=400, channel=1):
         TRACK3R.__init__(self, medium_motor, left_motor, right_motor, speed_sp=speed_sp, channel=channel)
-        self.pen_down = True
         self.remote.on_change = self.handle_changed_buttons
         # self.remote.on_beacon = self.toggle_pen
         # we can't use the on_beacon because beacon gets dropped whenever we move
@@ -137,12 +137,15 @@ class TRACK3RWithPen(TRACK3R):
 
 
     def toggle_pen(self):
-        # print("Current pen state:", self.pen_down)
-        if self.pen_down:
-            self.medium_motor.run_to_rel_pos(speed_sp=20, position_sp=-75, stop_action="hold")
+        global pen_down
+        # print("Current pen state:", pen_down)
+        if pen_down:
+            # lift pen
+            self.medium_motor.run_to_rel_pos(speed_sp=80, position_sp=30, stop_action="hold")
         else:
-            self.medium_motor.run_to_rel_pos(speed_sp=20, position_sp=75, stop_action="hold")
-        self.pen_down = not self.pen_down
+            # put pen
+            self.medium_motor.run_to_rel_pos(speed_sp=80, position_sp=30, stop_action="hold")
+        pen_down = not pen_down
 
 
 
