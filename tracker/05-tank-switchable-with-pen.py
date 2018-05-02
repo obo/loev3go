@@ -119,14 +119,11 @@ class TRACK3R(RemoteControlledTank):
         self.medium_motor.reset()
 
 
+# assuming we start with both pens up
 pen_state = 0
-pen_positions = [30, 0, 30, 60]
-# 30 ... pens up
-# 0 ... left pen down
-# 60 ... right pen down
+pen_shifts = [-30, +30, +30, -30]
+# from the even position, -30 is left pen down and +30 is right pen down
 m=MediumMotor(OUTPUT_A)
-m.run_to_abs_pos(speed_sp=80, position_sp=pen_positions[pen_state], stop_action="hold")
-# lift both pens
 
 class TRACK3RWithPen(TRACK3R):
 
@@ -145,9 +142,9 @@ class TRACK3RWithPen(TRACK3R):
 
     def toggle_pen(self):
         global pen_state
-        pen_state = (pen_state+1) % len(pen_positions)
-        print("New pen state:", pen_state)
-        self.medium_motor.run_to_abs_pos(speed_sp=80, position_sp=pen_positions[pen_state], stop_action="hold")
+        pen_state = (pen_state+1) % len(pen_shifts)
+        print("New pen state:", pen_state, " will do: ", pen_shifts[pen_state])
+        self.medium_motor.run_to_rel_pos(speed_sp=80, position_sp=pen_shifts[pen_state], stop_action="hold")
 
 
 
