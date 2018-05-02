@@ -436,3 +436,19 @@ Course: -184.6898381805486 , Left: 40.0 , Right:  40
 ...lift pen
 
 
+
+## Mouse in python:
+
+>>> import evdev
+>>> device = evdev.InputDevice('/dev/input/by-id/usb-04d9_0499-event-mouse')
+>>> device.capabilities()
+{0: [0, 1, 2, 4], 1: [272, 273, 274], 2: [0, 1, 8], 4: [4]}
+>>> device.capabilities(verbose=True)
+{('EV_REL', 2): [('REL_X', 0), ('REL_Y', 1), ('REL_WHEEL', 8)], ('EV_SYN', 0): [('SYN_REPORT', 0), ('SYN_CONFIG', 1), ('SYN_MT_REPORT', 2), ('?', 4)], ('EV_KEY', 1): [(['BTN_LEFT', 'BTN_MOUSE'], 272), ('BTN_RIGHT', 273), ('BTN_MIDDLE', 274)], ('EV_MSC', 4): [('MSC_SCAN', 4)]}
+
+Further details: http://www.antony-jordan.co.uk/python-evdev.html?i=1
+
+Working example: random-bits/report-mouse-moves.py
+
+Possibly simpler solutions:
+https://stackoverflow.com/questions/25848951/python-get-mouse-x-y-position-on-click
