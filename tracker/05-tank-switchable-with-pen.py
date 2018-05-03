@@ -108,28 +108,23 @@ class TRACK3R(RemoteControlledTank):
     To enable the medium motor toggle the beacon button on the EV3 remote.
     """
 
-    def __init__(self, medium_motor, left_motor, right_motor, speed_sp=400, channel=1):
+    def __init__(self, left_motor, right_motor, speed_sp=400, channel=1):
         RemoteControlledTank.__init__(self, left_motor, right_motor, speed_sp=speed_sp, channel=channel)
-        self.medium_motor = MediumMotor(medium_motor)
-
-        if not self.medium_motor.connected:
-            log.error("%s is not connected" % self.medium_motor)
-            sys.exit(1)
-
-        self.medium_motor.reset()
 
 
 # assuming we start with both pens up
-pen_state = 0
 pen_shifts = [-30, +30, +30, -30]
+pen_state = len(pen_shifts)-1 # the last pen state
 # from the even position, -30 is left pen down and +30 is right pen down
-m=MediumMotor(OUTPUT_A)
+medmotor=MediumMotor(OUTPUT_A)
+medmotor.reset() # set motor position to 0
 
 class TRACK3RWithPen(TRACK3R):
 
-    def __init__(self, medium_motor=OUTPUT_A, left_motor=OUTPUT_B, right_motor=OUTPUT_C, speed_sp=400, channel=1):
-        TRACK3R.__init__(self, medium_motor, left_motor, right_motor, speed_sp=speed_sp, channel=channel)
+    def __init__(self, medium_motor, left_motor=OUTPUT_B, right_motor=OUTPUT_C, speed_sp=400, channel=1):
+        TRACK3R.__init__(self, left_motor, right_motor, speed_sp=speed_sp, channel=channel)
         self.remote.on_change = self.handle_changed_buttons
+        self.medium_motor = medium_motor
         # self.remote.on_beacon = self.toggle_pen
         # we can't use the on_beacon because beacon gets dropped whenever we move
 
@@ -246,9 +241,9 @@ signal.signal(signal.SIGINT,  signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
 
-trackerBasic = TRACK3RWithPen()
-trackerFast = TRACK3RWithPen(channel=2, speed_sp=800)
-trackerSlow = TRACK3RWithPen(channel=3, speed_sp=200)
+trackerBasic = TRACK3RWithPen(medium_motor=medmotor)
+trackerFast = TRACK3RWithPen(medium_motor=medmotor, channel=2, speed_sp=800)
+trackerSlow = TRACK3RWithPen(medium_motor=medmotor, channel=3, speed_sp=200)
 
 # Now that we have the worker functions defined, lets run those in separate
 # threads.
@@ -276,11 +271,14 @@ except (KeyboardInterrupt, Exception) as e:
   log.exception(e)
   done.set()
   for motor in ev3.list_motors():
-    motor.stop()
+    motor.stop(stop_action='coast')
 
 # hopefully it will be sufficient to start one
 if not silent: ev3.Sound.speak("Exiting!")
 log.info("Exiting TRACK3RWithPen")
+
+for motor in ev3.list_motors():
+  motor.stop(stop_action='coast')
 
 # release all threads to let them stop
 color_speaker_on.set()
