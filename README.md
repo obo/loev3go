@@ -138,6 +138,16 @@ https://github.com/FrankBau/raspi-repo-manifest/wiki/OpenCV
 
 http://www.ev3dev.org/docs/tutorials/using-ev3-lcd/
 
+
+I thought I filed an issue on this, but don't see it.
+
+The photo booth works (gets pictures), but does not show them on screen.
+This is probably the error message:
+** (brickrun:1826): CRITICAL **: brickrun.vala:100: Failed to send signal: GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such method 'SignalGroup'
+
+
+
+
 ## Trying to get my old Logitech camera running
 
 lsusb
@@ -426,14 +436,16 @@ Course: -184.6898381805486 , Left: 40.0 , Right:  40
 
 ## Testing new design of pen holder
 
->>> import ev3dev.ev3 as ev3
->>> from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
->>> from ev3dev.helper import MediumMotor
->>> m=MediumMotor(OUTPUT_A)
->>> m.run_to_rel_pos(speed_sp=80, position_sp=-30, stop_action="hold")
-...put pen
->>> m.run_to_rel_pos(speed_sp=80, position_sp=30, stop_action="hold")
-...lift pen
+import ev3dev.ev3 as ev3
+from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D
+from ev3dev.helper import MediumMotor
+m=MediumMotor(OUTPUT_A)
+m.run_to_abs_pos(speed_sp=80, position_sp=30, stop_action="hold")
+# pens up
+m.run_to_abs_pos(speed_sp=80, position_sp=0, stop_action="hold")
+# left pen down
+m.run_to_abs_pos(speed_sp=80, position_sp=60, stop_action="hold")
+# right pen down
 
 
 
