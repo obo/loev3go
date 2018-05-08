@@ -1,0 +1,289 @@
+These are automated tests for Logo.  You can run these with ``pylogo
+--doctest tests.txt``
+
+This is a test for logo::
+
+    >>> 1 + 1
+    2
+    >>> pr [hey there!]
+    hey there!
+    >>> ifelse (1 = 1) [
+    ...     print "yep
+    ... ] [
+    ...     print "nope
+    ... ]
+    yep
+
+Some math to test::
+
+    >>> 1+1
+    2
+    >>> 1+1 = 2
+    True
+    >>> 1+1*2 = 4
+    True
+    >>> not 2 = 4
+    True
+    >>> 2*3 < 10
+    True
+
+Sadly this next one is kind of broken (if you remove the
+parenthesis)::
+
+    >>> 10 > (20 - 15)
+    True
+    >>> not 0
+    True
+    >>> not 1
+    False
+
+Words and lists::
+
+    >>> (word "a "b "c)
+    "abc
+    >>> word "a "b
+    "ab
+    >>> (list 1 2 3 4)
+    [1 2 3 4]
+    >>> (list "hey "there   "you 1) 
+    [hey there you 1]
+    >>> (se 1 2 3) 
+    [1 2 3]
+    >>> (se 1 2 [3 4]) 
+    [1 2 3 4]
+    >>> (se [2] [3 4] [5 4 [7 8]])
+    [2 3 4 5 4 [7 8]]
+    >>> fput "a [1 2] 
+    [a 1 2]
+    >>> lput "a [1 2]
+    [1 2 a]
+    >>> combine "a "b 
+    "ab
+    >>> combine [1] [2] 
+    [[1] 2]
+    >>> reverse [1 2 3] 
+    [3 2 1]
+    >>> gensym = gensym
+    False
+    >>> first [1 2 3] 
+    1
+    >>> first "this 
+    "t
+    >>> firsts [this that other] 
+    [t t o]
+    >>> firsts [[1 2 3] [2 3] [5 4]] 
+    [1 2 5]
+    >>> last [1 2 3]
+    3
+    >>> last "this 
+    "s
+    >>> butfirst [1 2 3]
+    [2 3]
+    >>> butfirst "this 
+    "his
+    >>> butfirsts [this that other] 
+    [his hat ther]
+    >>> butlast [1 2 3]
+    [1 2]
+    >>> butlast "this 
+    "thi
+    >>> item 1 [1 2 3] 
+    1
+    >>> item 2 [1 2 3] 
+    2
+    >>> item 3 "this 
+    "i
+    >>> ignore pick [1 2 3 4]
+    >>> remove "a [a b c] 
+    [b c]
+    >>> remove 5 [1 5 2 3] 
+    [1 2 3]
+    >>> remdup [1 5 3 2 3 1 5 4]
+    [2 3 1 5 4]
+
+Words::
+
+    >>> wordp "this
+    True
+    >>> word? "this
+    True
+    >>> wordp 1
+    False
+    >>> word? [1 2]
+    False
+    >>> emptyp []
+    True
+    >>> empty? butfirst "a
+    True
+    >>> empty? [1 2]
+    False
+    >>> empty? "a
+    False
+    >>> equalp 1 1
+    True
+    >>> equal? "a "a
+    True
+    >>> equal? [1 2] 1
+    False
+    >>> before? 1 3
+    True
+    >>> ; leading dots are not working...
+    >>> ; not .eq [1 2] [1 2]
+    >>> memberp 3 [1 2 3]
+    True
+    >>> member? "a "cat
+    True
+    >>> substring? "or "bored
+    True
+    >>> number? 3
+    True
+    >>> number? [1 2]
+    False
+    >>> count [1 2 3] 
+    3
+    >>> ascii "a 
+    97
+    >>> member? "at "hatter
+    True
+    >>> member? "at [this at that]
+    True
+    >>> member? "at "not
+    False
+    >>> lowercase "A 
+    "a
+    >>> uppercase "a 
+    "A
+    >>> print [this works...]
+    this works...
+    >>> type [this does too...]
+    this does too...
+    >>> type [and keeps going]
+    and keeps going
+    >>> (sum 1 2 3) 
+    6
+    >>> difference 3 2 
+    1
+    >>> minus 4 
+    -4
+    >>> (product 1 2 3 4) 
+    24
+    >>> quotient 4 2 
+    2
+    >>> remainder 10 3 
+    1
+    >>> int 4.5 
+    4
+    >>> round 4.7 
+    5.0
+    >>> sqrt 9 
+    3.0
+    >>> power 3 2 
+    9
+    >>> log10 100 
+    2.0
+    >>> sin 90 
+    1.0
+    >>> (round cos 90 3) 
+    0.0
+    >>> iseq 1 4 
+    [1 2 3 4]
+    >>> rseq 3 5 9 
+    [3.0 3.25 3.5 3.75 4.0 4.25 4.5 4.75 5]
+    >>> rseq 3 5 5 
+    [3.0 3.5 4.0 4.5 5]
+    >>> lessp 2 3
+    True
+    >>> greater? 4 2
+    True
+    >>> (random 100) > 0
+    True
+    >>> 2 < 3
+    True
+    >>> 3 > 2
+    True
+    >>> (random 10) < 10
+    True
+    >>> and 1 2
+    True
+    >>> or 0 1
+    True
+    >>> and 1 0
+    False
+    >>> or 0 []
+    False
+    >>> not 0
+    True
+    >>> procedure? "assert
+    True
+    >>> procedure? "assertdoesnotexist
+    False
+    >>> make :testme 1
+    >>> name? "testme
+    True
+    >>> name? "anothertest
+    False
+    >>> erase "testme
+    >>> name? "testme
+    False
+    >>> (eval [1 + 2])
+    3
+    >>> eval [make :x 10]
+    >>> :x 
+    10
+    >>> make :x :x + 20
+    >>> :x 
+    30
+    >>> repeat 4 [make :x :x - 1]
+    >>> :x
+    26
+    >>> repeat 100 [make :x :x - 1 if :x < 0 [break]]
+    >>> :x 
+    -1
+    >>> make :y 0
+    >>> repeat 100 [make :x :x + 1 
+    ...             if :x > 10 [continue] 
+    ...             make :y :y + 1]
+    >>> :x 
+    99
+    >>> :y 
+    11
+    >>> while [:x < 100] [make :x :x + 1]
+    >>> :x
+    100
+    >>> forever [make :x :x - 1
+    ...          if :x < 0 [break]]
+    >>> :x
+    -1
+    >>> if 1 [1]
+    1
+    >>> ifelse 1 [1] [2] 
+    1
+    >>> ifelse 0 [1] [2] 
+    2
+
+Some functions::
+
+    >>> to testfunc :t
+    ...   forever [
+    ...     make :t :t + 1
+    ...     if :t > 100 [output :t]
+    ...   ]
+    ... end
+    Function: testfunc
+    >>> testfunc 50 
+    101
+    >>> testfunc 10 
+    101
+
+    >>> make :x []
+    >>> for "e [1 2 3] [make :x fput :e :x]
+    >>> :x 
+    [3 2 1]
+    >>> dowhile [make :y :y - 1] [:y > 0]
+    >>> :y 
+    0
+    >>> dountil [make :y :y + 1] [:y > 0]
+    >>> :y 
+    1
+
+That's it.

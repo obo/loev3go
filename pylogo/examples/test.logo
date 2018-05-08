@@ -1,0 +1,161 @@
+;; This was a test of exceptions:
+;to something :test
+;    repeat 10 [print somethingelse :test]
+;end
+
+;repeat 5 [something 5]
+
+
+to ae :val1 :val2 :message 2
+  (pr "done :val1)
+  (assertequal :val1 :val2 :message)
+  (assertequal getattr :val1 "__class__ getattr :val2 "__class__ :message)
+end
+
+assert 1+1
+assert 1+1 = 2
+assert 1+1*2 = 4
+assert not 2 = 4
+assert 2*3 < 10
+assert 10 > 20 - 15
+
+assert not 0
+assertequal (word "a "b "c) "abc
+assertequal word "a "b "ab
+assertequal (list 1 2 3 4) [1 2 3 4]
+assertequal (list "hey "there   "you 1) [hey there you 1]
+assertequal (se 1 2 3) [1 2 3]
+ae (se 1 2 [3 4]) [1 2 3 4]
+ae (se [2] [3 4] [5 4 [7 8]]) [2 3 4 5 4 [7 8]]
+ae fput "a [1 2] [a 1 2]
+ae lput "a [1 2] [1 2 a]
+ae combine "a "b "ab
+ae combine [1] [2] [[1] 2]
+ae reverse [1 2 3] [3 2 1]
+assert not gensym = gensym
+ae first [1 2 3] 1
+ae first "this "t
+ae firsts ["this "that "other] ["t "t "o]
+ae firsts [[1 2 3] [2 3] [5 4]] [1 2 5]
+ae last [1 2 3] 3
+ae last "this "s
+ae butfirst [1 2 3] [2 3]
+ae butfirst "this "his
+ae butfirsts [this that other] [his hat ther]
+ae butlast [1 2 3] [1 2]
+ae butlast "this "thi
+ae item 1 [1 2 3] 1
+ae item 2 [1 2 3] 2
+ae item 3 "this "i
+assert pick [1 2 3 4]
+ae remove "a [a b c] [b c]
+ae remove 5 [1 5 2 3] [1 2 3]
+ae remdup [1 5 3 2 3 1 5 4] [1 5 3 2 4]
+assert wordp "this
+assert word? "this
+assert not wordp 1
+assert not word? [1 2]
+assert emptyp []
+assert empty? butfirst "a
+assert not empty? [1 2]
+assert not empty? "a
+assert equalp 1 1
+assert equal? "a "a
+assert not equal? [1 2] 1
+assert before? 1 3
+; leading dots are not working...
+;assert not .eq [1 2] [1 2]
+assert memberp 3 [1 2 3]
+assert member? "a "cat
+assert substring? "or "bored
+assert number? 3
+assert not number? [1 2]
+ae count [1 2 3] 3
+ae ascii "a 97
+assert member? "at "hatter
+assert member? "at [this at that]
+assert not member? "at "not
+ae lowercase "A "a
+ae uppercase "a "A
+print [this works...]
+type [this does too...]
+type [...and keeps going]
+ae (sum 1 2 3) 6
+ae difference 3 2 1
+ae minus 4 0-4
+ae (product 1 2 3 4) 24
+ae quotient 4 2 2
+ae remainder 10 3 1
+ae int 4.5 4
+ae round 4.7 5.0
+ae sqrt 9 3.0
+ae power 3 2 9
+ae log10 100 2.0
+ae sin 90 1.0
+ae (round cos 90 3) 0.0
+ae iseq 1 4 [1 2 3 4]
+ae rseq 3 5 9 [3 3.25 3.5 3.75 4 4.25 4.5 4.75 5]
+ae rseq 3 5 5 [3 3.5 4 4.5 5]
+assert lessp 2 3
+assert greater? 4 2
+assert random 100
+assert 2 < 3
+assert 3 > 2
+assert (random 10) < 10
+assert and 1 2
+assert or 0 1
+assert not and 1 0
+assert not or 0 []
+assert not 0
+assert procedure? "assert
+assert not procedure? "assertdoesnotexist
+make :testme 1
+assert name? "testme
+assert not name? "anothertest
+erase "testme
+assert not name? "testme
+assert (eval [1 + 2]) = 3
+eval [make :x 10]
+ae :x 10
+make :x :x + 20
+ae :x 30
+repeat 4 [make :x :x - 1]
+ae :x 26
+repeat 100 [make :x :x - 1 if :x < 0 [stop]]
+ae :x 0-1
+make :y 0
+repeat 100 [make :x :x + 1 
+            if :x > 10 [continue] 
+            make :y :y + 1]
+ae :x 99
+ae :y 11
+while [:x < 100] [make :x :x + 1]
+ae :x 100
+forever [make :x :x - 1
+         if :x < 0 [stop]]
+ae :x 0-1
+ae if 1 [1] 1
+ae ifelse 1 [1] [2] 1
+ae ifelse 0 [1] [2] 2
+
+to testfunc :t
+  forever [
+    make :t :t + 1
+    if :t > 100 [output :t]
+  ]
+end
+
+ae testfunc 50 101
+ae testfunc 10 101
+
+make :x []
+for "e [1 2 3] [make :x fput :e :x]
+ae :x [3 2 1]
+dowhile [make :y :y - 1] [:y > 0]
+ae :y 0
+dountil [make :y :y + 1] [:y > 0]
+ae :y 1
+
+
+
+bye

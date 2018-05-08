@@ -1,0 +1,64 @@
+======
+PyLogo
+======
+
+News
+----
+
+14 Oct 2007
+    0.4 version released
+
+21 Aug 2006:
+    0.3 version released
+
+14 Apr 2006:
+    0.2 version released
+
+18 Nov 2003:
+    First 0.1 package was missing scripts directory, uploaded a quick
+    fix (hopefully not too many people got that broken version).
+
+15 Nov 2003:
+    PyLogo first announced.
+
+Introduction
+------------
+
+PyLogo is a Logo interpreter written in Python. Its implementation is
+small, and is based on the language as implemented by UCBLogo. The
+Logo language is a learning language, intended for children for which
+more "complete" languages aren't appropriate. Many of Logos language
+design choices are driven by this, and differ from Python.
+
+For more, read the documentation:
+
+* `Main docs <PyLogo.html>`_
+
+* `Description of the Logo Language <LogoLanguage.html>`_
+
+* `Internal API <api.html>`_ (for people integrating PyLogo into
+  Python environments)
+
+* `To-Do <TODO.html>`_
+
+Download
+--------
+
+You can download from the `Cheese Shop Page
+<http://cheeseshop.python.org/pypi/PyLogo>`_, or if you use
+easy_install with ``easy_install PyLogo``.
+
+The subversion repository is available with::
+
+    svn co http://svn.colorstudy.com/PyLogo/trunk PyLogo
+
+Or with ``easy_install PyLogo==dev``
+
+Contact
+-------
+
+PyLogo has a mailing list at pylogo-discuss@lists.sf.net -- `subscribe
+here <http://lists.sourceforge.net/lists/listinfo/pylogo-discuss>`_.
+
+    -- Ian Bicking <ianb@colorstudy.com>
+

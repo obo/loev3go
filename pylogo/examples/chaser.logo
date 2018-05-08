@@ -1,0 +1,43 @@
+;; Sadly this doesn't actually work.
+;; It requires some more threading work that I haven't yet
+;; figured out.  The tkthread module is a start towards this.
+
+import [logo_turtle]
+
+to follow :other :speed
+  make :posy tell :other [posy]
+  make :posx tell :other [posx]
+  make :myposy posy
+  make :myposx posx
+  setheading (arctan :posy - :myposy :posx - :myposx)
+  fd :speed
+end
+
+to chase 
+  startsync
+  forever [
+    follow :chase 10
+    sync 0.2
+  ]
+end
+
+to wander
+  startsync
+  forever [
+    rt (random 20)-10
+    fd 10
+    sync 0.2
+  ]
+end
+
+
+to chaser_main
+  make :last :turtle
+  for :i iseq 0 10 [
+    make :next newturtle
+    tell :next [(spawn [make :chase :last] [chase])]
+    make :last :next
+  ]
+  tell :turtle [wander]
+end
+

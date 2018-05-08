@@ -1,0 +1,261 @@
+; regression-environment.logo (part of logo translation package)
+;   -- some regression tests for the logo environment.
+; Copyright Ian Bicking, 30 Nov 1998
+; Released under the GNU General Public License
+
+; To run the test, do (test.environment).
+; To get verbose output, do (set! verbose #t) or, in Logo, make :verbose true
+
+to t :block :expected :name
+  make :value eval :block
+  ifelse equal? :value :expected [
+    (print :name "succede)] [
+    (print :name "failed)
+    (print :value "not "equal :expected)]
+end
+
+to float.equal? :f1 :f2
+  (abs :f1 - :f2) < 0.001
+end
+
+to t.float :block :expected :name
+  make :value eval :block
+  ifelse float.equal? :value :expected [
+    (print :name "succede)] [
+    (print :name "failed)
+    (print :value "not "equal :expected)]
+end
+
+to test.environment
+  t [word "first "second]  "firstsecond   "word
+  t [list 1 2]               [1 2]           "list
+  t [sentence "this "that] ["this "that] [sentence 1]
+  t [(sentence [1 2 [3 4]] [5 6] 7)] [1 2 [3 4] 5 6 7] [sentence 2]
+  t [sentence 1 2]           se 1 2          "sentence.se
+  t [fput 1 [2 3]]           [1 2 3]         "fput
+  t [lput 3 [1 2]]           [1 2 3]         "lput
+  ;t [array 3]                [[] [] []]     "array
+; no origin test
+  ;(test.mdarray)
+  ;t [listtoarray [1 2 3]]    [1 2 3]        "listtoarray
+  ;t [arraytolist [1 2 3]]   [1 2 3]         "arraytolist
+  t [combine "this "that]  "thisthat      [combine 1]
+  t [combine [1] [2 3]]      [[1] 2 3]       [combine 2]
+  t [reverse [1 2 3]]        [3 2 1]         "reverse
+  testerror [not gensym = gensym]               "gensym
+  t [first [1 2 3]]          1               [first 1]
+  t [first "this1]           "t             [first 2 character]
+  t [firsts [[1 2] "this3 [3 4]]] [1 "t 3]   "firsts
+  t [last [1 2 3]]           3               [last 1]
+  t [last "this]            "s             [last 2 character]
+  t [butfirst [1 2 3]]       [2 3]           [butlast 1]
+  t [butfirst "this]        "his           [butlast 2]
+  t [butfirsts [[1 2] [2] "this]] [[2] [] "his] "butfirsts
+  t [butlast [1 2 3]]        [1 2]           [butlast 1]
+  t [butlast "this]         "thi           [butlast 2]
+  t [item 2 [1 2 3]]         3               [item 1]
+  t [item 0 [1 2 3]]        1               [item 2]
+  t [item 3 "this]          "s             [item 3]
+; no origin stuff
+; mditem in test.mdarray
+  t [pick [1 1 1]]           1               "pick
+  t [remove 0 [1 3 0 1 0 0]] [1 3 1]         "remove
+  t [remdup [1 5 4 2 4 4 1 6 5]] [2 4 1 6 5] "removedup
+  t [make :a [1 2 3]
+        setitem 1 :a "here
+        :a]                     [1 "here 3]    "setitem"
+; mdsetitem in test.mdarray
+;  t [make :l [1 2 3]
+;     \.setfirst :l "here"
+;     :l]                     ["here" 2 3]     ".setfirst"
+;  t [make :l [1 2 3]
+;     .setbutfirst :l [the rest]
+;     :l]                     [1 the rest]     ".setbutfirst"
+;  t [make :a #[1 2 3]
+;     .setitem 0 :a "here"
+;     :a]                     #["here" 2 3]    ".setitem"
+  (test.stacks)
+  testerror [and wordp "" not word? []]          "wordp/word?"
+  testerror [and listp [] not list? #[1 2]]      "listp/list?"
+  testerror [and arrayp #[] not array? []]       "arrayp/array?"
+  testerror [and emptyp [] not empty? [1]]       "emptyp/empty?"
+  testerror [and equalp [] [] not equal? 1 2]     "equalp/equal?"
+  testerror [1 + 1 = 2]                          "="
+  testerror [and beforep "aardvark" "zebra"
+                 not before? "q" "b"]            "beforep/before?"
+  testerror [and .eq 'this 'this
+                 not .eq [1 2] [1 2]]            ".eq"
+  testerror [(and memberp 2 [1 3 2 5]
+                  memberp [1 2] #[3 [1 2]]
+                  not member? 'this [])]         "memberp/member?"
+  testerror [(and substringp "an" "thanks"
+                  not substringp [] "not"
+                  not substringp "this" #[]
+                  not substring? "or" "thanks")] "substringp/substring?"
+  testerror [(and numberp 103
+                  numberp #o100
+                  not number? "102")]            "numberp/number?"
+  t [count [1 2 3]]           3               "count (1)"
+  t [count #[1 3 2]]          3               "count (2)"
+  t [count "this"]            4               "count (3)"
+  t [ascii #\A]               65              "ascii"
+  t [char 65]                 #\A             "char"
+  t [member 2 [1 2 3]]        [2 3]           "member (1)"
+  t [member #\h "this"]       "his"           "member (2)"
+  t [member "hi" "this"]      "his"           "member (3)"
+  t [member "or" "this"]      ""              "member (4)"
+  t [member 'this [1 2 3]]    []              "member (5)"
+  t [lowercase "ThIS"]        "this"          "lowercase"
+  t [uppercase "this.thing"]  "THIS.THING"    "uppercase"
+; Not sure how to t I/O
+  t [sum 1 2]                 1 + 2           "sum"
+  t [difference 1 2]          1 - 2           "difference"
+  t [minus 10]                - 10            "minus"
+  t [product 2 3]             2 * 3           "product"
+  t [quotient 6 3]            6 / 3           "quotient"
+  t [remainder 10 4]          2               "remainder (1)"
+  t [remainder (-10) 4]       -2              "remainder (2)"
+  t [remainder 10 (-4)]       2               "remainder (3)"
+  t [modulo 7 3]              1               "modulo (1)"
+  t [modulo 7 (-3)]           -2              "modulo (2)"
+  t [int 1.32]                1               "int (1)"
+  t [int 1.75]                1               "int (2)"
+  t [round 1.32]              1               "round (1)"
+  t [round 1.75]              2               "round (2)"
+  t.float [sqrt 16]           4               "sqrt"
+  t [power 4 3]               64              "power"
+  t.float [exp 0]             1               "exp"
+  t.float [log10 100]         2               "log10"
+  t.float [ln exp 2]          2               "ln"
+  t.float [sin 90]            1               "sin"
+  t.float [radsin 0]          0               "radsin"
+  t.float [cos 180]           -1              "cos"
+  t.float [radcos 0]          1               "radcos"
+  t.float [arctan 1]          45              "arctan (1)"
+  t.float [(arctan 3 (-3))]   135             "arctan (2)"
+  t.float [radarctan 0]       0               "radarctan"
+  t [iseq 1 5]                [1 2 3 4 5]     "iseq"
+  testerror [reduce [and ?1 ?2]
+                    (map [float.equal? ?1 ?2] 
+                         rseq 1 2 5
+                         [1 1.25 1.5 1.75 2])] "rseq"
+  testerror [and lessp 1 2
+                 not less? 2 1]                  "lessp/less?"
+  testerror [and greaterp 2 1
+                 not greater? 1 2]               "greaterp/greater?"
+  testerror [and ((random 10) < 10)
+                 ((random 10) >= 0)]             "random"
+  testerror [rerandom
+             make :r random 100
+             (rerandom 100)
+             not :r = random 100]                "rerandom"
+  testerror [and true true]                      "and"
+  testerror [or true false]                      "or"
+  testerror [not false]                          "not"
+  (test.prop)
+  testerror [run [ifelse true true false]]       "run (1)"
+  testerror [(run [ifelse (? + ?) = 2 true false] 1)] "run (2)"
+  testerror [make :c 0
+             repeat 100 [make :c :c + 1]
+             :c = 100]                           "repeat"
+  testerror [ifelse true true false]             "ifelse"
+  testerror [(if true true) = true]              "if"
+  (test.test)
+  (test.output)
+  (test.stop)
+  testerror [ignore 1 + 2
+             true]                               "ignore"
+  t [`[1 2 ,cons 1 2]]           [1 2 [1 . 2]]   "backquote"
+  t [make :c 0
+     do.while [(sqrt :c) < 10]
+              [make :c :c + 1]
+     :c]                         100             "do.while"
+  t [make :c 0
+     while [:c < 10]
+           [make :c :c + 1]
+     :c]                         10              "while"
+  t [make :c 0
+     do.until [(sqrt :c) > 10]
+              [make :c :c + 1]
+     :c]                         101             "do.until"
+  t [make :c 0
+     until [:c > 10]
+           [make :c :c + 1]
+     :c]                         11              "until"
+  t [make :c 1
+     foreach [make :c :c + ?] [1 2 3 4]
+     :c]                         11              "foreach"
+  t [map [? + ?] [1 2 3]]        [2 4 6]         "map (1)"
+  t [(map [?1 + ?2] [1 2 3] [2 3 4])] [3 5 7]    "map (2)"
+  t [map.se [reverse ?] [[1 2] [3 4]]] [2 1 4 3] "map.se"
+  t [filter [? > 0] [-1 3 -4 0 10]] [3 10]       "filter"
+  t [find [? > 0] [-1 -5 3 -5 10 5]] 3           "find"
+  t [reduce [?1 + ?2] [1 2 3]]    6              "reduce"
+;crossmap?
+end
+
+to test.mdarray
+  local :md
+  make :md mdarray [3 3 3]
+  t [mditem [1 1 1] :md] [] "mdarray/mditem (1)"
+  mdsetitem [2 2 2] :md 'this
+  t [mditem [2 2 2] :md] 'this "mdarray/mditem/mdsetitem (2)"
+end
+
+;to test.stacks
+;  local :stack
+;  make :stack []
+;  push :stack 10
+;  push :stack 14
+;  t [pop :stack] 14 "push/pop (1)"
+;  t [pop :stack] 10 "push/pop (2)"
+;  t [:stack] [] "push/pop (3)"
+;  queue :stack 1
+;  queue :stack 2
+;  t [dequeue :stack] 1 "queue/dequeue (1)"
+;  t [dequeue :stack] 2 "queue/dequeue (2)"
+;  t [:stack] [] "queue/dequeue (3)"
+;end
+
+to test.stacks
+  do-nothing
+end
+
+to test.prop
+  pprop 'test 'v1 1
+  pprop 'test 'v2 2
+  t [gprop 'test 'v1] 1 "pprop/gprop (1)"
+  t [gprop 'test 'nothing] [] "pprop/gprop (2)"
+  remprop 'test 'v1
+  t [gprop 'test 'v1] [] "pprop/gprop (3)"
+  t [plist 'test] [v2 2] "plist"
+  t [gprop 'nothing 'key] [] "gprop"
+end
+
+to test.output
+  []
+end
+
+to test.stop
+  []
+end
+
+to test.test
+  local :c
+  test 1 = 1
+  make :c false
+  testerror [ift [make :c true] :c] "ift"
+  make :c true
+  test 1 = 2
+  testerror [iftrue [make :c false] :c] "iftrue"
+  make :c true
+  test 1 = 1
+;  testerror [iff [make :c false] :c] "iff"
+  make :c true
+  test 1 = 2
+  testerror [iffalse [make :c true] :c] "iffalse"
+end
+
+make :verbose false
+
+  

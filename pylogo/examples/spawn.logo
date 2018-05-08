@@ -1,0 +1,13 @@
+to printer :i
+  for j iseq 0 10 [
+    print "Ping :threadname :i :j
+    wait 0.5
+  ]
+end
+
+to spawn_main
+  for :i iseq 0 10 [
+    spawn [printer :i]
+    wait 0.1
+  ]
+end

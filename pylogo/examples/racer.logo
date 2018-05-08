@@ -1,0 +1,47 @@
+; A turtle race...
+
+import "logo_turtle
+
+to raceline :ypos :dist
+  ht
+  pu
+  setxy 0 :ypos
+  setheading 0
+  pd
+  fd :dist
+  pu
+  home
+  pd
+  st
+end
+
+to race :numturtles :distance 1
+  if :distance = none [make :distance 200]
+  raceline :distance :numturtles * 20
+  raceline 0 :numturtles * 20
+  ; This is a dictionary of all the turtles and their speed:
+  make :turtles newdict
+  for :i iseq 0 :numturtles [
+    ; Reuse the original turtle, or create another one:
+    (if :i = 0 [make :t :turtle] 
+               [make :t newturtle])
+    make :speed random 5 + 5
+    setitem :t :turtles :speed
+    ; Space all the turtles out on the line:
+    tell :t [pu setx :i*20 lt 90]
+  ]
+  make :maxy 0
+  while [:maxy < :distance] [
+    for :t keys :turtles [
+      tell :t [fd (item :t :turtles) + random 5]
+      make :posy tell :t [posy]
+      if :posy > :maxy [make :maxy :posy make :bestturtle :t]
+    ]
+    wait 0.1
+  ]
+  tell :bestturtle [turtlewrite [I won!]]
+end
+
+to racer_main
+  race 5
+end

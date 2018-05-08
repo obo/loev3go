@@ -1,0 +1,31 @@
+; regression.logo (part of logo translation package)
+;   -- some regression tests for the logo translator.
+; Copyright Ian Bicking, 30 Nov 1998
+; Released under the GNU General Public License
+
+to testerror [block :b] :name
+if not run :b [display string-append "Failed test: " :name
+                       newline]
+end
+
+to test
+testerror [2 = 2] "Number equality"
+testerror ["this" = "this"] "String equality"
+testerror [not 'this = 'that] "Boolean not, symbol inequality"
+testerror [#t] "Literal true"
+testerror [not #f] "Literal false"
+testerror [(list 1 2 3) = [1 2 3]] "Literal lists"
+testerror [(cons 1 2) = [1 . 2]] "Literal cons"
+testerror [`[1 ,cons 2 3 4] = [1 [2 . 3] 4]] "Quasiquote/unquote"
+testerror [`[1 ,@list 2 3 4] = [1 2 3 4]] "Quasiquote/unquote-splice"
+testerror [#o100 = 64] "Octal numbers"
+testerror [inexact? #i10] "Literal inexact numbers"
+testerror [#d10 = 10] "Literal decimal numbers"
+testerror [#xfF = 255] "Literal hexidecimal numbers"
+testerror [#b10 = 2] "Literal binary numbers"
+testerror [1 = 1 = 1 = 1] "Continued equality"
+testerror [1 < 2 < 3 < 4] "Continued inequality"
+end
+
+
+

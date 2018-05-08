@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo buildhtml.py --report=2 --prune=.svn --prune=UCBManual.txt --silent --no-toc-bac
+buildhtml.py --report=2 --prune=.svn --prune=UCBManual.txt --silent --no-toc-bac

@@ -1,0 +1,18 @@
+to factorial :value
+  make :product 1
+  make :i :value
+  while [:i > 1] [
+        make :product :product * :i
+        make :i :i - 1]
+  output :product
+end
+
+to recursive_factorial :value
+  (ifelse :value = 0 [output 1] 
+   [output :value * recursive_factorial :value - 1])
+end
+
+to factorial_main
+  for :i iseq 0 10 [print "Factorial :i "= factorial :i]
+end
+

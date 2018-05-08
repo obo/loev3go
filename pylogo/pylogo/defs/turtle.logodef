@@ -1,0 +1,10 @@
+reset: * clearscreen cs
+clear: *
+forward: fd
+backward: bk
+left: lt
+right: rt
+up: * penup pu
+down: * pendown pd
+color: arity:3
+goto: * setxy

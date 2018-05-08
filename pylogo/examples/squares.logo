@@ -1,0 +1,15 @@
+to squares :start :stop
+  ifelse :start < :stop [
+    output fput :start * :start squares :start + 1 :stop
+  ] [
+    output []
+  ]
+end
+
+
+to squares_main
+  print [Script running:
+squares 1 10
+the squares from start to end (not inclusive of end)]
+  print squares 1 10
+end

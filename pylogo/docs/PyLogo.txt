@@ -1,0 +1,565 @@
+++++++
+PyLogo
+++++++
+
+.. contents::
+
+Introduction
+============
+
+PyLogo is a Logo interpreter written in Python.  Its implementation is
+small, and is based on the language as implemented by UCBLogo_.  The
+Logo language is a learning language, intended for children for which
+more "complete" languages aren't appropriate.  Many of Logos language
+design choices are driven by this, and differ from Python.
+
+.. _UCBLogo: http://www.cs.berkeley.edu/~bh/logo.html
+
+Because of the design choices a Logo compiler (or translator) is
+difficult to write -- aspects of the parsing can only be done at
+runtime.  So PyLogo is an interpreter built on top of another
+interpreter.  So it's not that fast, but it's not so bad either.
+(Some Logo implementations have been faster, like StarLogo or Object
+Logo, by using complex optimizations and lazy compilation, and of
+course an interpreter written in C would be faster)
+
+Logo is a simple an elegent language.  Its focused much more on
+mathematics, abstract thought, and accessibility than on software
+design; Mindstorms_ by Seymour Papert is a good introduction to the
+philosophy.  Since many people in the Python community have had
+aspirations for using Python for these goals, Logo seems like an
+interesting example upon which to think about learning and
+programming.
+
+.. _Mindstorms: http://www.amazon.com/exec/obidos/ASIN/0465046746/qid=1067922418/sr=ka-2/ref=pd_ka_2/002-8146556-2968008
+
+I feel programming environments have a widely untapped potential to
+revolutionize pre-algebra mathematical learning, and abstraction
+skills in general.  What is challenging in the declarative expressions
+of algebra is easy and intuitive when using imperative programming
+with names and values.  (Boxer_ is even *more* concrete, but that's a
+task for another day)
+
+.. _Boxer: http://www.soe.berkeley.edu/boxer/
+
+Python, while elegant in many ways, does not have the simplicity of
+Logo, or the casual syntax to make it accessible to absolute
+beginners, who often don't have the keyboarding skills to write proper
+Python code, the typographic literacy to identify the detailed
+punctuation used, and lack the patience to build these skills before
+producing working programs.
+
+Despite these general goals, PyLogo also offers some practical
+advantages.  One of PyLogo's best features is the ease of using Python
+code from PyLogo code (and to a lesser degree, vice versa).  Logo
+primitives are easy to add.  PyGame_ primitives would be be very
+interesting.  
+
+.. _pygame: http://www.pygame.org
+
+Features
+========
+
+* Complete Logo language, based on the UCBLogo dialect.
+
+* Errors produce tracebacks of your Logo code.
+
+* Multi-threaded.
+
+* Multiple simultaneous turtles (unfortunately not yet compatible with
+  threading, due to the limitations of Tkinter).
+
+* Easily extensible from Python.
+
+* Written 100% in Python (portable, easy to read, etc).
+
+Anti-Features
+-------------
+
+* Not used by many people; hasn't really been tried-in-fire.
+
+* A lot of erroneous, or even syntactically incorrect Logo will create
+  weird error messages, instead of causing readable error messages
+  like it should.
+
+* Python errors aren't handled too elegantly -- they get wrapped in a
+  special ``LogoError`` which creates the Logo traceback (which you
+  want), but this can obscure as well as assist.  Python tracebacks
+  and Logo tracebacks don't quite go together.
+
+* Not very fast.  A tight loop is about 400x lower than Python, about
+  10x slower than UCBLogo.  
+
+* No IDE.  No persistence (mmm, pickle_), for storing code or
+  incomplete projects.  None of that clever stuff that the commercial
+  Logos have.  But maybe someday.  Alternately, it may make more sense
+  to use other IDE(ish) Python products and try to add Logo
+  interpretation there.
+
+* No quasi-quote.
+
+.. _pickle: http://python.org/doc/current/lib/module-pickle.html
+
+Usage
+=====
+
+PyLogo's basic syntax is very similar to UCBLogo_.  You may wish to
+read the `UCBLogo manual`_ -- most of the primitives in UCBLogo are
+implemented in PyLogo (in the ``pylogo.builtins`` module).
+
+.. _`UCBLogo manual`: http://www.cs.berkeley.edu/~bh/usermanual
+
+Basic usage::
+
+    $ python setup.py install
+    ...
+    $ pylogo
+    Importing pylogo.builtins
+    ??? 1 + 1
+    2
+    ??? to square :size
+    to?   repeat 4 [
+    to?     fd :size
+    to?     rt 90
+    to?   ]
+    to? end
+    Function: square
+    ??? square 100
+
+Compared to other languages
+===========================
+
+I've also included a `post about Logo`__, which is a useful description
+for people knowledgeable about computer programming languages.
+
+.. __: LogoLanguage.html
+
+Differences from UCBLogo
+------------------------
+
+MAKE accepts UCBLogo's form (``MAKE "var 10``) and a more normal, less
+surprising form (``MAKE :var 10``).  LOCAL, LOCALMAKE works the same way.
+
+FOR works more like Python's ``for``, e.g. ``FOR :i :some_sequence
+[block]``.  It is a special form (hence ``:i`` instead of ``"i``).
+UCBLogo's FOR is more like Pascal (``FOR [i start end step]
+[block]``).
+
+PyLogo doesn't have constrained object types.  Variables can hold any
+kind of object.  Because of this many of UCBLogo's awkard constructs
+-- like properties and files -- can be implemented as normal objects
+(in UCBLogo properties and files get names, and are referred to by
+these names -- essentially each object type has its own global
+namespace and is addressable only by name).
+
+PyLogo doesn't distinguish between procedures and functions, i.e., you
+do not have to use ``IGNORE`` to suppress an error when you ignore the
+result of a function.  All procedures return None, like in Python.
+
+Python dictionaries can be used in PyLogo.  ``NEWDICT`` creates a new
+dictionary, and ``ITEM`` and ``SETITEM`` can be used (like ``ITEM :key
+:dict`` or ``SETITEM :key :dict :value``).  You can use the ``KEYS``,
+``VALUES``, and ``ITEMS`` functions to access the appropriate methods
+on dictionaries.
+
+The special Python variables None, True, and False are available with
+the (zero-argument) functions ``NONE``, ``TRUE``, and ``FALSE``.
+
+Logo files can be loaded with the ``LOAD`` command.  You do not need
+to use the ``.logo`` extension with the name.  Python modules can also
+be loaded, if they are in the current directory.  Python modules can
+be loaded from other locations using the ``IMPORT`` statement, like
+``IMPORT [path to my module]`` to load ``path.to.my.module``.
+
+Scoping is slightly different than in most Logos.  Barring the use of
+``LOCAL``, when you do something like ``MAKE :VAR 10``, we look for a
+scope where ``:VAR`` is defined; if found we change that binding.  If
+it is not found, we set it in the local scope.  Many Logos set it in
+the global scope.
+
+Complete List of Special Forms
+------------------------------
+
+In all cases ``:VAR`` means ``:var``, ``"var`` or simply ``var``.
+
+* ``MAKE :VAR <value>``
+
+* ``LOCALMAKE :VAR ...``
+
+* ``LOCAL :VAR <more vars...>``
+
+* ``TO funcname :VAR ... <default/int>``
+
+* ``FOR :VAR <sequence> [block]``
+
+* ``TELL <object> [block]`` (normal form) or ``TELL <object> method
+  args...``.  ``ASK`` means the same as ``TELL`` (for the
+  object-oriented functionality)
+
+* ``MAKEATTR <object> :VAR <value>``
+
+
+Turtles and Graphics
+--------------------
+
+Graphics are implemented in the ``logo_turtle.py`` module, which is in
+turn built upon the standard Python `turtle
+<http://python.org/doc/current/lib/module-turtle.html>`_ module.  Most
+basic commands match UCBLogo, and are typical for most Logos.
+
+Minor differences:
+
+``PENCOLOR`` can take a color name (like "white), or used like
+``(PENCOLOR 255 255 0)`` to set RGB colors exactly.
+
+``HIDETURTLE`` (or ``HT``) speeds up graphics a lot.  It usually does
+in Logo implementations, but there's a larger delay in actions in the
+Python ``turtle`` module than is typical elsewhere.
+
+``TURTLEWRITE`` will write text at the turtle's current position.  Use
+lists for multiple words.  ``(TURTLEWRITE [text] 1)`` will also move
+the turtle to the end of the text (otherwise the turtle doesn't change
+position).
+
+To fill in spaces, use ``STARTFILL``, move your turtle, and finish
+with ``ENDFILL``.  The turtle's path will be turned into a closed
+shape (even if the path doesn't close, and may cross itself).
+
+``DISTANCE`` will find the distance to another turtle, or if you
+provide it with two arguments (like ``(DISTANCE :t1 :t2)``) will find
+the distance between the two given turtles.
+
+``ALLTURTLES`` returns a list of all the turtles.
+
+Multiple turtles are supported in PyLogo.  The "current" turtle is
+always stored in the ``:TURTLE`` variable.  When you run a command
+like ``FD 10`` you are asking ``:TURTLE`` to do this command.
+
+To create a new turtle, use the ``NEWTURTLE`` command.  This returns a
+turtle object, so you will almost always want to do ``MAKE :t
+NEWTURTLE`` to save the result.
+
+To control a different turtle, you can use the ``TELL`` command, like
+``TELL :t [fd 10]``.  This creates a new scope where ``:TURTLE`` is
+bound to ``:t``, then evaluates the block.
+
+Threads and Concurrent Processing
+---------------------------------
+
+PyLogo supports multiple threads of processing.  
+
+.. warning::
+
+   Right now PyLogo does not support threads being used with turtles
+   -- you can only use turtles from the main thread.  This sucks.  It
+   has to do with Tk (which the turtles use) being single-threaded.
+   Hopefully we can fix this, because it's these two features together
+   that are most fun to use.  (``tkthread`` is my attempt to run
+   turtle commands in the main thread, while queuing up requests for
+   turtle operations in other threads -- for some reason it didn't
+   work, though)
+
+The basic threading function is ``SPAWN``.  It works like::
+
+    ??? SPAWN [REPEAT 10 [PRINT "HI WAIT 1]]
+
+This runs ``[REPEAT 10...]`` in another thread.  It also adds another
+scope, so that variables can be set locally to the thread.  A
+``:THREADNAME`` variable is set local to the scope as well, which
+gives a unique name for the thread.
+
+``SPAWN`` takes an optional argument.  If two arguments are given,
+then the second is the code for the thread, and the first argument is
+a list that is evaluated in the new scope, but still while in the main
+thread.  I can't remember why I put this in, but it seemed really
+useful at some point.
+
+``WAIT`` waits the given number of seconds (floats work too, of
+course).  Useful if you don't want your thread to go crazy fast.
+
+``SYNC`` can help you time your events, compensating for the speed of
+the machine.  When you run ``STARTSYNC`` a special variable is created
+locally (``:SyncTimestamp``).  Later calls to ``SYNC :Secs`` will wait
+however long is necessary for so that it will be have been at least
+``:Secs`` seconds since the last ``SYNC`` or ``STARTSYNC`` command.
+
+An example of ``SYNC``::
+
+    STARTSYNC
+    FOREVER [
+      FD RANDOM 10
+      RT RANDOM 90
+      SYNC 1
+    ]
+
+This moves the turtle once a second, regardless of how long ``FD`` and
+``RT`` take to run.
+
+Other Functions
+---------------
+
+Some other extra functions: 
+
+``ASSERT``, ``ASSERTEQUAL``:
+    Just like in Python, assert something is true (or that two things
+    are equal).
+
+``FUNCTION``:
+    Returns a function object given the function name, e.g.,
+    ``FUNCTION "ASSERT`` returns the ``ASSERT`` function.
+
+``CATCH``:
+    Works like ``(CATCH [block] "LogoError [except block] ...)``.
+    Most exceptions get wrapped in a LogoError exception, so catching
+    specific exceptions might not work that well yet.  Exceptions
+    (like ``"LogoError`` in this example) are matched against the
+    exception class name.
+
+``GETATTR``:
+    Like Python's ``getattr``, e.g., ``GETATTR :dict "items`` (returns
+    a function object, the ``items`` method of the dictionary object;
+    you'll need to use ``CALL`` to call it)
+
+``SETATTR``:
+    Like ``setattr``, e.g., ``SETATTR :obj "attr :value``.
+
+``TIMESTAMP``:
+    Returns the timestamp (seconds from the Unix epoc).
+
+``CALL``:
+    Calls the function object.  Takes optional arguments, which are
+    passed to the function.  Use like ``(CALL :func :arg1 :arg2)``.
+
+Using Objects
+-------------
+
+PyLogo uses a kind of funny method for accessing objects, that I hope
+will be natural in the Logo environment.
+
+In each scope there can be a list of "actors", aka objects.  Everytime
+you run a function, each actor (in order) gets a chance to perform the
+operation.  So, if an actor defines an appropriate method then that is
+used.  This way you can add an actor that basically overrides
+functions; e.g., if a turtle object defines ``FD`` and you add that to
+the actor list then it will catch all those calls.  This is applied
+*dynamically*, not lexically.  That means that when you call *other*
+functions, they too will start using the object's methods.  This is an
+extension of the dynamic scoping in concept; just don't be too clever
+about it, because I'm sure this feature can bite.
+
+There are three basic operations for objects:
+
+``TELL`` or ``ASK``:
+    These are both equivalent.  The simple method is ``TELL <object>
+    [block]``, which runs the block with the object on the actor
+    list.  You can also do ``TELL <object> method args...``, which
+    will call the given method.  Unlike with a block, the object
+    *must* define the method.  You can also use ``ASK <object> :var``,
+    which will get an attribute (and the object *must* have the
+    ``var`` attribute).
+
+``MAKEATTR <object> :VAR <value>``:
+    This sets an attribute on the object.  ``MAKE`` never does this,
+    even though attributes from an actor object are available to read
+    as variables.
+
+``CREATE <base> "NAME [class def]``:
+    This creates a new class, or a new instance through cloning.  The
+    basis for the new object is ``<base>``.  The standard base you
+    should start with is ``:object``.  If you give a class as the
+    base, then a new class is created.  If you give an instance, a new
+    instance is created and its attributes are updated.
+
+    The class def is a series of ``MAKE`` and ``TO`` statements,
+    forming attributes and methods.  Inside a method ``:SELF`` is
+    available, as are variables for each of the attributes.
+
+    Once you've created the object, both a variable and function are
+    added to the scope -- the function creates a new instance, while
+    the variable refers to the object.  Right now there is no way to
+    take arguments while creating an instance.  Maybe later.
+
+    An example::
+
+        CREATE :object "POINT [
+            MAKE :x 0
+            MAKE :y 0
+            TO distance :otherpoint [
+                MAKE :distx :x - ASK :otherpoint :x
+                MAKE :disty :y - ASK :otherpoint :y
+                OUTPUT SQRT (:distx*:distx + :disty*:disty)
+            END
+        ]
+
+Adding Primitives from Python
+-----------------------------
+
+This section shows how to add new Logo primitives written in Python.
+
+You should probably put all your new primitives in a file.
+``builtins.py`` and ``logo_turtle.py`` are examples.
+
+The basic form is this::
+
+    >>> from pylogo.common import logofunc
+    >>> @logofunc(name="override_name", aliases=("other", "names"),
+    ...           aware=True, arity=-1, hide=True)
+    ... def func(interp, *args): ...
+
+``name``:
+    Used when the Logo name is not a valid Python name (otherwise
+    the name of the function is used); an example is the ``AND``
+    function.
+
+``aliases``:
+    Used when there's multiple names for a function (like ``FD`` and
+    ``FORWARD``).
+
+``aware``:
+    Used if you want access to the interpreter (the ``interp``
+    argument in this example).
+
+``arity``:
+    Used when you want to override the arity (by default it is picked
+    up from the positional arguments): -1 means that the function is
+    "greedy" and will take as many arguments as it can (for example,
+    ``PRINT``).
+
+``hide``:
+    Used to mean you don't want the function to show up in listings
+    (even though it is available).
+
+Interpreter Object
+~~~~~~~~~~~~~~~~~~
+
+When making primitives with ``aware=True``, you gain access to the
+interpreter object (this is defined in
+``pylogo.interpreter.Interpreter`` if you want to look at the
+source).  There's a few methods you may wish to use:
+
+``.eval(lst)``:
+    Evaluate the list, returning the value of the last expression.
+
+``.get_function(functionName)``:
+    Return the function object.  You should use ``interp.apply()`` to run it.
+
+``.set_function(functionName, func)``:
+    Add the function to the interpreter.
+
+``.apply(func, args)``:
+    Run the function ``func`` with the given ``args`` (a list or
+    tuple); mostly this just uses the ``logoAware`` rule.
+
+``.get_variable(var)``:
+    Return the value of the variable.  ``pylogo.common.LogoNameError``
+    is raised if the variable is not found.
+
+``.set_variable(var, value)``:
+    Set the variable.
+
+``.set_variable_local(var, value)``:
+    Set the variable in the local scope (``setVariable`` will find the
+    first scope where the variable is defined, and only if the
+    variable is not found in any parent scope will it set it locally).
+
+``.new()``:
+    Create and return a new scope (which is attached to a new interpreter
+    object).  This is how you create a local scope.  To use the new 
+    scope, you must start calling methods on the object this method returns.
+
+``.function_names()``:
+    Return a list of function names.
+
+``.variable_names()``:
+    Return a list of variable names.
+
+Other Logos
+===========
+
+For reference, here are some other free logo implementations (this
+list isn't very up-to-date):
+
+* `Logo Foundation`_: a good place to start looking at Logo and
+  learning about Logo; but the software list is very out of date.
+
+* UCBLogo_, intended as a lowest-common-denominator of Logos, it's a
+  straight forward, pure, and fairly complete implementation of Logo.
+  PyLogo was written with UCBLogo's dialect in mind.
+
+* `aUCBLogo <http://www.physik.uni-augsburg.de/~micheler/>`_, a fork
+  of UCBLogo, with lots of graphics improvements and multithreading.
+
+* MSWLogo_, Windows version of UCBLogo, with another offshoot being
+  `FMSLogo <http://fmslogo.sourceforge.net/>`_.
+
+* ProLOGO_, written in Prolog, with graphics but no procedures.
+
+* `Turtle Tracks`_: Java implementation of Logo, also based on the
+  UCBLogo dialect.  A quite complete implementation, but with no
+  activity for many years (last release in 1999).
+
+* Boxer_: an academic Logo, with novel ideas of program representation
+  and IDE.  I personally find this language very interesting, and
+  would love to see some of its ideas in PyLogo, or even better in
+  Python itself.  The actual project is inactive.
+
+* StarLogo_: an academic highly concurrent Logo programming (lots of
+  independent turtles acting simultaneously)
+
+* StarLogoT_: an academic Logo language with an emphasis on
+  concurrency and parallelism.  Seems to be inactive, with NetLogo
+  taking its place.
+
+* NetLogo_: an academic Logo language oriented on concurrency and
+  independent agents.  An emphasis on simulation.
+
+* Elica_: an academic OO Logo, with strong graphics capabilities.
+  Only works on Windows.
+
+* `Logo in Scheme`_: a Logo to Scheme compiler (written by me).
+
+* TinyLogo_: Logo for the Palm.
+
+* rLogo_: Logo that can be distributed in applet form, with several
+  translations.
+
+* XLogo_, Mac OS X Logo (incomplete language?)
+
+* `Logo nyelv`_, Hungarian, written in Turbo Pascal, 
+
+* JavaLogo_, appears to be turtle graphics, without the Logo
+  language.
+
+* Galapago_: Java turtle graphics with an incomplete Logo language,
+  focused on Fractals.
+
+* Tortue_, written in Java (incomplete language?)
+
+* `KLogo-Turtle`_: KDE turtle graphics, incomplete Logo language.
+
+* `Logo++`_: a C++ Logo-like language (with significant language
+  changes)
+
+.. _rLogo: http://www.embry.com/rLogo/
+.. _TinyLogo: http://www.palmspot.com/software/detail/ps3104a_98232.html
+.. _MSWLogo: http://www.softronix.com/logo.html
+.. _`Scheme Logo`: http://www.ccs.neu.edu/home/arthur/logo.page.html
+.. _`Logo in Scheme`: http://www.colorstudy.com/static/ianb/old/logo-scheme/
+.. _Elica: http://www.elica.net/
+.. _`Logo Foundation`: http://el.media.mit.edu/logo-foundation/
+.. _NetLogo: http://ccl.northwestern.edu/netlogo/
+.. _StarLogo: http://education.mit.edu/starlogo/
+.. _StarLogoT: http://ccl.northwestern.edu/cm/starlogoT/
+.. _`Logo++`: http://clpp.sourceforge.net/
+.. _`Turtle Tracks`: http://turtletracks.sourceforge.net
+.. _KTurtle: http://kturtle.sourceforge.net/
+.. _`KLogo-Turtle`: http://klogoturtle.sourceforge.net/
+.. _SharpLOGO: http://sharplogo.sourceforge.net/
+.. _MonoLOGO: http://monologo.sourceforge.net/
+.. _Galapago: http://www.hexidec.com/galapago.php
+.. _JavaLogo: http://javalogo.sourceforge.net/
+.. _ProLOGO: http://prologo.sourceforge.net/
+.. _`Logo nyelv`: http://logonyelv.sourceforge.net/index-en.html
+.. _Tortue: http://tortue.sourceforge.net/
+.. _XLogo: http://xlogo.sourceforge.net/
+

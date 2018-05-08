@@ -1,0 +1,12 @@
+to shapes :count
+  for [i 0 :count] [poly 100 (:count-:i)+2 cs]
+end
+
+to poly :size :sides
+  repeat :sides [fd :size rt 360/:sides]
+end
+
+ht
+repeat 100 [shapes 10]
+
+bye

@@ -1,0 +1,75 @@
+These are automated tests for Logo.  You can run these with ``pylogo
+--oo --doctest test_oo.txt``
+
+The OO interpreter has a "tell" command.  It also has a way to capture
+prints::
+
+    >>> make "w capturewriter
+    >>> tell :w [pr "hi]
+    >>> ask :w writervalue
+    "hi
+    <BLANKLINE>
+    >>> ask :w [writervalue]
+    "hi
+    <BLANKLINE>
+    >>> tell :w print "you
+    >>> tell :w writervalue
+    "hi
+    you
+    <BLANKLINE>
+
+Methods should handle aliases too::
+
+    >>> tell :w print "guy
+    >>> ask :w writervalue
+    "hi
+    you
+    guy
+    <BLANKLINE>
+    
+You can get variables too::
+
+    >>> make :output ask :w [:_output]
+    >>> make "output2 ask :w :_output
+    >>> :output = :output2
+    True
+    >>> ask ( ask :output :__class__ ) :__name__
+    "StringO
+
+And define classes::
+
+    >>> create :object "foo [
+    ...     make :attr1 1
+    ...     to hi
+    ...         pr "I "am :self :attr1
+    ...     end
+    ... ]
+    <class 'pylogo.oobuiltins.foo'>
+    >>> :foo
+    <class 'pylogo.oobuiltins.foo'>
+    >>> make :x foo
+    >>> :x
+    <pylogo.oobuiltins.foo object at ...>
+    >>> ask :x :attr1
+    1
+    >>> :attr1
+    Traceback (most recent call last):
+        ...
+    LogoNameError: ...
+    ...
+    >>> ask :x hi
+    I am <pylogo.oobuiltins.foo object at ...> 1
+    >>> create :x "test2 [
+    ...     make :attr1 2
+    ...     to hi
+    ...         pr "I "really "am :self :attr1
+    ...     end
+    ... ]
+    <pylogo.oobuiltins.foo object at ...>
+    >>> :test2
+    <pylogo.oobuiltins.foo object at ...>
+    >>> ask :test2 :hi
+    Function: hi for <pylogo.oobuiltins.foo object at ...>
+    >>> tell :test2 hi
+    I really am <pylogo.oobuiltins.foo object at ...> 2
+

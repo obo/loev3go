@@ -1,0 +1,17 @@
+Logo Definitions
+================
+
+Files in this directory are annotations of Python modules.  Each file
+named XXX.logodef is an annotation of the XXX module.
+
+Blank lines and lines starting with ``;`` or ``#`` are ignored as
+comments.
+
+Other lines should start with the name of the function that is being
+annotated, then a ``:``.  Options, separated by spaces, follow on the
+line.
+
+An ``*`` means that the original (Python) name of the function should
+not be used when importing the function.  A word ``arity:N`` will set
+the default arity of the function to N.  Any other words will be
+interpreted as aliases for the function.

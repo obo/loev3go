@@ -1,0 +1,170 @@
+The Logo Language
+=================
+
+    The following is taken from a April 2003 post by Brian Harvey.
+    Differences with PyLogo are noted in sidebars.
+
+.. note::
+   PyLogo doesn't use property lists; lists themselves are mutable
+   (like Python lists), and Python dictionaries can also be created
+   and manipulated.  These are first-class objects, unlike Logo
+   property lists.
+
+Name space organization:  Logo has separate name spaces for procedures,
+variables, and property lists.  Variables are dynamically scoped;
+procedures and property lists are all global.  (Not all versions of
+Logo include property lists.) 
+
+.. note::
+   PyLogo can use and manipulate any Python data type, so the possible
+   number of types is much larger.  Also, lists actually arrays
+   (Python's list type), and are mutable (though most of the Logo
+   builtins don't mutate the lists).  TRUE and FALSE are special
+   values.
+
+Data organization: I'm not quite sure what you mean by this, but I'm
+guessing that you're asking about aggregate data types.  Logo's main
+types are word and list.  A word can be divided into characters, but
+"character" is not a separate data type -- they're just one-letter
+words.  A number is a special case of a word, although of course
+internally they're represented in a form that allows for fast
+arithmetic.  Lists are just like Lisp lists: singly-linked.  Most
+versions of Logo do not allow list mutation (which is why property
+lists are important; those are mutable but not sharable).  Some
+versions of Logo, but not all, include arrays.  A few versions include
+objects (sometimes in the form of first-class turtles that can have
+local variables and/or methods).  For some purposes, Logo recognizes
+the special case of a "sentence," which is a (flat) list of words.
+The words TRUE and FALSE serve as Booleans.
+
+Syntactic structural organization: There's no official BNF description
+of Logo, because there's too much variation among dialects, and most
+of us feel that allowing for experimentation is more important than
+uniformity, in a language that's never going to take over the world in
+any case!
+
+Basically, everything is done with procedure calls.  There are no
+special forms except for TO, which is used to define procedures.
+Quotation is similar in spirit to Lisp, but different in notation:
+
+.. note::
+   PyLogo doesn't have a string literal representation currently,
+   besides the single-word representation.
+
++------------+--------------------+
+| Lisp       | Logo               |
++============+====================+
+| (foo 3 4)  | foo 3 4            |
++------------+--------------------+
+| '(a b c)   | [a b c]            |
++------------+--------------------+
+| 27         | 27                 |
++------------+--------------------+
+| foo        | :foo               |
++------------+--------------------+
+| 'foo       | "foo               |
++------------+--------------------+
+| "foo baz"  | "\|foo baz\|       | 
+|            | (in some dialects) |
+|            | or "foo\\ baz      |
++------------+--------------------+
+
+Parentheses are not generally needed for procedure calls because
+most procedures take a fixed number of arguments (and all procedures
+take a *default* number of arguments if parentheses are omitted).
+But they are allowed for clarity or to give a non-default number of
+arguments to those procedures that allow it.
+
+Arithmetic operators come in prefix and infix form::
+
+    3+4  sum 3 4
+
+.. note::
+   PyLogo does not require spaces.
+
+(Some dialects require spaces around the infix operators: ``3 + 4``.)
+
+The notation ``:FOO`` is an abbreviation for ``THING "FOO``.  The
+primitive procedure ``THING`` takes a variable name as argument and
+returns its value.  Note that the colon abbreviates THING-quote, not
+just THING, so ``::FOO`` doesn't do what you might hope.  The notation
+``"FOO`` isn't an abbreviation for anything; there is no ``QUOTE``
+special form.
+
+Here's how TO works::
+
+    to poly :num :size
+      repeat :num [forward :size right 360/:num]
+    end
+
+This defines a procedure named ``POLY`` that has formal parameters
+``NUM`` and ``SIZE``.  I believe every Logo dialect allows this form;
+a few also allow variants such as::
+
+    to poly num size
+    to poly "num "size
+
+.. note::
+   PyLogo always allows rest args, and puts them in a special
+   ``:REST`` variable.  If a variable is omitted, it is always set to
+   None.  This will probably change in the future.  The trailing
+   integer form is allowed.  ``num`` and ``"num`` are also allowed.
+
+Some dialects allow optional and rest args::
+
+    to foo :a :b :c [:d 43] [:e [foo baz]] [:f]
+
+where ``A``, ``B``, and ``C`` are required args, ``D`` and ``E`` are
+optional args (with the indicated default values if omitted), and
+``F`` is a rest arg (meaning that any number of arguments starting
+from the sixth are put into a list and assigned to ``F``).  Procedure
+``FOO`` will have a default number of arguments of 3; this can be
+changed by putting a number at the end of the title line::
+
+    to foo :a :b :c [:d 43] [:e [foo baz]] [:f] 5
+
+By the way, note that ``REPEAT`` (a primitive used in the ``POLY``
+example) is not a special form even though it's a control structure.
+One of its arguments is a list -- a quoted list, in this example, and
+in most uses of control structures, but like any argument it is
+computed from whatever expression is provided.  Since Logo is
+dynamically scoped, a procedure is nothing more than its text, and so
+a quoted instruction list is just as good as a ``LAMBDA`` expression
+would be if Logo had ``LAMBDA``.
+
+Other implementation notes
+--------------------------
+
+.. note::
+   We allow list mutation, and with a richer set of objects there's
+   lots of ways circular constructs can be created.  But Python's GC
+   does all the work for us.
+
+Since most versions don't allow list mutation, circular lists are
+impossible, and so in principle a reference counting storage
+management system would work.  But I think most implementations use
+standard Lispish garbage collectors.
+
+.. note::
+   PyLogo is a simple interpreter, and doesn't do any optimization at
+   this time.  Procedures are tokenized when they are defined, but
+   they are not fully parsed into expessions until they are run, and
+   no information is cached.
+
+Most implementations are interpreters, rather than compilers, but most
+achieve some speedup by parsing instruction lists into Lispish list
+structure the first time a procedure is called.  (It can't be done
+when the procedure is defined, because a procedure can be defined
+before its helper procedures are defined, and so Logo doesn't know yet
+how many arguments each procedure takes.)
+
+.. note::
+   Python lists, which PyLogo uses, allow constant time access.
+   Procedures like ``FPUT`` do not modify their arguments, so they end
+   up copying the list; lists are not shared, and link lists are not
+   used, so the performance behaves differently than in most Logos.
+
+Although lists are singly-linked, the constructors and selectors treat
+the two ends symmetrically.  For example, both ``FIRST`` and ``LAST``
+are provided, even though ``FIRST`` is Theta(1) time and ``LAST`` is
+Theta(N) time.

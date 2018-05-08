@@ -136,14 +136,6 @@ https://github.com/dlech/ev3dev-photo-booth
 and a similar tutorial in C++:
 https://github.com/FrankBau/raspi-repo-manifest/wiki/OpenCV
 
-http://www.ev3dev.org/docs/tutorials/using-ev3-lcd/
-
-
-I thought I filed an issue on this, but don't see it.
-
-The photo booth works (gets pictures), but does not show them on screen.
-This is probably the error message:
-** (brickrun:1826): CRITICAL **: brickrun.vala:100: Failed to send signal: GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such method 'SignalGroup'
 
 
 
@@ -363,9 +355,20 @@ follow_mouse:
 sudo openvt -s -w -- sudo --user <user> -- COMMAND
 ...this should allow me to run the COMMAND with access to the screen
 
+Another way to connect to the virtual console through ssh:
+  sudo chvt 6
+  # same as typing ctrl-alt-F6
+  sudo conspy
+
+http://www.ev3dev.org/docs/tutorials/using-ev3-lcd/
 https://sites.google.com/site/ev3python/learn_ev3_python/screen
 
 My issue: https://github.com/ev3dev/ev3dev-lang-python/issues/463
+
+The photo booth works (gets pictures), but does not show them on screen.
+This is probably the error message:
+** (brickrun:1826): CRITICAL **: brickrun.vala:100: Failed to send signal: GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such method 'SignalGroup'
+
 
 ## QR code reader:
 
@@ -464,3 +467,71 @@ Working example: random-bits/report-mouse-moves.py
 
 Possibly simpler solutions:
 https://stackoverflow.com/questions/25848951/python-get-mouse-x-y-position-on-click
+
+## Python Logo:
+Standard python turtle graphics:
+from turtle import *
+forward(15)
+...
+
+https://stackoverflow.com/questions/4071633/python-turtle-module-saving-an-image
+...a tip how to export the canvas as svg
+
+...but none of this is what I need. I need Logo language interpreter where I
+can 1) simply get the drawing as png, and 2) replace the commands with robot
+moves
+
+
+pylogo ... promising but the main project page was hacked
+perhaps this fork?
+  https://github.com/gldnspud/pylogo
+
+export PYTHONPATH=/home/bojar/notes/lego/pylogo:/home/bojar/notes/lego/pylogo/Pmw.1.3:
+python
+import pylogo.script
+pylogo.script.main()
+... basic programs work but the for [ i ... ] syntax is not recognized
+
+jslogo: for [l 10 80 5] [print :l]
+...means 10 15 20 25 ... 80
+pylogo: for "l (gen 10 80 5) [print :l]
+...with my own generator:
+to gen :lo :hi :step
+  make "x []
+  while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
+  output :x
+end
+
+http://www.calormen.com/jslogo/language.html
+...jslogo syntax
+
+
+Simpler:
+
+https://github.com/dominoanty/Logo-Interpreter
+...works but python2 and pygame needed
+... and it takes 87% CPU when idle, probably due to pygame
+... but does not support procedures
+
+here:
+cd Logo-Interpreter
+python main.py
+repeat 10 [ lt 60 fd 20 rt 120 fd 20 lt 60 ]
+
+Could be also used to record turtle moves from mouse drawing.
+
+http://www.calormen.com/jslogo/
+... nice javascript interpreter, for testing, with examples
+source:
+https://github.com/inexorabletash/jslogo
+
+### Great Logo One-Liners
+
+http://www.mathcats.com/gallery/15wordcontest.html
+http://www.mathcats.com/gallery/15wordcontest.html#squarespiralvariations
+
+## Web servers:
+
+https://www.youtube.com/watch?v=x5VauXr7W4A
+...demos the standard EV3D4:
+https://github.com/ev3dev/ev3dev-lang-python/tree/jessie/demo/EV3D4

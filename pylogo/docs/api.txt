@@ -1,0 +1,46 @@
+Embedding PyLogo
+================
+
+This document describes how you can use PyLogo in your Python
+application.  
+
+Usually there is a single "master" interpreter, called
+``pylogo.Logo``.  This is the object you will interact with.
+
+Running Logo
+------------
+
+To read a Logo file into Logo, use::
+
+    >>> Logo.import_logo('filename.logo')
+    >>> Logo.import_logo_stream(file_like_object)
+
+You should try to give your ``file_like_object`` a ``.name``
+attribute, which will be used in tracebacks as the filename.
+
+When you get a ``pylogo.common.LogoError`` exception, typically you
+can just print ``exc.description, ':', exc`` to give the proper error
+message.  Other exceptions should be displayed with whatever your
+normal Python exception display routine is.
+
+To do a REPL (read-eval-print-loop) use::
+
+    >>> Logo.input_loop(input_stream, output_stream)
+
+Interacting With Logo
+---------------------
+
+If you have Python code you want to make available, you can use::
+
+    >>> Logo.import_function(python_function, name_override=['foo'])
+    >>> Logo.import_module(python_module)
+
+The first form imports a single function.  It will use the function's
+name unless you provide ``name_override``, a list of the name/aliases
+of the function.  The second form searches a Python module for
+functions to add to logo.  ``pylogo.builtins`` is an example of this
+kind of module, and `Adding Primitives with Python
+<PyLogo.html#adding-primitives-with-python>`_ section describes how
+you can do this.
+
+

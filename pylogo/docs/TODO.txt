@@ -1,0 +1,15 @@
+TODO
+====
+
+These are some things I'd like to add, sometime:
+
+* Self-recursive functions should use tail call elimination (i.e., you
+  shouldn't get a stack overflow).  Other recursion doesn't need this
+  optimization (it messes up tracebacks and other debugging).
+
+* The way errors are handled is kind of dumb.  I think it can be done
+  much more intelligently, maybe using ``paste.excections`` or
+  something similar.
+
+* Keyword arguments for function calls aren't supported.  This makes
+  it hard to use lots of Python code where keywords are used heavily.

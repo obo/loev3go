@@ -1,0 +1,72 @@
+; This is an attempt to translate turing.scm (from the Scheme Repository)
+; I'm not sure it worked.  I don't quite understand this code at the moment.
+
+make :empty [0]
+
+; busiest beaver (= prints the most "1"s) with 3 states
+make :table1 [[[1 r 2] [1 l 3]]
+              [[1 l 1] [1 r 2]]
+              [[1 l 2] [1 s]]]
+
+; produces 511 "1"s
+make :table2 [[[1 r 2] [0 l 3]]
+              [[1 r 3] [1 r 4]]
+              [[1 l 1] [0 r 2]]
+              [[0 r 5] [1 s]]
+              [[1 l 3] [1 r 1]]]
+
+; produces 1915 "1"s
+make :table3 [[[1 r 2] [1 l 3]]
+              [[0 l 1] [0 l 4]]
+              [[1 l 1] [1 s]]
+              [[1 l 2] [1 r 5]]
+              [[0 r 4] [0 r 2]]]
+
+make :table4 [[[0 r 1] [0 r 2]]
+              [[0 r 3] [1 r 2]]
+              [[1 l 4] [1 r 3]]
+              [[0 l 5] [1 l 4]]
+              [[1 l 8] [1 l 6]]
+              [[1 r 7] [1 l 6]]
+              [[n n n] [0 r 2]]
+              [[0 s]   [1 l 8]]]
+
+to turing :table
+  (local :band :print :start)
+  to turing_help :zustand :pos
+    (local :input :command :output)
+    make :input list-ref :band :pos
+    make :command list-ref (list-ref :table :zustand - 1) :input
+    make :output first :command
+    ifelse :pos = 0 [make :band fput :output rest :band]
+      [ifelse :pos = (length :band) - 1
+              [make :band append (list-head :band :pos) (list :output)]
+              [make :band append (list-head :band :pos) (list :output)
+                                 (list-tail :band :pos + 1)]]
+    if and :print not :input = :output
+       [display :band newline]
+    ifelse (cadr :command) = 'r
+      [ifelse :pos + 1 < length :band
+         [make :pos :pos + 1]
+         [make :band append :band (list 0)
+          make :pos :pos + 1]]
+      [ifelse (cadr :command) = 'l
+         [ifelse :pos = 0
+            [make :band append (list 0) :band]
+            [make :pos :pos - 1]]
+         [return ifelse :print 'done :band]]
+  end
+  make :print false
+  make :band ifelse (length :rest) = 0 :empty [first :rest]
+  ifelse (length :rest) < 2
+    [turing_help 1 0]
+    [make :start cadr :rest
+     ifelse :start < length :band
+       [ifelse (cddr :rest) = []
+          [turing_help 1 :start]
+          [ifelse (cddr :rest) = 1
+             [make :print true
+              turing_help 1 :start]
+             [turing_help 1 :start]]]
+       [display "Error : start position is greater than band length"]]
+end

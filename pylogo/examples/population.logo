@@ -1,0 +1,37 @@
+;   This is a simulation of the Chinese population problem.
+; Imagine that you keep having children until you get a boy,
+; what will the proportion of boys to girls be?
+;   It took me a while to realize what the answer to this would
+; be, since my intuition led me wrong.  But this proves it.
+
+to randomchild
+  output random 2
+end
+
+to inc_child :type
+  (ifelse :type = 0 [make :girl :girl + 1]
+                    [make :boy :boy + 1])
+end
+
+to reproduce
+  local :type
+  while [make :type randomchild
+         inc_child :type
+         :type = 0] []
+end
+
+to try :number 0
+  ; This is a way of doing a default:
+  if :number = none [make :number 100]
+  make :girl 0
+  make :boy 0
+  repeat :number [reproduce]
+  (print "Boys :boy)
+  (print "Girls :girl)
+end
+
+to population_main
+  pr [Script running:
+??? try]
+  try
+end

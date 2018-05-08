@@ -1,0 +1,21 @@
+to estimate :low :high :test :accuracy 3
+  ; handle the default value:
+  if :accuracy = none [make :accuracy 0.01]
+  (local :mid :result)
+  make :mid (:low + :high) / 2
+  make :estimate :mid
+  make :result (run :test)
+  if :accuracy > abs :result [output :mid]
+  (ifelse :result > 0 [output (estimate :mid :high :test :accuracy)]
+                      [output (estimate :low :mid :test :accuracy)])
+end
+
+to estimate_sqrt :value
+  ; Careful of those parenthesis -- we don't know order of 
+  ; precedence here...
+  output estimate 0 :value [:value - (:estimate * :estimate)]
+end
+
+to square_root_main
+  for :i iseq 1 5 [print "sqrt :i estimate_sqrt :i]  
+end

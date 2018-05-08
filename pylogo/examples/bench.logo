@@ -1,0 +1,103 @@
+to timeit :rep :block
+  make "start timestamp
+  for :i (iseq 0 :rep) :block
+  make "stop timestamp
+  print "Ran :block :rep "times "in :stop-:start "secs
+end
+
+to square10
+  make "result 0
+  for "i iseq 0 10 [make :result :result + (:i*:i)]
+  output :result
+end
+
+to bench_square
+  timeit 1000 [square10]
+end
+
+to shapes :count
+  for "i iseq 0 :count [poly 100 (:count-:i)+2 cs]
+end
+
+to poly :size :sides
+  repeat :sides [fd :size rt 360/:sides]
+end
+
+to bench_poly
+  ht
+  timeit 100 [shapes 10]
+  st
+end
+
+ignore [Python:
+
+import time
+def timeit(rep, func):
+    start = time.time()
+    for i in range(rep):
+        func()
+    stop = time.time()
+    print "Ran %s %i times in %f secs" % (func, rep, stop-start)
+
+def square10():
+    result = 0
+    for i in range(10):
+        result = result + i*i
+    return result
+
+def shapes(turt, count):
+    for i in range(count+1):
+        poly(turt, 100, count-i+2)
+        clear(turt)
+
+def poly(turt, size, sides):
+    for i in range(sides):
+        turt.forward(size)
+        turt._canvas.update()
+        turt.right(360.0/sides)
+        turt._canvas.update()
+
+def clear(turt):
+    turt.clear()
+    turt._canvas.update()
+
+def bench_poly():
+    turt = turtle.Pen()    
+    turt.tracer(0)
+    def func(turt=turt):
+        shapes(turt, 10)
+    timeit(100, func)
+
+>>> timeit(1000, square10)
+
+Results (on a 650MHz Athlon):
+
+Square:
+  PyLogo: 7.5sec (ouch)
+  Python: 0.02sec, 400x as fast (100,000 in 1.3sec)
+  UCBLogo: 0.8sec, 10x as fast
+    (includes startup -- no timestamp function in ucblogo, but startup
+     alone takes only about 0.1sec)
+
+Poly:
+  PyLogo: 23sec
+  Python: 15sec
+  UCBLogo: 1.5sec (wow!)
+
+On a faster computer:
+
+Square:
+  PyLogo:  2.9   sec  (  1x PyLogo)
+  Python:  0.004 sec  (700x PyLogo)
+  UCBLogo: 0.23  sec  ( 12x PyLogo)
+
+Poly:
+  PyLogo:  7.7   sec  (1x   PyLogo)
+  Python:  4.3   sec  (1.8x PyLogo)
+  UCBLogo: 1.0   sec  (7.7x PyLogo)
+
+So you see, in this second case the Tk canvas (upon which Python's
+turtle is built) is the clear bottleneck (though perhaps an acceptable
+bottleneck)
+
+]
