@@ -247,7 +247,8 @@ https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-h
 
 https://thecodacus.com/opencv-object-tracking-colour-detection-python/#.WuB4pta-lUA
 
-## Connecting via wifi
+## Connecting via wifi [solved]
+https://github.com/ev3dev/ev3dev/issues/1082
 
 lsusb:
 Bus 001 Device 003: ID 083a:4505 Accton Technology Corp. SMCWUSB-G 802.11bg
@@ -336,10 +337,23 @@ BOARD_INFO_TYPE=main
 
 Brickman says Wifi: Not available
 
+2018-05-08
 
-## connmanctl to connect to wifi:
+After a kernel update, Brickman can power up wifi, but Start Scan says:
+  DGBus.Error:net.connman.Error.NoCarrier. No carrier
 
-http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/
+Fixed by adding the correct firmware from:
+
+https://sourceforge.net/projects/zd1211/files/zd1211-firmware/
+
+After powering the wifi off and on, scan was possible.
+
+However, picking my wifi and trying to connect failed with:
+  GDBus.Error:net.connman.Error.OperationAborted: Operation aborted
+...this was actually due to my MAC filter where I allowed a different MAC
+address than the dongle presented now. I can't understand where I copied the
+wrong MAC address from in at the first attempt.
+
 
 ## Mouse input?
 

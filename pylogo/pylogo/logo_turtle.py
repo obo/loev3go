@@ -1,3 +1,9 @@
+# dbg print
+from __future__ import print_function
+import sys
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 import turtle
 import math
 import weakref
@@ -29,6 +35,7 @@ class Turtle:
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
+        eprint("Forward %i called.", v)
         add_command(self.pen.forward, v)
         add_command(get_canvas().update)
 
