@@ -20,6 +20,8 @@ while True:
     screen.draw.ellipse((118, 20, 158, 60))
     screen.draw.ellipse((128, 30, 148, 50), fill=128)
 
+    # print(smile)
+
     if smile:
         screen.draw.arc((20, 80, 158, 100), 0, 180)
     else:
