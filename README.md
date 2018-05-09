@@ -366,6 +366,9 @@ follow_mouse:
 
 ## LCD
 
+Use:
+  brickrun ./command
+
 sudo openvt -s -w -- sudo --user <user> -- COMMAND
 ...this should allow me to run the COMMAND with access to the screen
 
@@ -378,6 +381,7 @@ http://www.ev3dev.org/docs/tutorials/using-ev3-lcd/
 https://sites.google.com/site/ev3python/learn_ev3_python/screen
 
 My issue: https://github.com/ev3dev/ev3dev-lang-python/issues/463
+...should still confirm the booth
 
 The photo booth works (gets pictures), but does not show them on screen.
 This is probably the error message:
