@@ -906,7 +906,7 @@ class RootFrame(Interpreter):
         try:
             return self.functions[name.lower()]
         except KeyError:
-            raise LogoNameError("I don't know how  to %s" % name)
+            raise LogoNameError("I don't know how to %s" % name)
 
     def set_function(self, name, func):
         self.functions[name.lower()] = func

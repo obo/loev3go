@@ -549,3 +549,16 @@ http://www.mathcats.com/gallery/15wordcontest.html#squarespiralvariations
 https://www.youtube.com/watch?v=x5VauXr7W4A
 ...demos the standard EV3D4:
 https://github.com/ev3dev/ev3dev-lang-python/tree/jessie/demo/EV3D4
+
+## Pylogo on robot:
+
+pylogo needs tkinter which in turn needs X display.
+xvfb-run from xvfb resolved the limitation:
+
+robot@ev3dev:~/lego/pylogo$ xvfb-run ./start.py 
+...no more complaints, so it hopefully works. (Can't see anything in xvfb...)
+
+...well, not really sure, after killing the silent process, I got:
+IO:  fatal IO error 11 (Resource temporarily unavailable) on X server ":99"
+      after 1632 requests (668 known processed) with 0 events remaining.
+
