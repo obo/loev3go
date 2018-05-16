@@ -4,6 +4,11 @@
 #
 # Based on ev3dev-lang-python/ev3dev/webserver.py
 
+# Get the minimal web server from here:
+# https://gist.github.com/bradmontgomery/2219997
+#
+
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
