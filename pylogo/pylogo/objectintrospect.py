@@ -1,3 +1,5 @@
+from future.utils import iteritems
+
 class NoDefault: pass
 
 def getlogoattr(obj, attr, default=NoDefault):
@@ -52,7 +54,7 @@ def update_logo_attrs(obj):
         if hasattr(o, '_logo_attrs'):
             attrs.update(o._logo_attrs)
             break
-        for name, value in o.__dict__.iteritems():
+        for name, value in iteritems(o.__dict__):
             if getattr(value, 'logo_expose', False):
                 if name.lower() != name:
                     attrs[name.lower()] = name

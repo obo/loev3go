@@ -47,8 +47,8 @@ class FileTokenizer:
     """
 
     def __init__(self, f, output=None, prompt=None):
-        if type(f) is file:
-            f = TrackingStream(f)
+        #if type(f) is file:
+            # f = TrackingStream(f)
         self.file = f
         self.generator = self._generator()
         self.peeked = []
@@ -88,7 +88,7 @@ class FileTokenizer:
 
     def next(self):
         try:
-            return self.generator.next()
+            return self.generator.__next__()
         except StopIteration:
             import traceback
             traceback.print_exc()
@@ -277,7 +277,7 @@ def main():
     import sys
     tok = FileTokenizer(TrackingStream(sys.stdin))
     while 1:
-        print '>> %s' % repr(tok.next())
+        print('>> %s' % repr(tok.next()))
 
 if __name__ == '__main__':
     main()

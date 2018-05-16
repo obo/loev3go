@@ -17,11 +17,7 @@ All missing functions are noted in comments and marked with '@@'
 import os, random, sys
 import operator, math, time
 import threading
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-from sets import Set
+from io import StringIO    # for handling unicode strings
 
 from pylogo.common import *
 from pylogo import reader
@@ -598,7 +594,7 @@ def pr(*args):
             trans.append(_join(map(logo_soft_repr, arg)))
         else:
             trans.append(logo_soft_repr(arg))
-    print ' '.join(trans)
+    print(' '.join(trans))
 
 @logofunc(name='type', arity=-1)
 def logo_type(*args):
@@ -627,7 +623,7 @@ def show(*args):
     command.  Prints the input or inputs like PRINT, except that
     if an input is a list it is printed inside square brackets.
     """
-    print ' '.join(map(repr(args)))
+    print(' '.join(map(repr(args))))
 
 ##############################
 ## Receivers
@@ -1394,15 +1390,15 @@ def logo_help(interp, name):
     try:
         func = interp.get_function(name)
     except NameError:
-        print "I don't know how  to %s" % name
+        print("I don't know how  to %s" % name)
         return
     doc = func.__doc__
     if not doc:
-        print "No help available for %s" % name
+        print("No help available for %s" % name)
         return
     import textwrap
     doc = textwrap.dedent(doc).strip('\n\r')
-    print doc
+    print(doc)
     
 
 # @@: gc
@@ -1421,7 +1417,7 @@ def logo_run(interp, l):
     """
     try:
         interp.eval(l)
-    except LogoOutput, e:
+    except LogoOutput as e:
         return e.value
     return None
 
@@ -1442,7 +1438,7 @@ def repeat(interp, n, block):
     if hasattr(interp, '_repcount'):
         lastrepcount = interp._repcount
     try:
-        for i in xrange(n):
+        for i in range(n):
             interp._repcount = i+1
             try:
                 lastVal = interp.eval(block)
@@ -1798,7 +1794,7 @@ def assertequal(value1, value2, message=None):
         if message:
             message += '; '
         message = (message or '') + '%r != %r' % (value1, value2)
-        raise AssertionError, message
+        raise AssertionError(message)
 
 @logofunc(aware=True, arity=2)
 def function(interp, name, default=NoDefault):
@@ -1815,7 +1811,7 @@ def catch(interp, block, *args):
     assert not len(args)%2, "You must provide a block and a list of exceptions and block handlers for those exceptions (and odd number of arguments)"
     try:
         value = logo_eval(interp, block)
-    except Exception, e:
+    except Exception as e:
         handler = None
         while 1:
             if not args:

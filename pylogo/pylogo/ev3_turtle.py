@@ -10,7 +10,7 @@ import weakref
 import threading
 import sys
 
-from common import *
+from pylogo.common import *
 
 eprint("ev3_turtle starting")
 

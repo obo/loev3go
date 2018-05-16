@@ -5,6 +5,9 @@ interpreter for pylogo
 A Logo interpreter.
 """
 
+# python2-3 compatibility
+from future.utils import raise_
+from past.builtins import basestring # pip install future
 
 from types import *
 from pylogo import reader
@@ -73,7 +76,7 @@ class Interpreter(object):
         """
         try:
             val = self.expr_without_error()
-        except LogoError, e:
+        except LogoError as e:
             # This is used for creating the traceback
             e.set_frame(self)
             raise
@@ -81,7 +84,7 @@ class Interpreter(object):
                 StopIteration):
             # These exceptions are mostly harmless
             raise
-        except Exception, e:
+        except Exception as e:
             # Here we wrap other exceptions... this needs some work
             #import traceback
             #traceback.print_exc()
@@ -89,7 +92,8 @@ class Interpreter(object):
             # @@: should add the exception traceback to this somehow
             newExc = LogoError(str(e), description=str(e))
             newExc.set_frame(self)
-            raise LogoError, newExc, exc_info[2]
+            # raise_(LogoError, newExc, exc_info[2])
+            raise LogoError(str(e))
         return val
 
     def expr_top(self):
@@ -523,13 +527,13 @@ class Interpreter(object):
         `logo_name` overrides the function name, and `aliases` provides
         abbreviations for the function (like FD for FORWARD).
         """
-        if isinstance(import_function, (ClassType, type)):
+        if isinstance(import_function, type):
             func = import_function.__init__
             name = import_function.__name__
         else:
             func = import_function
-            name = import_function.func_name
-        d = func.func_dict
+            name = import_function.__name__
+        d = func.__dict__
         if d.get('logo_hide'):
             return
         if names is None:
@@ -565,8 +569,8 @@ class Interpreter(object):
             if type(obj) is FunctionType:
                 if n == main_name:
                     main_func = obj
-                name = obj.func_name
-                if defs.has_key(name.lower()):
+                name = obj.__name__
+                if name.lower() in defs:
                     useName, arity, aliases = defs.get(name.lower())
                     if arity is not None:
                         obj.arity = arity
@@ -580,7 +584,8 @@ class Interpreter(object):
                     self.import_function(obj, names)
                 else:
                     self.import_function(obj)
-            if (type(obj) in (ClassType, type)
+            #if (type(obj) in (ClassType, type)  # python2
+            if (type(obj) is type
                 and getattr(obj, 'logo_class', False)):
                 self.import_function(obj, [obj.__name__])
         if main_func:
@@ -630,7 +635,7 @@ class Interpreter(object):
         Import a logo file.  This executes the file, including any TO
         statements, putting everything into the normal namespace/scope.
         """
-        print "Loading %s." % filename
+        print("Loading %s." % filename)
         f = open(filename)
         self.import_logo_stream(f)
         try:
@@ -663,29 +668,29 @@ class Interpreter(object):
             while 1:
                 try:
                     v = self.expr_top()
-                except LogoError, e:
+                except LogoError as e:
                     if str(e) != str(e.description):
-                        print e.description, ':', e
+                        print(e.description, ':', e)
                     else:
-                        print e
+                        print(e)
                     v = None
                 except KeyboardInterrupt:
                     if tokenizer.context:
                         tokenizer.context = []
-                        print 'Aborted'
+                        print('Aborted')
                     else:
-                        print "Bye"
+                        print("Bye")
                         break
                 except SystemExit:
                     break
-                except Exception, e:
+                except Exception as e:
                     import traceback
                     traceback.print_exc()
                     v = None
                 if v is EOF:
                     break
                 if v is not None:
-                    print "%s" % repr(v)
+                    print("%s" % repr(v))
         finally:
             self.pop_tokenizer()
 
@@ -755,24 +760,25 @@ def arity(func):
     Since `logo_aware` functions take an interpreter as the first
     argument, the arity of these functions is reduced by one.
     """
-    if isinstance(func, (ClassType, type)):
-        func = func.__init__
+    #if isinstance(func, (ClassType, type)):
+    if isinstance(func, type):
+       func = func.__init__
     if func is object.__init__:
         # Weird special case
         return 0
     if hasattr(func, 'arity'):
         return func.arity
     offset = 0
-    if hasattr(func, 'im_func'):
-        func = func.im_func
+    if hasattr(func, '__func__'):
+        func = func.__func__
         offset = -1
     try:
         args, varargs, varkw, defaults = inspect.getargspec(func)
-    except TypeError, e:
+    except TypeError as e:
         e.args += (repr(func),)
         raise
     a = len(args) - len(defaults or [])
-    if func.func_dict.get('logo_aware'):
+    if func.__dict__.get('logo_aware'):
         a -= 1
     return a + offset
 
@@ -825,7 +831,7 @@ class UserFunction(object):
                 return
             try:
                 interp.expr_top()
-            except LogoOutput, exc:
+            except LogoOutput as exc:
                 return exc.value
 
     def __get__(self, obj, type=None):

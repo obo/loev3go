@@ -1,11 +1,11 @@
 import types
-from cStringIO import StringIO
-from builtins import _join, logo_soft_repr
-import interpreter
-from common import *
+#from cStringIO import StringIO
+from io import StringIO    # for handling unicode strings
+from pylogo.builtins import _join, logo_soft_repr
+import pylogo.interpreter
+from pylogo.common import *
 
 class Writer(object):
-
     def __init__(self, output):
         self._output = output
 

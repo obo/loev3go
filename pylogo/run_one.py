@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from pylogo import common
 from pylogo import Logo
 from pylogo import interpreter
@@ -38,7 +38,7 @@ interp.import_module(builtins)
 interp.import_module(oobuiltins)
 from pylogo import builtins
 
-from StringIO import StringIO
+from io import StringIO
 input = StringIO(code)
 input.name = '<string>'
 tokenizer = reader.FileTokenizer(reader.TrackingStream(input))
@@ -46,7 +46,7 @@ interp.push_tokenizer(tokenizer)
 try:
     v = interp.expr_top()
     if v is not None:
-        print builtins.logo_repr(v)
+        print(builtins.logo_repr(v))
 finally:
     interp.pop_tokenizer()
 # comm = LogoCommunicator(TheApp, interpreter.Logo)
