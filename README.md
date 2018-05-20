@@ -588,3 +588,145 @@ KiB Swap:    98300 total,    84988 free,    13312 used.    28968 avail Mem
  2348 root      20   0       0      0      0 I 14.5  0.0   1:40.79 kworker/0:0  
    71 root     -51   0       0      0      0 S 13.8  0.0  12:25.19 irq/245-ti-+ 
 
+
+## Trying to figure out the distance needed for 360 degree tank rotation
+
+random-bits/find_angle_speed.py
+
+The following generally reports how much needs to be travelled with the left
+and right motors to get 180 degree of rotation.
+
+The average is around 402, as detailed below.
+To travel 1 degree, we need to travel 402/180 steps
+
+
+carpet:
+At 100 , travel for 1/2circ  403 L and 400 R; absL: 805 , absR: 800
+At 100 , travel for 1/2circ  401 L and 399 R; absL: 1206 , absR: 1199
+At 100 , travel for 1/2circ  401 L and 400 R; absL: 1607 , absR: 1599
+At 100 , travel for 1/2circ  403 L and 399 R; absL: 2010 , absR: 1998
+At 100 , travel for 1/2circ  401 L and 398 R; absL: 2411 , absR: 2396
+At 100 , travel for 1/2circ  402 L and 399 R; absL: 804 , absR: 796
+At 100 , travel for 1/2circ  404 L and 405 R; absL: 1208 , absR: 1201
+At 100 , travel for 1/2circ  403 L and 398 R; absL: 1611 , absR: 1599
+At 100 , travel for 1/2circ  403 L and 404 R; absL: 2014 , absR: 2003
+At 100 , travel for 1/2circ  402 L and 398 R; absL: 2416 , absR: 2401
+At 150 , travel for 1/2circ  405 L and 404 R; absL: 2821 , absR: 2805
+At 150 , travel for 1/2circ  401 L and 398 R; absL: 3222 , absR: 3203
+At 150 , travel for 1/2circ  401 L and 398 R; absL: 3623 , absR: 3601
+At 150 , travel for 1/2circ  402 L and 402 R; absL: 4025 , absR: 4003
+At 150 , travel for 1/2circ  403 L and 402 R; absL: 4428 , absR: 4405
+At -180 , travel for 1/2circ  401 L and 404 R; absL: 4027 , absR: 4001
+At -180 , travel for 1/2circ  408 L and 408 R; absL: 3619 , absR: 3593
+At -180 , travel for 1/2circ  403 L and 404 R; absL: 3216 , absR: 3189
+At -180 , travel for 1/2circ  403 L and 405 R; absL: 2813 , absR: 2784
+At -180 , travel for 1/2circ  402 L and 405 R; absL: 2411 , absR: 2379
+At 150 , travel for 1/2circ  402 L and 398 R; absL: 2813 , absR: 2777
+At 150 , travel for 1/2circ  401 L and 399 R; absL: 3214 , absR: 3176
+At 150 , travel for 1/2circ  401 L and 399 R; absL: 3615 , absR: 3575
+At 150 , travel for 1/2circ  401 L and 401 R; absL: 4016 , absR: 3976
+At 150 , travel for 1/2circ  404 L and 403 R; absL: 4420 , absR: 4379
+At -90 , travel for 1/2circ  402 L and 399 R; absL: 4018 , absR: 3980
+At -90 , travel for 1/2circ  403 L and 401 R; absL: 3615 , absR: 3579
+At -90 , travel for 1/2circ  402 L and 400 R; absL: 3213 , absR: 3179
+At -90 , travel for 1/2circ  401 L and 399 R; absL: 2812 , absR: 2780
+At -90 , travel for 1/2circ  401 L and 401 R; absL: 2411 , absR: 2379
+At -180 , travel for 1/2circ  403 L and 404 R; absL: 2008 , absR: 1975
+At -180 , travel for 1/2circ  405 L and 409 R; absL: 1603 , absR: 1566
+At -180 , travel for 1/2circ  403 L and 405 R; absL: 1200 , absR: 1161
+At -180 , travel for 1/2circ  403 L and 404 R; absL: 797 , absR: 757
+At -180 , travel for 1/2circ  401 L and 405 R; absL: 396 , absR: 352
+At 90 , travel for 1/2circ  403 L and 401 R; absL: 799 , absR: 753
+At 90 , travel for 1/2circ  401 L and 401 R; absL: 1200 , absR: 1154
+At 90 , travel for 1/2circ  401 L and 398 R; absL: 1601 , absR: 1552
+At 90 , travel for 1/2circ  403 L and 404 R; absL: 2004 , absR: 1956
+At 90 , travel for 1/2circ  403 L and 404 R; absL: 2407 , absR: 2360
+At -120 , travel for 1/2circ  402 L and 399 R; absL: 2005 , absR: 1961
+At -120 , travel for 1/2circ  403 L and 399 R; absL: 1602 , absR: 1562
+At -120 , travel for 1/2circ  402 L and 403 R; absL: 1200 , absR: 1159
+At -120 , travel for 1/2circ  402 L and 402 R; absL: 798 , absR: 757
+At -120 , travel for 1/2circ  403 L and 400 R; absL: 395 , absR: 357
+At -180 , travel for 1/2circ  405 L and 408 R; absL: 10 , absR: 51
+At -180 , travel for 1/2circ  405 L and 409 R; absL: 415 , absR: 460
+At -180 , travel for 1/2circ  401 L and 405 R; absL: 816 , absR: 865
+At -180 , travel for 1/2circ  402 L and 405 R; absL: 1218 , absR: 1270
+At -180 , travel for 1/2circ  404 L and 407 R; absL: 1622 , absR: 1677
+At -180 , travel for 1/2circ  401 L and 404 R; absL: 2023 , absR: 2081
+At -180 , travel for 1/2circ  404 L and 407 R; absL: 2427 , absR: 2488
+At -180 , travel for 1/2circ  403 L and 407 R; absL: 2830 , absR: 2895
+At -180 , travel for 1/2circ  403 L and 404 R; absL: 3233 , absR: 3299
+
+Solid floor:
+
+At 100 , travel for 1/2circ  402 L and 399 R; absL: 804 , absR: 797
+At 100 , travel for 1/2circ  406 L and 406 R; absL: 1210 , absR: 1203
+At 100 , travel for 1/2circ  401 L and 400 R; absL: 1611 , absR: 1603
+At 100 , travel for 1/2circ  402 L and 398 R; absL: 2013 , absR: 2001
+At 100 , travel for 1/2circ  402 L and 398 R; absL: 2415 , absR: 2399
+At 90 , travel for 1/2circ  402 L and 398 R; absL: 2817 , absR: 2797
+At 90 , travel for 1/2circ  403 L and 401 R; absL: 3220 , absR: 3198
+At 90 , travel for 1/2circ  402 L and 401 R; absL: 3622 , absR: 3599
+At 90 , travel for 1/2circ  402 L and 400 R; absL: 4024 , absR: 3999
+At 90 , travel for 1/2circ  402 L and 401 R; absL: 4426 , absR: 4400
+At -90 , travel for 1/2circ  401 L and 397 R; absL: 4025 , absR: 4003
+At -90 , travel for 1/2circ  401 L and 400 R; absL: 3624 , absR: 3603
+At -90 , travel for 1/2circ  402 L and 401 R; absL: 3222 , absR: 3202
+At -90 , travel for 1/2circ  401 L and 400 R; absL: 2821 , absR: 2802
+At -90 , travel for 1/2circ  402 L and 399 R; absL: 2419 , absR: 2403
+At 150 , travel for 1/2circ  401 L and 398 R; absL: 2820 , absR: 2801
+At 150 , travel for 1/2circ  403 L and 402 R; absL: 3223 , absR: 3203
+At 150 , travel for 1/2circ  404 L and 404 R; absL: 3627 , absR: 3607
+At 150 , travel for 1/2circ  401 L and 398 R; absL: 4028 , absR: 4005
+At 150 , travel for 1/2circ  402 L and 398 R; absL: 4430 , absR: 4403
+At 120 , travel for 1/2circ  403 L and 402 R; absL: 4833 , absR: 4805
+At 120 , travel for 1/2circ  403 L and 399 R; absL: 5236 , absR: 5204
+At 120 , travel for 1/2circ  403 L and 398 R; absL: 5639 , absR: 5602
+At 120 , travel for 1/2circ  403 L and 400 R; absL: 6042 , absR: 6002
+At 120 , travel for 1/2circ  402 L and 400 R; absL: 6444 , absR: 6402
+At -180 , travel for 1/2circ  404 L and 405 R; absL: 6040 , absR: 5997
+At -180 , travel for 1/2circ  403 L and 408 R; absL: 5637 , absR: 5589
+At -180 , travel for 1/2circ  403 L and 403 R; absL: 5234 , absR: 5186
+At -180 , travel for 1/2circ  402 L and 405 R; absL: 4832 , absR: 4781
+At -180 , travel for 1/2circ  404 L and 407 R; absL: 4428 , absR: 4374
+At -150 , travel for 1/2circ  404 L and 401 R; absL: 4024 , absR: 3973
+At -150 , travel for 1/2circ  401 L and 400 R; absL: 3623 , absR: 3573
+At -150 , travel for 1/2circ  402 L and 402 R; absL: 3221 , absR: 3171
+At -150 , travel for 1/2circ  401 L and 400 R; absL: 2820 , absR: 2771
+At -150 , travel for 1/2circ  402 L and 400 R; absL: 2418 , absR: 2371
+At 180 , travel for 1/2circ  403 L and 404 R; absL: 2821 , absR: 2775
+At 180 , travel for 1/2circ  401 L and 404 R; absL: 3222 , absR: 3179
+At 180 , travel for 1/2circ  404 L and 402 R; absL: 3626 , absR: 3581
+At 180 , travel for 1/2circ  402 L and 404 R; absL: 4028 , absR: 3985
+At 180 , travel for 1/2circ  401 L and 405 R; absL: 4429 , absR: 4390
+At -180 , travel for 1/2circ  403 L and 406 R; absL: 4026 , absR: 3984
+At -180 , travel for 1/2circ  402 L and 405 R; absL: 3624 , absR: 3579
+At -180 , travel for 1/2circ  404 L and 409 R; absL: 3220 , absR: 3170
+At -180 , travel for 1/2circ  404 L and 407 R; absL: 2816 , absR: 2763
+At -180 , travel for 1/2circ  404 L and 407 R; absL: 2412 , absR: 2356
+At 90 , travel for 1/2circ  401 L and 397 R; absL: 2813 , absR: 2753
+At 90 , travel for 1/2circ  405 L and 405 R; absL: 3218 , absR: 3158
+At 90 , travel for 1/2circ  402 L and 400 R; absL: 3620 , absR: 3558
+At 90 , travel for 1/2circ  402 L and 400 R; absL: 4022 , absR: 3958
+At 90 , travel for 1/2circ  403 L and 401 R; absL: 4425 , absR: 4359
+At -90 , travel for 1/2circ  411 L and 408 R; absL: 4014 , absR: 3951
+At -90 , travel for 1/2circ  402 L and 401 R; absL: 3612 , absR: 3550
+At -90 , travel for 1/2circ  401 L and 399 R; absL: 3211 , absR: 3151
+At -90 , travel for 1/2circ  403 L and 403 R; absL: 2808 , absR: 2748
+At -90 , travel for 1/2circ  401 L and 399 R; absL: 2407 , absR: 2349
+At -90 , travel for 1/2circ  401 L and 399 R; absL: 2006 , absR: 1950
+At -90 , travel for 1/2circ  401 L and 399 R; absL: 1605 , absR: 1551
+At -90 , travel for 1/2circ  401 L and 400 R; absL: 1204 , absR: 1151
+
+
+
+...strangely, when I set these values, the robot rotated *much* less with run_to_rel_pos, although the tacho counters seemed to report the correct 200 of delta for 90 degrees turn:
+
+Left -90 called, going for -201 from 20768 L, -28889 R.
+  Left -90 done, going for -201 to 20971 L, -29090 R.
+
+Left -90 called, going for -201 from 20570 L, -29893 R.
+  Left -90 done, going for -201 to 20773 L, -30093 R.
+
+Left -90 called, going for -201 from 20470 L, -30394 R.
+  Left -90 done, going for -201 to 20674 L, -30594 R.
+
