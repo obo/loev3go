@@ -53,6 +53,7 @@ class Turtle:
         self.right_motor = right_motor
         self.speed = speed
         self.moving_speed = moving_speed
+        self.angle_speed = angle_speed
         self.pen_down = False
         # assume we start with the pen up
         self.pen_color = "right"
@@ -80,7 +81,9 @@ class Turtle:
           position_sp = v*self.moving_speed,
           stop_action="brake")
         ## Block the code until the movement is finished
+        eprint("  Forward %i waiting to finish." % v)
         self.left_motor.wait_until_not_moving()
+        eprint("  Forward %i done." % v)
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
 
