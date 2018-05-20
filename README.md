@@ -569,3 +569,22 @@ robot@ev3dev:~/lego/pylogo$ xvfb-run ./start.py
 IO:  fatal IO error 11 (Resource temporarily unavailable) on X server ":99"
       after 1632 requests (668 known processed) with 0 events remaining.
 
+## Battery Voltage in bash
+
+cat /sys/class/power_supply/lego-ev3-battery/voltage_now
+# divide by 10^6
+
+## Overloaded on Stretch
+https://github.com/ev3dev/ev3dev/issues/1022
+
+top - 17:01:17 up  1:31,  3 users,  load average: 3.06, 2.83, 2.59
+Tasks:  73 total,   2 running,  45 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 74.1 us, 23.7 sy,  0.0 ni,  0.0 id,  0.3 wa,  0.0 hi,  2.0 si,  0.0 st
+KiB Mem :    57180 total,     1532 free,    24700 used,    30948 buff/cache
+KiB Swap:    98300 total,    84988 free,    13312 used.    28968 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND      
+ 2606 robot     20   0   12276   8308   4804 R 49.8 14.5   0:06.25 run_ev3.py   
+ 2348 root      20   0       0      0      0 I 14.5  0.0   1:40.79 kworker/0:0  
+   71 root     -51   0       0      0      0 S 13.8  0.0  12:25.19 irq/245-ti-+ 
+

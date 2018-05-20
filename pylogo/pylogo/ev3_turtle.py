@@ -17,8 +17,8 @@ right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
 polarity = -1
   # polarity means where the 'head' of the robot is wrt to motor direction
 
-speed = 30 # rotation speed of each of the motors
-moving_speed = 30 # how much is one unit of "forward"
+speed = 100 # rotation speed of each of the motors
+moving_speed = 30 # how many tacho counts is one unit of "forward"
 angle_speed = 5
   # how much have both left and right motor roll (in opposite directions)
   # to get 1 degree of overall rotation
@@ -26,6 +26,16 @@ angle_speed = 5
 # for simplicity, we include polarity in moving speed
 moving_speed *= polarity
 
+
+# # automatic stopping when this unit is destroyed
+# import weakref
+# class Ev3_Turtle_Object:
+#   pass
+# alive=Ev3_Turtle_Object()
+# def finalizer:
+#   left_motor.stop()
+#   right_motor.stop()
+# weakref.finalize(alive, finalizer)
 
 
 import turtle
@@ -66,6 +76,9 @@ class Turtle:
     def __repr__(self):
         return '<%s %i>' % (self.__class__.__name__,
                             self._count)
+    def __del__(self):
+        self.left_motor.stop()
+        self.right_motor.stop()
 
     @logofunc()
     def turtle(self):
