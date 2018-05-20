@@ -194,3 +194,7 @@ _T=20180520_16:28:40_1041	 sudo apt-get install python3-pip
 _T=20180520_16:52:23_1041	 pip3 install future
 _T=20180520_16:54:30_1041	 ls
 _T=20180520_17:08:22_1041	 ls
+_T=20180520_20:03:20_1045	 git pull
+_T=20180520_20:53:08_1157	 vim pylogo/pylogo/ev3_turtle.py
+_T=20180520_20:59:41_1157	 vim /usr/lib/python3/dist-packages/ev3dev/core.py
+_T=20180520_21:36:12_1157	 vim pylogo/pylogo/ev3_turtle.py

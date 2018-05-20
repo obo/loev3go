@@ -19,7 +19,7 @@ polarity = -1
 
 speed = 100 # rotation speed of each of the motors
 moving_speed = 30 # how many tacho counts is one unit of "forward"
-angle_speed = 5
+angle_speed = 402/180
   # how much have both left and right motor roll (in opposite directions)
   # to get 1 degree of overall rotation
 
@@ -89,10 +89,10 @@ class Turtle:
         eprint("Forward %i called." % v)
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
           position_sp = v*self.moving_speed,
-          stop_action="brake")
+          stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
           position_sp = v*self.moving_speed,
-          stop_action="brake")
+          stop_action="hold")
         ## Block the code until the movement is finished
         eprint("  Forward %i waiting to finish." % v)
         self.left_motor.wait_until_not_moving()
@@ -114,10 +114,10 @@ class Turtle:
               dir = sign(ir.value(0))
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
           position_sp = v*self.moving_speed,
-          stop_action="brake")
+          stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
           position_sp = v*self.moving_speed,
-          stop_action="brake")
+          stop_action="hold")
         ## XXX BLOCK!
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
@@ -130,15 +130,21 @@ class Turtle:
 
     @logofunc(aliases=['lt'])
     def left(self, v):
-        eprint("Left %i called." % v)
+        delta = v*self.angle_speed
+        lpos = self.left_motor.position
+        rpos = self.right_motor.position
+        eprint("Left %i called, going for %i from %i L, %i R." % (v, delta, lpos, rpos))
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = (-1.0)*v*self.angle_speed,
-          stop_action="brake")
+          position_sp = (-1.0)*delta,
+          stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.angle_speed,
-          stop_action="brake")
+          position_sp = delta,
+          stop_action="hold")
         ## Block the code until the movement is finished
         self.left_motor.wait_until_not_moving()
+        lpos = self.left_motor.position
+        rpos = self.right_motor.position
+        eprint("  Left %i done, going for %i to %i L, %i R." % (v, delta, lpos, rpos))
         # add_command(self.pen.left, v)
 
     @logofunc(aliases=['rt'])

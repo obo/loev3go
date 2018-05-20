@@ -8,6 +8,7 @@ import time
 # 11 54   ... means that at "angle" 11, 54 "cm"
 
 ir = ev3.InfraredSensor()
+ir.mode = "IR-SEEK"
 while True:
     print(ir.value(0), ir.value(1))
     time.sleep(1)
