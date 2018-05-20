@@ -548,6 +548,9 @@ https://github.com/inexorabletash/jslogo
 http://www.mathcats.com/gallery/15wordcontest.html
 http://www.mathcats.com/gallery/15wordcontest.html#squarespiralvariations
 
+And other nice drawings:
+http://www.pool-rnd.com/en/Kafelka.aspx?artID=5
+
 ## Web servers:
 
 https://www.youtube.com/watch?v=x5VauXr7W4A

@@ -1,32 +1,12 @@
-# EV3 Logo, Drawing on the ground with a tank robot
+# This turtle version only prints the commands that were called.
+# It is useful for debugging.
+
 
 # dbg print
 from __future__ import print_function
 import sys
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
-
-from time   import time, sleep
-from ev3dev.auto import *
-
-# Connect two large motors on output ports B and C and check that
-# the device is connected using the 'connected' property.
-#print('Connecting motors')
-left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
-right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
-polarity = -1
-  # polarity means where the 'head' of the robot is wrt to motor direction
-
-speed = 30 # rotation speed of each of the motors
-moving_speed = 30 # how much is one unit of "forward"
-angle_speed = 5
-  # how much have both left and right motor roll (in opposite directions)
-  # to get 1 degree of overall rotation
-
-# for simplicity, we include polarity in moving speed
-moving_speed *= polarity
-
-
 
 import turtle
 import math
@@ -36,7 +16,7 @@ import sys
 
 from pylogo.common import *
 
-eprint("ev3_turtle starting")
+eprint("print_turtle starting")
 
 class Turtle:
 
@@ -45,17 +25,6 @@ class Turtle:
 
     def __init__(self):
         eprint("init")
-        global left_motor
-        global right_motor
-        global speed
-        global moving_speed
-        self.left_motor = left_motor
-        self.right_motor = right_motor
-        self.speed = speed
-        self.moving_speed = moving_speed
-        self.pen_down = False
-        # assume we start with the pen up
-        self.pen_color = "right"
         # self.pen = turtle.RawPen(get_canvas())
         # self.pen.degrees()
         # self._all_turtles.append(weakref.ref(self))
@@ -73,62 +42,22 @@ class Turtle:
     @logofunc(aliases=['fd'])
     def forward(self, v):
         eprint("Forward %i called." % v)
-        self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
-          stop_action="brake")
-        self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
-          stop_action="brake")
-        ## Block the code until the movement is finished
-        self.left_motor.wait_until_not_moving()
-        # add_command(self.pen.forward, v)
-        # add_command(get_canvas().update)
-
-    @logofunc(aliases=['calibrateangle'])
-    def calibrate_angle(self):
-        eprint("Calibrating angle based on beacon." % v)
-        ir = ev3.InfraredSensor()
-        while True:
-            print(ir.value(0), ir.value(1))
-            if ir.value(1) == -128:
-              print("Beacon lost, waiting")
-              time.sleep(1)
-            else:
-              # Rotating to face the beacon
-              dir = sign(ir.value(0))
-        self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
-          stop_action="brake")
-        self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
-          stop_action="brake")
-        ## XXX BLOCK!
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
 
     @logofunc(aliases=['back', 'bk'])
     def backward(self, v):
         eprint("Backward %i called." % v)
-        self.forward(-v)
         # add_command(self.pen.backward, v).add_command(get_canvas().update)
 
     @logofunc(aliases=['lt'])
     def left(self, v):
         eprint("Left %i called." % v)
-        self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = (-1.0)*v*self.angle_speed,
-          stop_action="brake")
-        self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.angle_speed,
-          stop_action="brake")
-        ## Block the code until the movement is finished
-        self.left_motor.wait_until_not_moving()
         # add_command(self.pen.left, v)
 
     @logofunc(aliases=['rt'])
     def right(self, v):
         eprint("Right %i called." % v)
-        self.left(-v)
         # add_command(self.pen.right, v)
 
     @logofunc(aliases=['pu'])
@@ -253,13 +182,3 @@ def allturtles():
 def createturtle(interp):
     t = Turtle()
     interp.push_actor(t)
-
-def sign(x):
-    if x > 0:
-        return 1.
-    elif x < 0:
-        return -1.
-    elif x == 0:
-        return 0.
-    else:
-        return x
