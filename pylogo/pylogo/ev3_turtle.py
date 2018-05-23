@@ -19,7 +19,7 @@ polarity = -1
 
 speed = 100 # rotation speed of each of the motors
 moving_speed = 30 # how many tacho counts is one unit of "forward"
-angle_speed = 402/180
+angle_speed = 2098/360
   # how much have both left and right motor roll (in opposite directions)
   # to get 1 degree of overall rotation
 
