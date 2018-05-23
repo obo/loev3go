@@ -730,3 +730,7 @@ Left -90 called, going for -201 from 20570 L, -29893 R.
 Left -90 called, going for -201 from 20470 L, -30394 R.
   Left -90 done, going for -201 to 20674 L, -30594 R.
 
+
+180 seems like 14 degrees
+
+full circle seems like 2098
