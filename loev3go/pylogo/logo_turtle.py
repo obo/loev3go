@@ -4,7 +4,7 @@ import weakref
 import threading
 import sys
 
-from common import *
+from pylogo.common import *
 from ide import add_command, get_canvas
 
 class Turtle:

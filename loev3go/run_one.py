@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# Run one hardcoded LOGO program using logo_turtle and saving the canvas
+# afterwards.
+
 from pylogo import common
 from pylogo import Logo
 from pylogo import interpreter
@@ -6,13 +9,15 @@ from pylogo import reader
 from pylogo import builtins
 from pylogo import oobuiltins
 
-# from pylogo import logo_turtle
-# interpreter.Logo.import_module(logo_turtle)
+import turtle
 
-from pylogo import ev3_turtle
-interpreter.Logo.import_module(ev3_turtle)
+from pylogo import ps_turtle
+interpreter.Logo.import_module(ps_turtle)
+ps_turtle.createturtle(interpreter.Logo)
 
-ev3_turtle.createturtle(interpreter.Logo)
+# from pylogo import ev3_turtle
+# interpreter.Logo.import_module(ev3_turtle)
+# ev3_turtle.createturtle(interpreter.Logo)
 
 code = "fd 10"
 code = "for [l 10 80 5] [repeat 5 [repeat 8 [fd :l rt 45] rt 72]"
@@ -49,6 +54,14 @@ try:
         print(builtins.logo_repr(v))
 finally:
     interp.pop_tokenizer()
+
+turtle.update()
+cv = turtle.getcanvas()
+cv.postscript(file="file_name.ps", colormode='color')
+print("Closing.")
+cv.destroy()
+print("Destroyed.")
+
 # comm = LogoCommunicator(TheApp, interpreter.Logo)
 #self.logo_communicator.add_input(code)
 

@@ -1,4 +1,4 @@
-# EV3 Logo, Drawing on the ground with a tank robot
+# EV3 Logo, Drawing on the ground with a turtle robot
 
 # dbg print
 from __future__ import print_function
@@ -8,6 +8,8 @@ def eprint(*args, **kwargs):
 
 from time   import time, sleep
 from ev3dev.auto import *
+
+from .src/PenSelector import *
 
 # Connect two large motors on output ports B and C and check that
 # the device is connected using the 'connected' property.
@@ -66,7 +68,7 @@ class Turtle:
         self.angle_speed = angle_speed
         self.pen_down = False
         # assume we start with the pen up
-        self.pen_color = "right"
+        self.pen_color = LEFT_PEN
         # self.pen = turtle.RawPen(get_canvas())
         # self.pen.degrees()
         # self._all_turtles.append(weakref.ref(self))
@@ -118,7 +120,6 @@ class Turtle:
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
           position_sp = v*self.moving_speed,
           stop_action="hold")
-        ## XXX BLOCK!
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
 
@@ -156,11 +157,13 @@ class Turtle:
     @logofunc(aliases=['pu'])
     def penup(self):
         eprint("Pen up called.")
+        PenSelector.static_set(NO_PEN)
         # add_command(self.pen.up)
 
     @logofunc(aliases=['pd'])
     def pendown(self):
         eprint("Pen down called.")
+        PenSelector.static_set(self.pen_color)
         # add_command(self.pen.down)
 
     @logofunc(aware=True)

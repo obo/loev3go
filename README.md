@@ -734,3 +734,14 @@ Left -90 called, going for -201 from 20470 L, -30394 R.
 180 seems like 14 degrees
 
 full circle seems like 2098
+
+
+## 2018-05-25 Navrh zastavitelneho weboveho interpretru loga
+
+- webserver:
+  - nabizi kod k editaci
+  - kdyz nebezi vlakno malovani, nabidne spusteni kodu
+  - kdyz bezi vlakno, tak to naopak nabizi jen pause/stop
+  - tlacitko na robotovi udela pause
+  - kdyz vyjede mimo bile, tak to taky pauzne
+  - infra se da jezdit nezavisle, ale smysl to ma jen v pauze

@@ -1,8 +1,12 @@
+# Postscript turtle, direct drawing on plain canvas from python turtle graphics
+# Exporting the canvas then to postscript
+
 # dbg print
 from __future__ import print_function
 import sys
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+
 
 import turtle
 import math
@@ -10,9 +14,12 @@ import weakref
 import threading
 import sys
 
-from common import *
+from pylogo.common import *
 
-eprint("ps_turtle starting")
+update = False
+  # update after ever step
+
+get_canvas = turtle.getcanvas
 
 class Turtle:
 
@@ -20,11 +27,15 @@ class Turtle:
     _turtle_count = 1
 
     def __init__(self):
-        self.pen = turtle.RawPen(get_canvas())
+        self.pen = turtle # use plain turtle graphics
         self.pen.degrees()
-        # self._all_turtles.append(weakref.ref(self))
-        # self._count = self._turtle_count
-        # self.__class__._turtle_count += 1
+        turtle.tracer(False)
+        turtle.ht()
+        self.pen.speed(0)
+        # I don't know why more turtles should be supported:
+        self._all_turtles.append(weakref.ref(self))
+        self._count = self._turtle_count
+        self.__class__._turtle_count += 1
 
     def __repr__(self):
         return '<%s %i>' % (self.__class__.__name__,
@@ -36,55 +47,46 @@ class Turtle:
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
-        eprint("Forward %i called." % v)
-        # add_command(self.pen.forward, v)
-        # add_command(get_canvas().update)
+        self.pen.forward(v)
+        if update: get_canvas().update()
 
     @logofunc(aliases=['back', 'bk'])
     def backward(self, v):
-        eprint("Backward %i called." % v)
-        # add_command(self.pen.backward, v).add_command(get_canvas().update)
+        self.pen.backward(v)
+        if update: get_canvas().update()
 
     @logofunc(aliases=['lt'])
     def left(self, v):
-        eprint("Left %i called." % v)
-        # add_command(self.pen.left, v)
+        self.pen.left(v)
 
     @logofunc(aliases=['rt'])
     def right(self, v):
-        eprint("Right %i called." % v)
-        # add_command(self.pen.right, v)
+        self.pen.right(v)
 
     @logofunc(aliases=['pu'])
     def penup(self):
-        eprint("Pen up called.")
-        # add_command(self.pen.up)
+        self.pen.up()
 
     @logofunc(aliases=['pd'])
     def pendown(self):
-        eprint("Pen down called.")
-        # add_command(self.pen.down)
+        self.pen.down()
 
     @logofunc(aware=True)
     def penwidth(self, v):
-        eprint("Pen width %i called." % v)
-        # add_command(self.pen.width, v)
+        self.pen.width(v)
 
     @logofunc(aliases=['pc', 'color'],
               arity=1)
     def pencolor(self, *args):
-        eprint("Pen color called: ", *args)
-        # add_command(self.pen.color, *args)
+        self.pen.color(*args)
 
     @logofunc(aliases=['ht'])
     def hideturtle(self):
-        eprint("NOOP: Hide turtle.")
-        # add_command(self.pen.tracer, 0)
+        self.pen.tracer(0)
 
     @logofunc(aliases=['st'])
     def showturtle(self):
-        eprint("NOOP: Show turtle.")
-        # add_command(self.pen.tracer, 1)
+        self.pen.tracer(1)
 
     @logofunc(aliases=['turtleprint', 'turtlepr'], arity=1)
     def turtlewrite(self, text, move=False):
@@ -92,40 +94,34 @@ class Turtle:
             text = ' '.join(map(str, text))
         else:
             text = str(text)
-        eprint("Turtleprint called: ", text)
-        # add_command(self.pen.write, text, move)
-        # add_command(get_canvas().update)
+        self.pen.write(text, move)
+        if update: get_canvas().update()
 
     @logofunc()
     def startfill(self):
-        eprint("NOOP: Start fill.")
-        # add_command(self.pen.fill, 1)
+        self.pen.fill(1)
 
     @logofunc()
     def endfill(self):
-        eprint("NOOP: Stop fill.")
-        # add_command(self.pen.fill, 0)
-        # add_command(get_canvas().update)
+        self.pen.fill(0)
+        if update: get_canvas().update()
 
     @logofunc()
     def setxy(self, x, y):
-        eprint("Goto %i, %i called." % [x, y])
-        # add_command(self.pen.goto, x, y)
-        # add_command(get_canvas().update)
+        self.pen.goto(x, y)
+        if update: get_canvas().update()
 
     @logofunc()
     def setx(self, x):
-        eprint("Setx %i called." % x)
-        # t = self.pen
-        # add_command(t.goto, x, t.position()[1])
-        # add_command(get_canvas().update)
+        t = self.pen
+        t.goto(x, t.position()[1])
+        if update: get_canvas().update()
 
     @logofunc()
     def sety(self, y):
-        eprint("Sety %i called." % y)
-        # t = self.pen
-        # add_command(t.goto, t.position()[0], y)
-        # add_command(get_canvas().update)
+        t = self.pen
+        t.goto(t.position()[0], y)
+        if update: get_canvas().update()
 
     @logofunc()
     def posx(self):
@@ -141,22 +137,19 @@ class Turtle:
 
     @logofunc()
     def setheading(self, v):
-        eprint("Setheading %i called." % v)
-        # add_command(self.pen.setheading, v)
+        self.pen.setheading(v)
 
     @logofunc()
     def home(self):
-        eprint("Home %i called.")
-        # add_command(self.pen.setheading, 0)
-        # add_command(self.pen.goto, 0, 0)
-        # add_command(get_canvas().update)
+        self.pen.setheading(0)
+        self.pen.goto(0, 0)
+        if update: get_canvas().update()
 
     @logofunc(aliases=['cs', 'clearscreen'])
     def clear(self):
-        eprint("NOOP: Clearscreen.")
-        # self.home()
-        # add_command(self.pen.clear)
-        # add_command(get_canvas().update)
+        self.home()
+        self.pen.clear()
+        if update: get_canvas().update()
 
     @logofunc(arity=1)
     def distance(self, other, orig=None):

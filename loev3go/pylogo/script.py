@@ -36,7 +36,7 @@ def doit(args):
         from pylogo.logodoctest import testfile
         import doctest
         for fn in filenames:
-            print '-- Testing %s %s' % (fn, '-'*(40-len(fn)))
+            print('-- Testing %s %s' % (fn, '-'*(40-len(fn))))
             testfile(fn, optionflags=doctest.ELLIPSIS,
                      verbose_summary=True,
                      interp=Logo)

@@ -146,7 +146,7 @@ class RobotWebServer(object):
             for motor in list_motors():
                 motor.stop()
 
-tank=...XXXinicializuj-robota...
+manual_tank=...XXXinicializuj-robota-trackera...
 www=RobotWebServer(tank, LogoWebHandler, port_number)
 
 

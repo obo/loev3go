@@ -1,4 +1,4 @@
-import Tkinter
+import tkinter
 import Pmw
 import threading
 from pylogo import reader
@@ -93,7 +93,7 @@ class IDE:
             self.history.appendtext(line)
 
     def exit(self):
-        print "Exiting!"
+        print("Exiting!")
         self.parent.destroy()
         self.logo_communicator.exit()
         return
@@ -115,7 +115,7 @@ class IDE:
                 self.exit()
             try:
                 val = command[1](*command[2], **command[3])
-            except Exception, e:
+            except Exception(e):
                 if command[0]:
                     command[0].put([True, e])
             else:
