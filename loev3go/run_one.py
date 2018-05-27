@@ -12,6 +12,7 @@ from pylogo import oobuiltins
 from pylogo.common import EOF
 
 import turtle
+import src.canvasvg as canvasvg
 
 from pylogo import ps_turtle
 interpreter.Logo.import_module(ps_turtle)
@@ -80,10 +81,12 @@ finally:
 
 turtle.update()
 cv = turtle.getcanvas()
-cv.postscript(file="file_name.ps", colormode='color')
+canvasvg.saveall("output.svg", cv)
+cv.postscript(file="output.ps", colormode='color')
 print("Closing.")
 cv.destroy()
 print("Destroyed.")
+turtle.done()
 
 # comm = LogoCommunicator(TheApp, interpreter.Logo)
 #self.logo_communicator.add_input(code)
