@@ -268,7 +268,7 @@ class Interpreter(object):
                     return val
                 else:
                     self.tokenizer.next()
-                if self.special_forms.has_key(func.lower()):
+                if func.lower() in self.special_forms:
                     special_form = self.special_forms[func.lower()]
                     val = special_form(self, greedy=True)
                     next_tok = self.tokenizer.next()
@@ -823,7 +823,7 @@ class UserFunction(object):
             interp.set_variable_local(var, arg)
         if len(args) > len(self.vars):
             interp.set_variable_local('rest', args[len(self.vars):])
-        for name, value in extravars.iteritems():
+        for name, value in extravars.items():
             interp.set_variable_local(name, value)
         while 1:
             tok = tokenizer.peek()
@@ -887,7 +887,7 @@ class RootFrame(Interpreter):
 
     def get_nonactor_variable(self, v):
         v = v.lower()
-        if self.vars.has_key(v):
+        if v in self.vars:
             return self.vars[v]
         raise LogoNameError(
             "Variable :%s has not been set." % v)
@@ -899,7 +899,7 @@ class RootFrame(Interpreter):
         self.vars[v.lower()] = value
 
     def _set_variable_if_present(self, v, value):
-        if self.vars.has_key(v):
+        if v in self.vars:
             self.vars[v] = value
             return 1
         else:
@@ -931,9 +931,9 @@ class RootFrame(Interpreter):
         return d
 
     def erase_name(self, name):
-        if self.vars.has_key(name.lower()):
+        if name.lower() in self.vars:
             del self.vars[name.lower()]
-        if self.functions.has_key(name.lower()):
+        if name.lower() in self.functions:
             del self.functions[name.lower()]
 
     def make_local(self, v):
@@ -983,9 +983,9 @@ class Frame(RootFrame):
 
     def get_nonactor_variable(self, v):
         v = v.lower()
-        if self.vars.has_key(v):
+        if v in self.vars:
             return self.vars[v]
-        if self.local_vars.has_key(v):
+        if v in self.local_vars:
             raise LogoUndefinedError(
                 "Variable :%s has not been set, but it has been "
                 "declared LOCAL." % v)
@@ -1000,7 +1000,7 @@ class Frame(RootFrame):
             self.vars[v] = value
 
     def _set_variable_if_present(self, v, value):
-        if self.local_vars.has_key(v) or self.vars.has_key(v):
+        if v in self.local_vars or v in self.vars:
             self.vars[v] = value
             return 1
         else:
@@ -1024,7 +1024,7 @@ class Frame(RootFrame):
         return self.parent._set_variable_names(d)
 
     def erase_name(self, name):
-        if self.vars.has_key(name.lower()):
+        if name.lower() in self.vars:
             del self.vars[name.lower()]
         self.parent.erase_name(name)
 

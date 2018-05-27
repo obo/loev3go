@@ -9,6 +9,8 @@ from pylogo import reader
 from pylogo import builtins
 from pylogo import oobuiltins
 
+from pylogo.common import EOF
+
 import turtle
 
 from pylogo import ps_turtle
@@ -20,7 +22,6 @@ ps_turtle.createturtle(interpreter.Logo)
 # ev3_turtle.createturtle(interpreter.Logo)
 
 code = "fd 10"
-code = "for [l 10 80 5] [repeat 5 [repeat 8 [fd :l rt 45] rt 72]"
 code = "repeat 10 [fd 40 fd 40 bk 80 rt 1]"
 code = """to square
   repeat 4 [ fd 10 rt 90 ]
@@ -37,6 +38,14 @@ for "l (gen 10 80 5) [print :l]
 
 code = "repeat 8 [repeat 4 [rt 90 fd 100] bk 100 lt 45]"
 
+code = """to gen :lo :hi :step
+  make "x []
+  while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
+  output :x
+end
+for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]
+"""
+
 # interp = interpreter.RootFrame()
 interp = Logo
 interp.import_module(builtins)
@@ -48,10 +57,24 @@ input = StringIO(code)
 input.name = '<string>'
 tokenizer = reader.FileTokenizer(reader.TrackingStream(input))
 interp.push_tokenizer(tokenizer)
+# outval = None
 try:
-    v = interp.expr_top()
-    if v is not None:
-        print(builtins.logo_repr(v))
+    while True:
+        tok = interp.tokenizer.peek()
+        if tok is EOF:
+            break
+        val = interp.expr_top()
+# finally:
+    # self.pop_tokenizer()
+# return val
+# try:
+  # while True:
+    # v = interp.expr_top()
+    # print(v)
+    # if v is not None:
+      # print(builtins.logo_repr(v))
+    # else:
+      # break;
 finally:
     interp.pop_tokenizer()
 
