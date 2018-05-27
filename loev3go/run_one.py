@@ -82,11 +82,11 @@ finally:
 turtle.update()
 cv = turtle.getcanvas()
 canvasvg.saveall("output.svg", cv)
+#turtle.done()
 cv.postscript(file="output.ps", colormode='color')
 print("Closing.")
 cv.destroy()
 print("Destroyed.")
-turtle.done()
 
 # comm = LogoCommunicator(TheApp, interpreter.Logo)
 #self.logo_communicator.add_input(code)
