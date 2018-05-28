@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>LoEV3go: LOGO Drawing with EV3 Robot</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#stop").click(function() {
+            alert("clicked");
+        });
+    });
+</script>
+<!--
+$(document).ready(function(){
+    $( "#stop" ).click(function() {
+      alert( "Handler for .click() called on STOP." );
+    });
+    $("button").click(function(){
+        $.post("demo_test_post.asp",
+        {
+          name: "Donald Duck",
+          city: "Duckburg"
+        },
+        function(data,status){
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+    });
+});
+-->
+</head>
+<body>
+
+<button id="#stop">Stop</button>
+
+<button>Click me</button>
+
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  document.getElementById("demo").innerHTML = "Hello World";
+}
+</script>
+
+
+
+</body>
+It works!
+<img src="output.svg"/>
+</html>
