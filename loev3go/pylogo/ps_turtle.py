@@ -16,21 +16,22 @@ import sys
 
 from pylogo.common import *
 
-update = False
-  # update after ever step
+# update = False
+  # # update after ever step
 
-get_canvas = turtle.getcanvas
+# get_canvas = turtle.getcanvas
 
 class Turtle:
 
     _all_turtles = []
     _turtle_count = 1
 
-    def __init__(self):
-        self.pen = turtle # use plain turtle graphics
+    def __init__(self, use_turtle = turtle):
+        eprint("initing ps_turtle.Turtle")
+        self.pen = use_turtle # use plain turtle graphics
         self.pen.degrees()
-        turtle.tracer(False)
-        turtle.ht()
+        turtle.tracer(False) # this affects the *global* turtle, not use_turtle
+        turtle.ht() # this affects the *global* turtle, not use_turtle
         self.pen.speed(0)
         # I don't know why more turtles should be supported:
         self._all_turtles.append(weakref.ref(self))
@@ -48,12 +49,12 @@ class Turtle:
     @logofunc(aliases=['fd'])
     def forward(self, v):
         self.pen.forward(v)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc(aliases=['back', 'bk'])
     def backward(self, v):
         self.pen.backward(v)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc(aliases=['lt'])
     def left(self, v):
@@ -95,7 +96,7 @@ class Turtle:
         else:
             text = str(text)
         self.pen.write(text, move)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc()
     def startfill(self):
@@ -104,24 +105,24 @@ class Turtle:
     @logofunc()
     def endfill(self):
         self.pen.fill(0)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc()
     def setxy(self, x, y):
         self.pen.goto(x, y)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc()
     def setx(self, x):
         t = self.pen
         t.goto(x, t.position()[1])
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc()
     def sety(self, y):
         t = self.pen
         t.goto(t.position()[0], y)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc()
     def posx(self):
@@ -143,13 +144,13 @@ class Turtle:
     def home(self):
         self.pen.setheading(0)
         self.pen.goto(0, 0)
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc(aliases=['cs', 'clearscreen'])
     def clear(self):
         self.home()
         self.pen.clear()
-        if update: get_canvas().update()
+        # if update: get_canvas().update()
 
     @logofunc(arity=1)
     def distance(self, other, orig=None):
@@ -167,6 +168,6 @@ def allturtles():
     return [t() for t in Turtle._all_turtles if t()]
 
 @logofunc(aware=True)
-def createturtle(interp):
-    t = Turtle()
+def createturtle(interp, use_turtle = turtle):
+    t = Turtle(use_turtle)
     interp.push_actor(t)

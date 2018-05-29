@@ -51,7 +51,7 @@ for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]
 interp = Logo
 interp.import_module(builtins)
 interp.import_module(oobuiltins)
-from pylogo import builtins
+#from pylogo import builtins
 
 from io import StringIO
 input = StringIO(code)

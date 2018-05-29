@@ -15,6 +15,9 @@ Send a POST request::
 """
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+import argparse
+import threading, signal
+import LogoIntoSVG
 
 class LoEV3goHandler(BaseHTTPRequestHandler):
 
@@ -29,6 +32,19 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'js'   : 'application/javascript',
         'png'  : 'image/png'
     }
+
+    def __init__(self, main_exit, args):
+      # Initialize drawing LOGO into SVG
+      self.lis = LogoIntoSVG.LogoIntoSVG()
+
+      if args.do_robot:
+        # Initialize handling IR requests for robot drawing:
+        import SpeedableTrackerWithPen
+        t = SpeedableTrackerWithPen(main_exit)
+        t.run() # launch in a thread, it will finish after main_exit is set
+    
+        # Initialize handling LOGO scripts
+        # XXX
 
     def _set_headers(self):
         self.send_response(200)
@@ -69,6 +85,9 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                     log.error("404: %s not found" % self.path)
                     self.send_error(404, 'File Not Found: %s' % self.path)
                 return True
+        else:
+          # Handle request
+          pass
 
         return False
 
@@ -80,16 +99,36 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         self._set_headers()
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
         
-def run(server_class=HTTPServer, handler_class=LoEV3goHandler, port=80):
+def run(server_class=HTTPServer, handler_class=LoEV3goHandler,
+        port=8080,
+        root="web/"):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
+    print("Chdir to: %s" % root)
+    os.chdir(root)
     print('Starting httpd...')
     httpd.serve_forever()
 
 if __name__ == "__main__":
-    from sys import argv
+  parser = argparse.ArgumentParser(description='LoEV3go: Webserver and turtle robot for EV3.')
+  parser.add_argument('--no-robot', action='store_false', dest="do_robot",
+    help="don't load robot modules")
+  parser.add_argument('--port', type=int, default=8080, nargs=1,
+    help='which port to use')
+  args = parser.parse_args()
 
-    if len(argv) == 2:
-        run(port=int(argv[1]))
-    else:
-        run()
+  # main exit switch: everyone should listen to this and exit gracefully
+  main_exit = threading.Event() # set this to stop gracefully
+  # gracefully die on signals
+  def signal_handler(signal, frame):
+    main_exit.set()
+  signal.signal(signal.SIGINT,  signal_handler)
+  signal.signal(signal.SIGTERM, signal_handler)
+
+  ourhandler = LoEV3goHandler(main_exit, args)
+
+  try:
+    run(port=args.port, handler_class=ourhandler)
+  finally:
+    # everyone should totally stop, set the threading event
+    main_exit.set()
