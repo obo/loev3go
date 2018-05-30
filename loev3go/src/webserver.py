@@ -13,11 +13,20 @@ Send a HEAD request::
 Send a POST request::
     curl -d "foo=bar&bin=baz" http://localhost
 """
+# dbg print
+from __future__ import print_function
+import sys
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import argparse
 import threading, signal
 import LogoIntoSVG
+import logging
+
+log = logging.getLogger(__name__)
 
 class LoEV3goHandler(BaseHTTPRequestHandler):
 
@@ -32,19 +41,6 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'js'   : 'application/javascript',
         'png'  : 'image/png'
     }
-
-    def __init__(self, main_exit, args):
-      # Initialize drawing LOGO into SVG
-      self.lis = LogoIntoSVG.LogoIntoSVG()
-
-      if args.do_robot:
-        # Initialize handling IR requests for robot drawing:
-        import SpeedableTrackerWithPen
-        t = SpeedableTrackerWithPen(main_exit)
-        t.run() # launch in a thread, it will finish after main_exit is set
-    
-        # Initialize handling LOGO scripts
-        # XXX
 
     def _set_headers(self):
         self.send_response(200)
@@ -87,7 +83,13 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                 return True
         else:
           # Handle request
-          pass
+          path = self.path.split('/')
+          action = path[1]
+          if action == 'stop':
+            if LoEV3goHandler.args.do_robot:
+              eprint("Stopping robot")
+            else:
+              eprint("Robot not attached, nothing to stop.")
 
         return False
 
@@ -99,36 +101,64 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         self._set_headers()
         self.wfile.write("<html><body><h1>POST!</h1></body></html>")
         
-def run(server_class=HTTPServer, handler_class=LoEV3goHandler,
+class MyException(Exception):
+    pass
+
+def run(main_exit, server_class=HTTPServer, handler_class=LoEV3goHandler,
         port=8080,
         root="web/"):
-    server_address = ('', port)
+    print("Port: ",  port)
+    server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
     print("Chdir to: %s" % root)
     os.chdir(root)
+
+    # gracefully die on signals
+    def signal_handler(signal, frame):
+      eprint("Setting main_exit")
+      main_exit.set()
+      # should stop the motors!
+      # raise an exception, that's the easiest way to interrupt the webserver
+      raise MyException("User interrupt")
+    signal.signal(signal.SIGINT,  signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     print('Starting httpd...')
     httpd.serve_forever()
+    # the following did not really work, it needed to get one more request:
+    # while not main_exit.is_set():
+      # eprint("Serving")
+      # httpd.handle_request()
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='LoEV3go: Webserver and turtle robot for EV3.')
   parser.add_argument('--no-robot', action='store_false', dest="do_robot",
     help="don't load robot modules")
-  parser.add_argument('--port', type=int, default=8080, nargs=1,
+  parser.add_argument('--port', type=int, default=8080,
     help='which port to use')
   args = parser.parse_args()
 
   # main exit switch: everyone should listen to this and exit gracefully
   main_exit = threading.Event() # set this to stop gracefully
-  # gracefully die on signals
-  def signal_handler(signal, frame):
-    main_exit.set()
-  signal.signal(signal.SIGINT,  signal_handler)
-  signal.signal(signal.SIGTERM, signal_handler)
 
-  ourhandler = LoEV3goHandler(main_exit, args)
+  handler_class = LoEV3goHandler
+  # set class variables, "global vars" for the class and input args for our
+  # handler
+  handler_class.main_exit = main_exit
+  handler_class.cmdline_args = args
+  # Initialize drawing LOGO into SVG
+  handler_class.lis = LogoIntoSVG.LogoIntoSVG()
+  if args.do_robot:
+    # Initialize handling IR requests for robot drawing:
+    import SpeedableTrackerWithPen
+    t = SpeedableTrackerWithPen(main_exit)
+    t.run() # launch in a thread, it will finish after main_exit is set
+  
+    # Initialize handling LOGO scripts
+    # XXX
 
   try:
-    run(port=args.port, handler_class=ourhandler)
+    run(main_exit, port=args.port, handler_class=handler_class)
   finally:
     # everyone should totally stop, set the threading event
     main_exit.set()

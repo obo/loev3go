@@ -3,14 +3,29 @@
 <title>LoEV3go: LOGO Drawing with EV3 Robot</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $("#stop").click(function() {
-            alert("clicked");
-        });
-        $("#clickme").click(function() {
-            myFunction();
-        });
+
+var moving = 0;
+
+function stop_motors() {
+    $.ajax({
+        type: "GET",
+        cache: false,
+        dataType: 'text',
+        async: true,
+        url: "/stop"
     });
+    moving = 0;
+}
+
+$(document).ready(function() {
+    $("#stop").click(function() {
+        stop_motors();
+        alert("Stop sent");
+    });
+    $("#clickme").click(function() {
+        myFunction();
+    });
+});
 </script>
 <!--
 $(document).ready(function(){
