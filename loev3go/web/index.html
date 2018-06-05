@@ -22,8 +22,10 @@ $(document).ready(function() {
         stop_motors();
         alert("Stop sent");
     });
-    $("#clickme").click(function() {
+    $("#preview").click(function() {
+        var logocode = $('#logocode').val();
         myFunction();
+	XXX
     });
 });
 </script>
@@ -50,6 +52,19 @@ $(document).ready(function(){
 <button id="stop">Stop</button>
 
 <button id="clickme">Click me</button>
+
+<textarea id="logocode" placeholder="Type LOGO code here...">
+to gen :lo :hi :step
+  make "x []
+  while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
+  output :x
+end
+for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]
+to square
+  repeat 4 [ fd 10 rt 90 ]
+end
+square
+</textarea>
 
 
 <p id="demo"></p>

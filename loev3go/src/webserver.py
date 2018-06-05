@@ -21,6 +21,7 @@ def eprint(*args, **kwargs):
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+import re
 import argparse
 import threading, signal
 import LogoIntoSVG
@@ -51,6 +52,8 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         """
         If the request is for a known file type serve the file (or send a 404) and return True
         """
+
+        eprint("GOT:", self.path)
 
         if self.path == "/":
             self.path = "/index.html"
@@ -83,13 +86,15 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                 return True
         else:
           # Handle request
-          path = self.path.split('/')
+          path = re.split("[\?/]", self.path)
+          eprint("SPLIT:", path)
           action = path[1]
           if action == 'stop':
-            if LoEV3goHandler.args.do_robot:
+            if self.cmdline_args.do_robot:
               eprint("Stopping robot")
             else:
               eprint("Robot not attached, nothing to stop.")
+            return True # event has been handled
 
         return False
 
@@ -156,6 +161,8 @@ if __name__ == "__main__":
   
     # Initialize handling LOGO scripts
     # XXX
+  else:
+    eprint("Robot disabled, not starting it")
 
   try:
     run(main_exit, port=args.port, handler_class=handler_class)
