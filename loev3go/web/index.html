@@ -24,8 +24,13 @@ $(document).ready(function() {
     });
     $("#preview").click(function() {
         var logocode = $('#logocode').val();
-        myFunction();
-	XXX
+        $.post("preview",
+        {
+          code: logocode
+        },
+        function(data,status){
+            alert("Data: " + data + "\nStatus: " + status);
+        });
     });
 });
 </script>
@@ -51,7 +56,7 @@ $(document).ready(function(){
 
 <button id="stop">Stop</button>
 
-<button id="clickme">Click me</button>
+<button id="preview">Preview</button>
 
 <textarea id="logocode" placeholder="Type LOGO code here...">
 to gen :lo :hi :step

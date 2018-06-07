@@ -21,6 +21,7 @@ def eprint(*args, **kwargs):
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+import simplejson
 import re
 import argparse
 import threading, signal
@@ -102,9 +103,17 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         self._set_headers()
         
     def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        eprint("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n" %
+          ( str(self.path), str(self.headers), post_data.decode('utf-8')) )
+        # obj = json.loads(post_data.decode('utf-8'))
+        obj = simplejson.loads(post_data)
+        eprint(obj)
         # Doesn't do anything with posted data
         self._set_headers()
-        self.wfile.write("<html><body><h1>POST!</h1></body></html>")
+        output = "<html><body><h1>POST!</h1></body></html>";
+        self.wfile.write(output.encode("utf-8"))
         
 class MyException(Exception):
     pass
