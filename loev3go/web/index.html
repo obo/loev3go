@@ -28,8 +28,12 @@ $(document).ready(function() {
         {
           code: logocode
         },
-        function(data,status){
-            alert("Data: " + data + "\nStatus: " + status);
+        function(rawImageData,status){
+          // when we receive the image, put it into the page:
+          //alert("Received: " + rawImageData + "\nStatus: " + status);
+          $('#the_image').remove();
+          $('#img_container').append('<img id="the_image" src="' + rawImageData + '"/>');
+          // alert("Data: " + data + "\nStatus: " + status);
         });
     });
 });
@@ -58,7 +62,8 @@ $(document).ready(function(){
 
 <button id="preview">Preview</button>
 
-<textarea id="logocode" placeholder="Type LOGO code here...">
+<div>
+<textarea width=40 height=18 id="logocode" placeholder="Type LOGO code here...">
 to gen :lo :hi :step
   make "x []
   while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
@@ -70,19 +75,31 @@ to square
 end
 square
 </textarea>
+</div>
 
 
+<div id="img_container">
+<img id="the_image" src=""/>
+</div>
+
+<!-- 
 <p id="demo"></p>
-
 <script>
 function myFunction() {
   document.getElementById("demo").innerHTML = "Hello World";
 }
 </script>
+-->
 
+Hardcoded:
+
+<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGhlaWdodD0iMzUuMDAwIiB2aWV3Qm94PSItMTMuMDAwIC0xMy4wMDAgMzUuMDAwIDM1LjAwMCIgd2lkdGg9IjM1LjAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48bGluZSBmaWxsPSJub25lIiBzdHJva2U9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjAiIHgxPSIwLjAiIHgyPSIwLjAiIHkxPSIwLjAiIHkyPSIwLjAiLz48cG9seWdvbiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHBvaW50cz0iMC4wLDAuMCAwLjAsMC4wIDAuMCwwLjAiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWxpbmUgZmlsbD0ibm9uZSIgcG9pbnRzPSIwLjAsLTAuMCAxMC4wLC0wLjAgMTAuMCwxMC4wIDAuMCwxMC4wMDAwMDAwMDAwMDAwMDIgLTEuODM2OTcwMTk4NzIxMDI5NmUtMTUsMS43NzYzNTY4Mzk0MDAyNTA1ZS0xNSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4="/>
+
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
+
+Stored on disk:
+<img src="output.svg"/>
 
 
 </body>
-It works!
-<img src="output.svg"/>
 </html>

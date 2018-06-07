@@ -1,4 +1,5 @@
 #!/bin/bash
 
 export PYTHONPATH=$(pwd):$PYTHONPATH
-./src/webserver.py "$@"
+export DISPLAY=
+xvfb-run ./src/webserver.py "$@"

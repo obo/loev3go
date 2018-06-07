@@ -19,13 +19,19 @@ import sys
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+import pdb
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
-import simplejson
+import urllib
+import base64
+def stringToBase64(s):
+    return base64.b64encode(s.encode('utf-8'))
 import re
 import argparse
 import threading, signal
 import LogoIntoSVG
+import pylogo.common
 import logging
 
 log = logging.getLogger(__name__)
@@ -104,16 +110,22 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        eprint("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n" %
-          ( str(self.path), str(self.headers), post_data.decode('utf-8')) )
-        # obj = json.loads(post_data.decode('utf-8'))
-        obj = simplejson.loads(post_data)
-        eprint(obj)
-        # Doesn't do anything with posted data
+        post_data = self.rfile.read(content_length).decode('utf-8')
+        obj = urllib.parse.parse_qs(post_data)
+        code = obj['code'][0]
+        eprint(code)
+        outfile="output.svg"
+        try:
+          LoEV3goHandler.lis.run_logo_emit_svg(code, outfile)
+          with open(outfile, 'r') as myfile:
+            rawsvg = myfile.read()
+          output = b"data:image/svg+xml;base64,"+stringToBase64(rawsvg);
+        except pylogo.common.LogoNameError as e:
+          eprint("Error:", e)
+          output = b""
         self._set_headers()
-        output = "<html><body><h1>POST!</h1></body></html>";
-        self.wfile.write(output.encode("utf-8"))
+        #self.wfile.write(output.encode("utf-8"))
+        self.wfile.write(output)
         
 class MyException(Exception):
     pass
