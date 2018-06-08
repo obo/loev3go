@@ -15,13 +15,14 @@ NO_PEN = 'penUP'
 
 pen_position = { LEFT_PEN:-30, NO_PEN:0, RIGHT_PEN:+30 }
 pen_shift_speed = 80
+medium_motor_output = OUTPUT_A
 med_motor = ev3.MediumMotor(medium_motor_output)
 med_motor.reset() # set motor position to 0
 # assuming we start with both pens up
 pen_state = NO_PEN
 
 pen_cycle = [LEFT_PEN, NO_PEN, RIGHT_PEN, NO_PEN]
-pen_cycle_state = len(pen_shifts)-1 # the last pen state
+pen_cycle_state = len(pen_cycle)-1 # the last pen state
 
 class PenSelector(object):
   """To access the pen, create a pen selector object.
@@ -48,11 +49,11 @@ class PenSelector(object):
     
   def next(self):
     """Move to the next pen state from the pre-defined cycle"""
-    static_next()
+    PenSelector.static_next()
 
   @staticmethod
   def static_next():
     global pen_cycle_state
     pen_cycle_state = (pen_cycle_state+1) % len(pen_cycle)
-    self.set(pen_cycle[pen_cycle_state])
+    PenSelector.static_set(pen_cycle[pen_cycle_state])
 

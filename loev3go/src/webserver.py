@@ -178,7 +178,7 @@ if __name__ == "__main__":
   if args.do_robot:
     # Initialize handling IR requests for robot drawing:
     import SpeedableTrackerWithPen
-    t = SpeedableTrackerWithPen(main_exit)
+    t = SpeedableTrackerWithPen.SpeedableTrackerWithPen(main_exit)
     t.run() # launch in a thread, it will finish after main_exit is set
   
     # Initialize handling LOGO scripts

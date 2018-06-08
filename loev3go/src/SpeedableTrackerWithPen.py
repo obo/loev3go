@@ -27,6 +27,28 @@ log.info("Starting TRACK3RWithPen")
 
 silent = True
 
+#### Helper functions
+
+def play_leds():
+  """Indicate that we've started"""
+  from ev3dev.ev3 import Leds
+  # save current state
+  saved_state = [led.brightness_pct for led in Leds.LEFT + Leds.RIGHT]
+  Leds.all_off()
+  time.sleep(0.1)
+  for _ in range(1):
+    for color in (Leds.RED, Leds.YELLOW, Leds.GREEN):
+        for group in (Leds.LEFT, Leds.RIGHT):
+            Leds.set_color(group, color)
+        time.sleep(0.1)
+  Leds.all_off()
+  time.sleep(0.5)
+  for led, level in zip(Leds.RIGHT + Leds.LEFT, saved_state) :
+      led.brightness_pct = level
+
+#### Main classes
+
+
 class Tank(object):
   def __init__(self, left_motor, right_motor, polarity='inversed', name='Tank',
                speed_sp=400):
@@ -137,14 +159,15 @@ class TRACK3RWithPen(TRACK3R):
 
 class SpeedableTrackerWithPen:
     """A combination of three trackers of various speeds"""
-    def __init__(self, done):
+    def __init__(self, done, medmotor=OUTPUT_A):
       # The 'done' event will be used to signal the threads to stop:
       #   done = threading.Event()
       self.done = done
+      self.pen_selector=PenSelector.PenSelector()
       self.trackers = [
-        TRACK3RWithPen(medium_motor=medmotor, channel=1, speed_sp=400),
-        TRACK3RWithPen(medium_motor=medmotor, channel=2, speed_sp=800),
-        TRACK3RWithPen(medium_motor=medmotor, channel=3, speed_sp=200)
+        TRACK3RWithPen(self.pen_selector, channel=1, speed_sp=400),
+        TRACK3RWithPen(self.pen_selector, channel=2, speed_sp=800),
+        TRACK3RWithPen(self.pen_selector, channel=3, speed_sp=200)
       ]
       play_leds()
 
@@ -175,7 +198,7 @@ class SpeedableTrackerWithPen:
     """
 
 
-def __main__():
+if __name__ == "__main__":
   """When run as script, run the tracker"""
   import threading, signal
   done = threading.Event() # set this to stop gracefully
@@ -186,27 +209,4 @@ def __main__():
   t = SpeedableTrackerWithPen(done)
   t.run() # or launch this in a thread, it will finish after done has been set
 
-
-#### Helper functions
-
-def play_leds():
-  """Indicate that we've started"""
-  from ev3dev.ev3 import Leds
-  # save current state
-  saved_state = [led.brightness_pct for led in Leds.LEFT + Leds.RIGHT]
-  Leds.all_off()
-  time.sleep(0.1)
-  # continuous mix of colors
-  print('colors fade')
-  for i in range(20): # spend 1 second on the animation
-      rd = math.radians(10 * i)
-      Leds.red_left.brightness_pct = .5 * (1 + math.cos(rd))
-      Leds.green_left.brightness_pct = .5 * (1 + math.sin(rd))
-      Leds.red_right.brightness_pct = .5 * (1 + math.sin(rd))
-      Leds.green_right.brightness_pct = .5 * (1 + math.cos(rd))
-      time.sleep(0.05)
-  Leds.all_off()
-  time.sleep(0.5)
-  for led, level in zip(Leds.RIGHT + Leds.LEFT, saved_state) :
-      led.brightness_pct = level
 
