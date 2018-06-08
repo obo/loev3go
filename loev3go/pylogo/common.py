@@ -124,11 +124,14 @@ def error_for_file(errorFile, row=None, col=None):
         except AttributeError:
             pass
     if row is not None:
-        s = 'File %s, line %i\n' % (name, row)
+        if name is not None and name != "<string>":
+          s = 'File %s, line %i\n' % (name, row)
+        else:
+          s = 'Line %i\n' % row
         l = errorFile.row_line(row)
         if l is not None:
             s += l
-            s += '%s^\n' % (' '*col)
+            s += '\n%s^\n' % (' '*col)
     else:
         s = 'File %s\n' % name
     return s
