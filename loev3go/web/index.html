@@ -1,6 +1,23 @@
 <html>
 <head>
 <title>LoEV3go: LOGO Drawing with EV3 Robot</title>
+<style>
+#canvas_box {
+    width: 640px;
+    height: 480px;
+    display: table;
+    background-color: #ccc;         
+}
+#canvas_box #img_container {
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+#canvas_box #img_container img {
+    max-width: 640px;
+    max-height: 480px;        
+}
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 
@@ -23,7 +40,11 @@ $(document).ready(function() {
         alert("Stop sent");
     });
     $("#preview").click(function() {
+        $('#the_image').remove();
+        $('#img_container').append('<img id="the_image" src="rendering.svg"/>');
+        // get the code
         var logocode = $('#logocode').val();
+        // run the code in web server
         $.post("preview",
         {
           code: logocode
@@ -63,7 +84,7 @@ $(document).ready(function(){
 <button id="preview">Preview</button>
 
 <div>
-<textarea width=40 height=18 id="logocode" placeholder="Type LOGO code here...">
+<textarea cols=60 rows=18 id="logocode" placeholder="Type LOGO code here...">
 to gen :lo :hi :step
   make "x []
   while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
@@ -78,8 +99,10 @@ square
 </div>
 
 
+<div id="canvas_box">
 <div id="img_container">
 <img id="the_image" src=""/>
+</div>
 </div>
 
 <!-- 
@@ -89,7 +112,6 @@ function myFunction() {
   document.getElementById("demo").innerHTML = "Hello World";
 }
 </script>
--->
 
 Hardcoded:
 
@@ -100,6 +122,7 @@ Hardcoded:
 Stored on disk:
 <img src="output.svg"/>
 
+-->
 
 </body>
 </html>

@@ -117,6 +117,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         outfile="output.svg"
         try:
           LoEV3goHandler.lis.run_logo_emit_svg(code, outfile)
+          eprint("Saved into:", outfile)
           with open(outfile, 'r') as myfile:
             rawsvg = myfile.read()
           output = b"data:image/svg+xml;base64,"+stringToBase64(rawsvg);
