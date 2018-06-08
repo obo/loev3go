@@ -112,6 +112,10 @@ https://www.youtube.com/watch?v=0d0ktACCwT4
 https://www.youtube.com/watch?v=LZYr646Ul4Q
 ...spirograph
 
+https://www.youtube.com/watch?v=0Aw23jQkP2g
+...gearbox
+
+
 ## Other interesting links:
 
 Camera: https://siyahodacom.wordpress.com/2017/10/01/adding-webcam-to-ev3-ev3dev/
@@ -739,9 +743,33 @@ full circle seems like 2098
 ## 2018-05-25 Navrh zastavitelneho weboveho interpretru loga
 
 - webserver:
-  - nabizi kod k editaci
+  - nabizi kod k editaci [done]
+  - pri stistku preview to vrati nakreslene SVG (nebo error log)
   - kdyz nebezi vlakno malovani, nabidne spusteni kodu
-  - kdyz bezi vlakno, tak to naopak nabizi jen pause/stop
-  - tlacitko na robotovi udela pause
-  - kdyz vyjede mimo bile, tak to taky pauzne
-  - infra se da jezdit nezavisle, ale smysl to ma jen v pauze
+  - kdyz bezi vlakno, tak to naopak nabizi jen stop
+  - tlacitko na robotovi udela stop
+  - kdyz vyjede mimo bile, udela stop
+  - infra se da jezdit nezavisle, ale smysl to ma jen, kdyz to nic nemaluje [done]
+
+Now the basic things work:
+
+```
+cd loev3go
+./run_webserver.py [--no-robot]
+```
+
+## Setting up robot as wifi accesspoint
+
+Maybe this tip contains everything that is needed:
+
+https://superuser.com/questions/748455/how-to-setup-access-point-wifi-hotspot-on-debian
+https://superuser.com/questions/437137/how-to-turn-my-linux-netbook-into-wifi-ap
+
+## Tips for power supply
+
+http://www.mindstormsrobots.com/lego-mindstorms/mindstorms-robots/mindstorms-ev3-robots/
+...napajeni ze site
+
+https://zbozi.mobilmania.cz/ostatni-baterie-a-prislusenstvi/napajeci-adapter-230v-3-12v-600ma/
+...194Kc
+https://www.softcom.cz/eshop/napajeci-adapter-230v-3-12v-stejnosmerny-600ma_d107596.html

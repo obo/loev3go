@@ -49,11 +49,17 @@ $(document).ready(function() {
         {
           code: logocode
         },
-        function(rawImageData,status){
+        function(data,status){
           // when we receive the image, put it into the page:
           //alert("Received: " + rawImageData + "\nStatus: " + status);
+	  var stat = data.substring(0, 1);
+	  var rawData = data.substring(1);
           $('#the_image').remove();
-          $('#img_container').append('<img id="the_image" src="' + rawImageData + '"/>');
+	  if (stat == "O") {
+            $('#img_container').append('<img id="the_image" src="' + rawData + '"/>');
+	  } else {
+            $('#img_container').append('<pre id="the_image">' + rawData + '"</pre>');
+	  }
           // alert("Data: " + data + "\nStatus: " + status);
         });
     });

@@ -109,6 +109,10 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         self._set_headers()
         
     def do_POST(self):
+        # get LOGO source code
+        # return one of:
+        #   O...and.the.rendered.image...
+        #   E...and.the.LOGO.error...
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length).decode('utf-8')
         obj = urllib.parse.parse_qs(post_data)
@@ -120,10 +124,11 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
           eprint("Saved into:", outfile)
           with open(outfile, 'r') as myfile:
             rawsvg = myfile.read()
-          output = b"data:image/svg+xml;base64,"+stringToBase64(rawsvg);
-        except pylogo.common.LogoNameError as e:
+          output = b"Odata:image/svg+xml;base64,"+stringToBase64(rawsvg);
+        except Exception as e: #pylogo.common.LogoNameError as e:
           eprint("Error:", e)
-          output = b""
+          #pdb.set_trace()
+          output = b"E"+str(e).encode("utf-8")
         self._set_headers()
         #self.wfile.write(output.encode("utf-8"))
         self.wfile.write(output)
@@ -135,7 +140,7 @@ def run(main_exit, server_class=HTTPServer, handler_class=LoEV3goHandler,
         port=8080,
         root="web/"):
     print("Port: ",  port)
-    server_address = ('127.0.0.1', port)
+    server_address = ('0.0.0.0', port) # accept connections to any of our IPs
     httpd = server_class(server_address, handler_class)
     print("Chdir to: %s" % root)
     os.chdir(root)
