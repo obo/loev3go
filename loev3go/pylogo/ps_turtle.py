@@ -33,6 +33,7 @@ class Turtle:
         turtle.tracer(False) # this affects the *global* turtle, not use_turtle
         turtle.ht() # this affects the *global* turtle, not use_turtle
         self.pen.speed(0)
+        self.pen.up() # assume we start with the pen up
         # I don't know why more turtles should be supported:
         self._all_turtles.append(weakref.ref(self))
         self._count = self._turtle_count
@@ -46,11 +47,10 @@ class Turtle:
     def turtle(self):
         return self
 
-    @logofunc()
+    @logofunc(arity=1)
     def speed(self, v):
         # a noop here, we don't want any slowdowns
         pass
-        # if update: get_canvas().update()
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
@@ -85,8 +85,12 @@ class Turtle:
 
     @logofunc(aliases=['pc', 'color'],
               arity=1)
-    def pencolor(self, *args):
-        self.pen.color(*args)
+    def pencolor(self, color):
+        if color == "left":
+          color = "black"
+        elif color == "right":
+          color = "red"
+        self.pen.color(color)
 
     @logofunc(aliases=['ht'])
     def hideturtle(self):

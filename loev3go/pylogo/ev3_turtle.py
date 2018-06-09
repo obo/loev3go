@@ -99,8 +99,8 @@ class Turtle:
     def turtle(self):
         return self
 
-    @logofunc(aware=True, aliases=['speed'])
-    def speed(self, rootframe, v):
+    @logofunc(arity=1, aliases=['speed'], aware=True)
+    def speed(self, v):
         self.speed = v
 
     @logofunc(aliases=['fd'])
@@ -175,12 +175,14 @@ class Turtle:
     def penup(self):
         eprint("Pen up called.")
         PenSelector.static_set(NO_PEN)
+        self.pen_down = False
         # add_command(self.pen.up)
 
     @logofunc(aliases=['pd'])
     def pendown(self):
         eprint("Pen down called.")
         PenSelector.static_set(self.pen_color)
+        self.pen_down = True
         # add_command(self.pen.down)
 
     @logofunc(aware=True)
@@ -190,9 +192,14 @@ class Turtle:
 
     @logofunc(aliases=['pc', 'color'],
               arity=1)
-    def pencolor(self, *args):
-        eprint("Pen color called: ", *args)
-        # add_command(self.pen.color, *args)
+    def pencolor(self, color):
+        eprint("Pen color called:", color)
+        if color == "left":
+          self.pen_color = LEFT_PEN
+        elif color == "right":
+          self.pen_color = RIGHT_PEN
+        if self.pen_down:
+          PenSelector.static_set(self.pen_color)
 
     @logofunc(aliases=['ht'])
     def hideturtle(self):

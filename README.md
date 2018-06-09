@@ -789,3 +789,19 @@ https://getbootstrap.com/docs/3.3/css/
 echo other-uart >  /sys/class/lego-port/port1/mode
 # and back on
 echo auto >  /sys/class/lego-port/port1/mode
+
+### Nice figures:
+
+# jewels:
+penwidth 2
+to square
+  repeat 4 [ fd 10 rt 90 ]
+end
+repeat 9 [
+pencolor "left
+pd
+square pu fd 10 lt 20
+pencolor "right
+pd
+square pu fd 10 lt 20
+]
