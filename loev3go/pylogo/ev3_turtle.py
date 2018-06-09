@@ -91,9 +91,6 @@ class Turtle:
         left_motor.stop()
         right_motor.stop()
 
-    def set_speed(self, new_speed):
-      self.speed = new_speed
-
     def set_scale(self, new_scale):
       self.scale = new_scale
 
@@ -102,11 +99,9 @@ class Turtle:
     def turtle(self):
         return self
 
-    @logofunc()
-    def speed(self, v):
-        pass
-        # if update: get_canvas().update()
-
+    @logofunc(aware=True, aliases=['speed'])
+    def speed(self, rootframe, v):
+        self.speed = v
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
@@ -189,7 +184,7 @@ class Turtle:
         # add_command(self.pen.down)
 
     @logofunc(aware=True)
-    def penwidth(self, v):
+    def penwidth(self, rootframe, v):
         eprint("Pen width %i called." % v)
         # add_command(self.pen.width, v)
 

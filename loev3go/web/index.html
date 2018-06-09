@@ -23,7 +23,7 @@ textarea
   width:640px;
 }
 
-#speed {
+#scale {
   width:3em;
 }
 
@@ -91,9 +91,9 @@ $(document).ready(function() {
         alert("Stop sent");
     });
     $("#run").click(function() {
-	var speed = document.getElementById("speed").value;
-	if (isNaN(speed) || speed < 50 || speed > 600) {
-          alert("Wrong speed: "+speed+"\nExpecting a number between 50 and 600");
+	var scale = document.getElementById("scale").value;
+	if (isNaN(scale) || scale < 1 || scale > 100) {
+          alert("Wrong scale: "+scale+"\nExpecting a number between 1 and 100");
 	} else if (valid_code == "") {
           alert("You must first pass a Preview.");
         } else {
@@ -102,7 +102,7 @@ $(document).ready(function() {
               cache: false,
               dataType: 'text',
               async: true,
-              url: "/run-last-valid-code/"+speed
+              url: "/run-last-valid-code/"+scale
           });
           moving = 1;
         }
@@ -161,10 +161,11 @@ $(document).ready(function(){
 
 <button id="run">Run</button>
 
-<input type="text" id="speed" name="speed" value="200" width="3"/>
+<input type="text" id="scale" name="scale" value="10"/>
 
 <div id="code_box">
 <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
+speed 100
 to gen :lo :hi :step
   make "x []
   while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]

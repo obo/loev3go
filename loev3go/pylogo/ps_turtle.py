@@ -79,7 +79,8 @@ class Turtle:
         self.pen.down()
 
     @logofunc(aware=True)
-    def penwidth(self, v):
+    def penwidth(self, rootframe, v):
+        eprint("Pen width %i called." % v)
         self.pen.width(v)
 
     @logofunc(aliases=['pc', 'color'],
