@@ -28,6 +28,14 @@
 
 # ~autogen
 
+
+
+# dbg print
+from __future__ import print_function
+import sys
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 # -----------------------------------------------------------------------------
 
 import sys
@@ -796,6 +804,9 @@ class Motor(Device):
         """
         for key in kwargs:
             setattr(self, key, kwargs[key])
+        delay = abs(1/self.speed_sp*self.position_sp)
+        eprint("Sleeping for %f" % delay)
+        time.sleep(delay)
         self.command = self.COMMAND_RUN_TO_REL_POS
 
     def run_timed(self, **kwargs):

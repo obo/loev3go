@@ -50,6 +50,8 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'png'  : 'image/png'
     }
     last_valid_code = None
+    running = False
+    robot_thread = None
 
     def _set_headers(self):
         self.send_response(200)
@@ -109,15 +111,32 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
           elif action == 'run-last-valid-code':
             if self.cmdline_args.do_robot:
               if LoEV3goHandler.last_valid_code is not None:
-                eprint("Starting logo ev3")
-                LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
+                if LoEV3goHandler.running == False:
+                  # join the previous thread, if needed
+                  if LoEV3goHandler.robot_thread is not None:
+                    LoEV3goHandler.robot_thread.join()
+                  eprint("Starting logo ev3")
+                  ## run without threads:
+                  LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
+                  ## threaded run:
+                  LoEV3goHandler.robot_thread = threading.Thread(
+                    target=LoEV3goHandler.loc.run_logo_robot,
+                    args = ((LoEV3goHandler.last_valid_code)))
+                  eprint("Starting robot thread")
+                  LoEV3goHandler.robot_thread.start()
+                  LoEV3goHandler.running = True
+                  msg = "Drawing..."
+                else:
+                  msg = "Cannot start, already running."
               else:
-                eprint("No code has been successfully previewed.")
+                msg = "No code has been successfully previewed."
             else:
-              eprint("Robot not attached, nothing to do.")
+              msg = "Robot not attached, nothing to do."
             self.send_response(200)
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
+            eprint(msg)
+            self.wfile.write(msg.encode("utf-8"))
             return True # event has been handled
 
         return False
@@ -207,7 +226,7 @@ if __name__ == "__main__":
     eprint("Creating tracker thread")
     tracker_thread = threading.Thread(target=t.run, args=())
     #t.run()
-    eprint("Straing tracker thread")
+    eprint("Starting tracker thread")
     tracker_thread.start()
     # launch in a thread, it will finish after main_exit is set
   
@@ -225,3 +244,5 @@ if __name__ == "__main__":
     main_exit.set()
     if tracker_thread is not None:
       tracker_thread.join()
+    if LoEV3goHandler.robot_thread is not None:
+      LoEV3goHandler.robot_thread.join()
