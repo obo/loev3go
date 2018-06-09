@@ -204,3 +204,21 @@ _T=20180608_18:19:54_1007	 ls
 _T=20180608_18:21:08_1029	 top
 _T=20180608_18:25:20_1202	 ls
 _T=20180608_19:24:20_1866	 sudo apt-get install vim-lastplace
+_T=20180608_20:00:44_1929	 h batt
+_T=20180608_20:00:47_1929	 cat /sys/class/power_supply/lego-ev3-battery/voltage_now
+_T=20180608_20:01:08_1929	 git commit -a
+_T=20180609_11:55:23_1010	 git pull
+_T=20180609_12:08:04_1074	 ls
+_T=20180609_12:20:26_1074	 vim tracker/05-tank-switchable-with-pen.py
+_T=20180609_12:20:38_1074	 h batt
+_T=20180609_12:20:42_1074	 cat /sys/class/power_supply/lego-ev3-battery/voltage_now
+_T=20180609_12:21:24_1074	 export PS1="\[\033[32m\]\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:22:28_1074	 export PS1="\[\040m[32m\]\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:22:42_1074	 export PS1="\[\040m[32m\\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:22:58_1074	 export PS1="\[\040m[32m\\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:23:03_1074	 export PS1="\[\033[32m\]\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:23:14_1074	 export PS1="\[\033[35m\]\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:23:57_1074	 export PS1="\[\033[35m\][\$(cut -c1-3 /sys/class/power_supply/lego-ev3-battery/voltage_now)]\$(date +%H:%M) \h \W\$\[\033[0m\]"
+_T=20180609_12:24:49_1074	 export PS1="\[\033[35m\]\$(date +%H:%M) [\$(cut -c1-3 /sys/class/power_supply/lego-ev3-battery/voltage_now)] \W\$\[\033[0m\]"
+_T=20180609_12:25:01_1074	 ls
+_T=20180609_12:25:06_1074	 vim environment/bashrc

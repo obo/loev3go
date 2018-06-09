@@ -43,3 +43,6 @@ shopt -s checkwinsize
 
 # some more ls aliases
 alias lt='ls -tr'
+
+# report time, battery and cwd in prompt:
+export PS1="\[\033[35m\]\$(date +%H:%M) [\$(cut -c1-3 /sys/class/power_supply/lego-ev3-battery/voltage_now)] \W\$\[\033[0m\]"

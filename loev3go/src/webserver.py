@@ -183,16 +183,25 @@ if __name__ == "__main__":
   if args.do_robot:
     # Initialize handling IR requests for robot drawing:
     import SpeedableTrackerWithPen
+    eprint("Creating tracker object")
     t = SpeedableTrackerWithPen.SpeedableTrackerWithPen(main_exit)
-    t.run() # launch in a thread, it will finish after main_exit is set
+    eprint("Creating tracker thread")
+    tracker_thread = threading.Thread(target=t.run, args=())
+    #t.run()
+    eprint("Straing tracker thread")
+    tracker_thread.start()
+    # launch in a thread, it will finish after main_exit is set
   
     # Initialize handling LOGO scripts
     # XXX
   else:
     eprint("Robot disabled, not starting it")
 
+  eprint("Starting web server.")
   try:
     run(main_exit, port=args.port, handler_class=handler_class)
   finally:
     # everyone should totally stop, set the threading event
     main_exit.set()
+    if tracker_thread is not None:
+      tracker_thread.join()
