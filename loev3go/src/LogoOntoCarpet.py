@@ -15,8 +15,8 @@ from pylogo import builtins
 
 from io import StringIO
 
-#import turtle
-#import tkinter as tk
+import turtle
+import tkinter as tk
 #import src.canvasvg as canvasvg
 
 from pylogo import ev3_turtle
@@ -25,12 +25,23 @@ class LogoOntoCarpet(object):
   def __init__(self, stop_switch):
     interpreter.Logo.import_module(ev3_turtle)
 
-    self.interp = Logo
+    # create our custom global-level interpreter object
+    self.interp = interpreter.RootFrame()
     self.interp.import_module(builtins)
     self.interp.import_module(oobuiltins)
     self.stop_switch = stop_switch
 
   def run_logo_robot(self, code):
+    # create a new canvas
+    f = tk.Frame(None).pack()
+    cv = tk.Canvas(master=f,width=500,height=500)
+    cv.pack()
+    # create a python turtle on it
+    t = turtle.RawTurtle(cv, shape='square', visible=False)
+    # run that turtle superfast
+    t._tracer(0, None)
+    # create our logo-runner turtle with the python turtle
+    ev3_turtle.createturtle(self.interp, t)
     input = StringIO(code)
     input.name = '<string>'
     tokenizer = reader.FileTokenizer(reader.TrackingStream(input))

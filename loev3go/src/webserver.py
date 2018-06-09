@@ -103,16 +103,22 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
               eprint("Stopping robot")
             else:
               eprint("Robot not attached, nothing to stop.")
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
             return True # event has been handled
           elif action == 'run-last-valid-code':
             if self.cmdline_args.do_robot:
               if LoEV3goHandler.last_valid_code is not None:
-                eprint("Staring logo ev3")
+                eprint("Starting logo ev3")
                 LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
               else:
                 eprint("No code has been successfully previewed.")
             else:
               eprint("Robot not attached, nothing to do.")
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
             return True # event has been handled
 
         return False

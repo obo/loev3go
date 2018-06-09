@@ -19,7 +19,7 @@ right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
 polarity = -1
   # polarity means where the 'head' of the robot is wrt to motor direction
 
-speed = 100 # rotation speed of each of the motors
+speed = 300 # rotation speed of each of the motors
 moving_speed = 30 # how many tacho counts is one unit of "forward"
 angle_speed = 2098/360
   # how much have both left and right motor roll (in opposite directions)
@@ -55,7 +55,7 @@ class Turtle:
     _all_turtles = []
     _turtle_count = 1
 
-    def __init__(self):
+    def __init__(self, use_turtle = turtle):
         eprint("init")
         global left_motor
         global right_motor
@@ -69,6 +69,13 @@ class Turtle:
         self.pen_down = False
         # assume we start with the pen up
         self.pen_color = LEFT_PEN
+        ## The following is from ps_turtle, trying to avoid
+        ## ps_turtle and ev3_turtle's interpreters fight over tk
+        self.pen = use_turtle # use plain turtle graphics
+        self.pen.degrees()
+        turtle.tracer(False) # this affects the *global* turtle, not use_turtle
+        turtle.ht() # this affects the *global* turtle, not use_turtle
+        self.pen.speed(0)
         # self.pen = turtle.RawPen(get_canvas())
         # self.pen.degrees()
         # self._all_turtles.append(weakref.ref(self))
@@ -79,8 +86,10 @@ class Turtle:
         return '<%s %i>' % (self.__class__.__name__,
                             self._count)
     def __del__(self):
-        self.left_motor.stop()
-        self.right_motor.stop()
+        global left_motor
+        global right_motor
+        left_motor.stop()
+        right_motor.stop()
 
     @logofunc()
     def turtle(self):
@@ -275,8 +284,8 @@ def allturtles():
     return [t() for t in Turtle._all_turtles if t()]
 
 @logofunc(aware=True)
-def createturtle(interp):
-    t = Turtle()
+def createturtle(interp, use_turtle = turtle):
+    t = Turtle(use_turtle)
     interp.push_actor(t)
 
 def sign(x):
