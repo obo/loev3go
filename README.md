@@ -758,6 +758,11 @@ cd loev3go
 ./run_webserver.py [--no-robot]
 ```
 
+TODO:
+- speed choice in web page
+- motor polarity (jezdi pozadu)
+- ladici robot
+
 ## Setting up robot as wifi accesspoint
 
 Maybe this tip contains everything that is needed:
@@ -773,3 +778,13 @@ http://www.mindstormsrobots.com/lego-mindstorms/mindstorms-robots/mindstorms-ev3
 https://zbozi.mobilmania.cz/ostatni-baterie-a-prislusenstvi/napajeci-adapter-230v-3-12v-600ma/
 ...194Kc
 https://www.softcom.cz/eshop/napajeci-adapter-230v-3-12v-stejnosmerny-600ma_d107596.html
+
+## Bootstrap web layout
+https://getbootstrap.com/docs/3.3/css/
+
+### Switch off color sensor
+
+# switch it off
+echo other-uart >  /sys/class/lego-port/port1/mode
+# and back on
+echo auto >  /sys/class/lego-port/port1/mode
