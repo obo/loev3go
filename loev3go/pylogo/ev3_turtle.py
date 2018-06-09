@@ -9,7 +9,7 @@ def eprint(*args, **kwargs):
 from time   import time, sleep
 from ev3dev.auto import *
 
-from .src/PenSelector import *
+from src.PenSelector import *
 
 # Connect two large motors on output ports B and C and check that
 # the device is connected using the 'connected' property.

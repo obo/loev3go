@@ -222,3 +222,5 @@ _T=20180609_12:23:57_1074	 export PS1="\[\033[35m\][\$(cut -c1-3 /sys/class/powe
 _T=20180609_12:24:49_1074	 export PS1="\[\033[35m\]\$(date +%H:%M) [\$(cut -c1-3 /sys/class/power_supply/lego-ev3-battery/voltage_now)] \W\$\[\033[0m\]"
 _T=20180609_12:25:01_1074	 ls
 _T=20180609_12:25:06_1074	 vim environment/bashrc
+_T=20180609_12:28:58_1732	 git commit -a
+_T=20180609_12:30:51_1732	 git push

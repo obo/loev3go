@@ -63,6 +63,7 @@ textarea
 <script>
 
 var moving = 0;
+var valid_code = "";
 
 function stop_motors() {
     $.ajax({
@@ -85,9 +86,23 @@ $(document).ready(function() {
         stop_motors();
         alert("Stop sent");
     });
+    $("#run").click(function() {
+        if (valid_code == "") {
+          alert("You must first pass a Preview.");
+        } else {
+          $.ajax({
+              type: "GET",
+              cache: false,
+              dataType: 'text',
+              async: true,
+              url: "/run-last-valid-code"
+          });
+          moving = 1;
+        }
+    });
     $("#preview").click(function() {
         $('#the_image').remove();
-        $('#img_container').append('<img id="the_image" src="rendering.svg"/>');
+        $('#img_container').append('<p id="the_image">...rendering...</p>');
         // get the code
         var logocode = $('#logocode').val();
         // run the code in web server
@@ -103,8 +118,10 @@ $(document).ready(function() {
           $('#the_image').remove();
 	  if (stat == "O") {
             $('#img_container').append('<img id="the_image" src="' + rawData + '"/>');
+            valid_code = logocode;
 	  } else {
             $('#img_container').append('<pre id="the_image">' + rawData + '</pre>');
+            valid_code = "";
 	  }
           // alert("Data: " + data + "\nStatus: " + status);
         });
@@ -134,6 +151,8 @@ $(document).ready(function(){
 <button id="stop">Stop</button>
 
 <button id="preview">Preview</button>
+
+<button id="run">Run</button>
 
 <div id="code_box">
 <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">

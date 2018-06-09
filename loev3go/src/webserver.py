@@ -31,6 +31,7 @@ import re
 import argparse
 import threading, signal
 import LogoIntoSVG
+import LogoOntoCarpet
 import pylogo.common
 import logging
 
@@ -49,6 +50,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'js'   : 'application/javascript',
         'png'  : 'image/png'
     }
+    last_valid_code = None
 
     def _set_headers(self):
         self.send_response(200)
@@ -102,6 +104,16 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
             else:
               eprint("Robot not attached, nothing to stop.")
             return True # event has been handled
+          elif action == 'run-last-valid-code':
+            if self.cmdline_args.do_robot:
+              if LoEV3goHandler.last_valid_code is not None:
+                eprint("Staring logo ev3")
+                LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
+              else:
+                eprint("No code has been successfully previewed.")
+            else:
+              eprint("Robot not attached, nothing to do.")
+            return True # event has been handled
 
         return False
 
@@ -125,10 +137,12 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
           with open(outfile, 'r') as myfile:
             rawsvg = myfile.read()
           output = b"Odata:image/svg+xml;base64,"+stringToBase64(rawsvg);
+          LoEV3goHandler.last_valid_code = code
         except Exception as e: #pylogo.common.LogoNameError as e:
           eprint("Error:", e)
           #pdb.set_trace()
           output = b"E"+str(e).encode("utf-8")
+          LoEV3goHandler.last_valid_code = None
         self._set_headers()
         #self.wfile.write(output.encode("utf-8"))
         self.wfile.write(output)
@@ -193,7 +207,7 @@ if __name__ == "__main__":
     # launch in a thread, it will finish after main_exit is set
   
     # Initialize handling LOGO scripts
-    # XXX
+    handler_class.loc = LogoOntoCarpet.LogoOntoCarpet(main_exit)
   else:
     eprint("Robot disabled, not starting it")
 
