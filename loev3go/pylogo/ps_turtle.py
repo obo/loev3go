@@ -46,6 +46,12 @@ class Turtle:
     def turtle(self):
         return self
 
+    @logofunc()
+    def speed(self, v):
+        # a noop here, we don't want any slowdowns
+        pass
+        # if update: get_canvas().update()
+
     @logofunc(aliases=['fd'])
     def forward(self, v):
         self.pen.forward(v)

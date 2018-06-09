@@ -23,6 +23,10 @@ textarea
   width:640px;
 }
 
+#speed {
+  width:3em;
+}
+
 /**
 #wrapper {
     border: 1px solid blue;
@@ -87,7 +91,10 @@ $(document).ready(function() {
         alert("Stop sent");
     });
     $("#run").click(function() {
-        if (valid_code == "") {
+	var speed = document.getElementById("speed").value;
+	if (isNaN(speed) || speed < 50 || speed > 600) {
+          alert("Wrong speed: "+speed+"\nExpecting a number between 50 and 600");
+	} else if (valid_code == "") {
           alert("You must first pass a Preview.");
         } else {
           $.ajax({
@@ -95,7 +102,7 @@ $(document).ready(function() {
               cache: false,
               dataType: 'text',
               async: true,
-              url: "/run-last-valid-code"
+              url: "/run-last-valid-code/"+speed
           });
           moving = 1;
         }
@@ -153,6 +160,8 @@ $(document).ready(function(){
 <button id="preview">Preview</button>
 
 <button id="run">Run</button>
+
+<input type="text" id="speed" name="speed" value="200" width="3"/>
 
 <div id="code_box">
 <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">

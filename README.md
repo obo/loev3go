@@ -761,7 +761,8 @@ cd loev3go
 TODO:
 - speed choice in web page
 - motor polarity (jezdi pozadu)
-- ladici robot
+- ladici robot, tj. jako ev3dev, ale jen ladici vypisy, aby se testovalo
+  zastavovani ap.
 
 ## Setting up robot as wifi accesspoint
 

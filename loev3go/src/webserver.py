@@ -31,7 +31,6 @@ import re
 import argparse
 import threading, signal
 import LogoIntoSVG
-import LogoOntoCarpet
 import pylogo.common
 import logging
 
@@ -213,6 +212,7 @@ if __name__ == "__main__":
     # launch in a thread, it will finish after main_exit is set
   
     # Initialize handling LOGO scripts
+    import LogoOntoCarpet
     handler_class.loc = LogoOntoCarpet.LogoOntoCarpet(main_exit)
   else:
     eprint("Robot disabled, not starting it")

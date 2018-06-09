@@ -16,17 +16,17 @@ from src.PenSelector import *
 #print('Connecting motors')
 left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
 right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
-polarity = -1
+polarity = 1
   # polarity means where the 'head' of the robot is wrt to motor direction
 
 speed = 300 # rotation speed of each of the motors
-moving_speed = 30 # how many tacho counts is one unit of "forward"
-angle_speed = 2098/360
+scale = 30 # how many tacho counts is one unit of "forward"
+angle_scale = 2098/360
   # how much have both left and right motor roll (in opposite directions)
   # to get 1 degree of overall rotation
 
-# for simplicity, we include polarity in moving speed
-moving_speed *= polarity
+# for simplicity of calculations, we include polarity in travel speed
+scale *= polarity
 
 
 # # automatic stopping when this unit is destroyed
@@ -60,12 +60,12 @@ class Turtle:
         global left_motor
         global right_motor
         global speed
-        global moving_speed
+        global scale
         self.left_motor = left_motor
         self.right_motor = right_motor
         self.speed = speed
-        self.moving_speed = moving_speed
-        self.angle_speed = angle_speed
+        self.scale = scale
+        self.angle_scale = angle_scale
         self.pen_down = False
         # assume we start with the pen up
         self.pen_color = LEFT_PEN
@@ -91,18 +91,31 @@ class Turtle:
         left_motor.stop()
         right_motor.stop()
 
+    def set_speed(self, new_speed):
+      self.speed = new_speed
+
+    def set_scale(self, new_scale):
+      self.scale = new_scale
+
+
     @logofunc()
     def turtle(self):
         return self
+
+    @logofunc()
+    def speed(self, v):
+        pass
+        # if update: get_canvas().update()
+
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
         eprint("Forward %i called." % v)
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
+          position_sp = v*self.scale,
           stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
+          position_sp = v*self.scale,
           stop_action="hold")
         ## Block the code until the movement is finished
         eprint("  Forward %i waiting to finish." % v)
@@ -124,10 +137,10 @@ class Turtle:
               # Rotating to face the beacon
               dir = sign(ir.value(0))
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
+          position_sp = v*self.scale,
           stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.moving_speed,
+          position_sp = v*self.scale,
           stop_action="hold")
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
@@ -140,7 +153,7 @@ class Turtle:
 
     @logofunc(aliases=['lt'])
     def left(self, v):
-        delta = v*self.angle_speed
+        delta = v*self.angle_scale
         lpos = self.left_motor.position
         rpos = self.right_motor.position
         eprint("Left %i called, going for %i from %i L, %i R." % (v, delta, lpos, rpos))
