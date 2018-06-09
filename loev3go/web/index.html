@@ -17,8 +17,49 @@
     max-width: 640px;
     max-height: 480px;        
 }
+textarea
+{
+  border:1px solid #999999;
+  width:640px;
+}
+
+/**
+#wrapper {
+    border: 1px solid blue;
+    vertical-align: top;
+}
+#code_box {
+    display: inline-block;
+    border: 1px solid red;
+}
+#canvas_box {
+    display: inline-block;
+    border: 1px solid green;
+}
+*/
+#wrapper {
+    display: table;
+    table-layout: fixed;
+    
+    width:90%;
+    height:480px;
+    background-color:Gray;
+}
+#wrapper div {
+    display: table-cell;
+    height:480px;
+}
+
+#one {
+    background-color:green
+}
+#two {
+    background-color:blue
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="jquery-linedtextarea/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+<script src="jquery-linedtextarea/jquery-linedtextarea.js"></script>
 <script>
 
 var moving = 0;
@@ -33,6 +74,11 @@ function stop_motors() {
     });
     moving = 0;
 }
+
+$(function() {
+  // show line numbers in my textarea
+  $("#logocode").linedtextarea();
+});
 
 $(document).ready(function() {
     $("#stop").click(function() {
@@ -58,7 +104,7 @@ $(document).ready(function() {
 	  if (stat == "O") {
             $('#img_container').append('<img id="the_image" src="' + rawData + '"/>');
 	  } else {
-            $('#img_container').append('<pre id="the_image">' + rawData + '"</pre>');
+            $('#img_container').append('<pre id="the_image">' + rawData + '</pre>');
 	  }
           // alert("Data: " + data + "\nStatus: " + status);
         });
@@ -89,8 +135,8 @@ $(document).ready(function(){
 
 <button id="preview">Preview</button>
 
-<div>
-<textarea cols=60 rows=18 id="logocode" placeholder="Type LOGO code here...">
+<div id="code_box">
+<textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
 to gen :lo :hi :step
   make "x []
   while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
@@ -103,12 +149,18 @@ end
 square
 </textarea>
 </div>
-
-
+</div>
 <div id="canvas_box">
 <div id="img_container">
 <img id="the_image" src=""/>
 </div>
+</div>
+
+<div id="wrapper">
+<div id="one">
+B
+</div>
+<div id="two">B</div>
 </div>
 
 <!-- 
