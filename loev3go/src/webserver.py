@@ -117,11 +117,11 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                     LoEV3goHandler.robot_thread.join()
                   eprint("Starting logo ev3")
                   ## run without threads:
-                  LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
+                  # LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
                   ## threaded run:
                   LoEV3goHandler.robot_thread = threading.Thread(
                     target=LoEV3goHandler.loc.run_logo_robot,
-                    args = ((LoEV3goHandler.last_valid_code)))
+                    args = [LoEV3goHandler.last_valid_code])
                   eprint("Starting robot thread")
                   LoEV3goHandler.robot_thread.start()
                   LoEV3goHandler.running = True
