@@ -109,6 +109,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return True # event has been handled
           elif action == 'run-last-valid-code':
+            scale = path[2]
             if self.cmdline_args.do_robot:
               if LoEV3goHandler.last_valid_code is not None:
                 if LoEV3goHandler.robot_is_stopped.is_set():
@@ -124,7 +125,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                   ## threaded run:
                   LoEV3goHandler.robot_thread = threading.Thread(
                     target=LoEV3goHandler.loc.run_logo_robot,
-                    args = [LoEV3goHandler.last_valid_code])
+                    args = [LoEV3goHandler.last_valid_code, scale])
                   eprint("Starting robot thread")
                   LoEV3goHandler.robot_thread.start()
                   msg = "Drawing..."

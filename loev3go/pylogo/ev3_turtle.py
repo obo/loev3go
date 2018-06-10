@@ -19,14 +19,14 @@ right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
 polarity = 1
   # polarity means where the 'head' of the robot is wrt to motor direction
 
-speed = 300 # rotation speed of each of the motors
-scale = 30 # how many tacho counts is one unit of "forward"
+speed = 150 # rotation speed of each of the motors
+# scale = 10 # how many tacho counts is one unit of "forward"
 angle_scale = 2098/360
   # how much have both left and right motor roll (in opposite directions)
   # to get 1 degree of overall rotation
 
-# for simplicity of calculations, we include polarity in travel speed
-scale *= polarity
+# # for simplicity of calculations, we include polarity in travel speed
+# scale *= polarity
 
 
 # # automatic stopping when this unit is destroyed
@@ -53,12 +53,11 @@ from pylogo.common import *
 eprint("ev3_turtle starting")
 
 class Turtle:
-    def __init__(self, robot_should_stop):
-        eprint("init")
+    def __init__(self, robot_should_stop, scale=10):
+        eprint("init, SCALE:", scale)
         global left_motor
         global right_motor
         global speed
-        global scale
         self.robot_should_stop = robot_should_stop
         self.left_motor = left_motor
         self.right_motor = right_motor
@@ -106,10 +105,10 @@ class Turtle:
         eprint("Forward %i called." % v)
         self.check_stop()
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale,
+          position_sp = v*self.scale*polarity,
           stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale,
+          position_sp = v*self.scale*polarity,
           stop_action="hold")
         self.wait_until_not_moving_watching_for_stop(self.left_motor)
         eprint("  Forward %i done." % v)
@@ -130,10 +129,10 @@ class Turtle:
               # Rotating to face the beacon
               dir = sign(ir.value(0))
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale,
+          position_sp = v*self.scale*polarity,
           stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale,
+          position_sp = v*self.scale*polarity,
           stop_action="hold")
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
@@ -320,8 +319,8 @@ def allturtles():
     return [t() for t in Turtle._all_turtles if t()]
 
 @logofunc(aware=True)
-def createturtle(interp, robot_should_stop):
-    t = Turtle(robot_should_stop)
+def createturtle(interp, robot_should_stop, scale):
+    t = Turtle(robot_should_stop, scale=scale)
     interp.push_actor(t)
 
 def sign(x):
