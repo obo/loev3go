@@ -15,44 +15,43 @@ from pylogo import builtins
 
 from io import StringIO
 
-import turtle
-import tkinter as tk
-#import src.canvasvg as canvasvg
-
 from pylogo import ev3_turtle
 
 class LogoOntoCarpet(object):
-  def __init__(self, stop_switch):
+  def __init__(self, should_stop, stopped):
+    # should_stop is something that we check and stop
+    # stopped is something that we set just before finishing
     interpreter.Logo.import_module(ev3_turtle)
 
     # create our custom global-level interpreter object
     self.interp = interpreter.RootFrame()
     self.interp.import_module(builtins)
     self.interp.import_module(oobuiltins)
-    self.stop_switch = stop_switch
+    self.should_stop = should_stop
+    self.stopped = stopped
+    self.stopped.set() # when we start, the robot is not running
 
   def run_logo_robot(self, code):
-    # create a new canvas
-    f = tk.Frame(None).pack()
-    cv = tk.Canvas(master=f,width=500,height=500)
-    cv.pack()
-    # create a python turtle on it
-    t = turtle.RawTurtle(cv, shape='square', visible=False)
-    # run that turtle superfast
-    t._tracer(0, None)
+    self.stopped.clear()
+      # indicate that we are running
     # create our logo-runner turtle with the python turtle
-    ev3_turtle.createturtle(self.interp, t)
+    ev3_turtle.createturtle(self.interp, self.should_stop)
     input = StringIO(code)
     input.name = '<string>'
     tokenizer = reader.FileTokenizer(reader.TrackingStream(input))
     self.interp.push_tokenizer(tokenizer)
     try:
         while True:
-            if self.stop_switch.is_set():
+            if self.should_stop.is_set():
                 break;
             tok = self.interp.tokenizer.peek()
             if tok is EOF:
                 break
             val = self.interp.expr_top()
+    except ev3_turtle.UserStoppedRobot as reason:
+      pass
+    except common.LogoError as e:
+      pass
     finally:
         self.interp.pop_tokenizer()
+        self.stopped.set()

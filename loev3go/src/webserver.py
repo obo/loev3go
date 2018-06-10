@@ -50,7 +50,6 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'png'  : 'image/png'
     }
     last_valid_code = None
-    running = False
     robot_thread = None
 
     def _set_headers(self):
@@ -102,6 +101,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
           if action == 'stop':
             if self.cmdline_args.do_robot:
               eprint("Stopping robot")
+              self.robot_should_stop.set();
             else:
               eprint("Robot not attached, nothing to stop.")
             self.send_response(200)
@@ -111,11 +111,14 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
           elif action == 'run-last-valid-code':
             if self.cmdline_args.do_robot:
               if LoEV3goHandler.last_valid_code is not None:
-                if LoEV3goHandler.running == False:
+                if LoEV3goHandler.robot_is_stopped.is_set():
+                  # the robot is not running
                   # join the previous thread, if needed
                   if LoEV3goHandler.robot_thread is not None:
                     LoEV3goHandler.robot_thread.join()
                   eprint("Starting logo ev3")
+                  LoEV3goHandler.robot_should_stop.clear();
+                    # so that anyone can notify the robot to stop
                   ## run without threads:
                   # LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
                   ## threaded run:
@@ -124,7 +127,6 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                     args = [LoEV3goHandler.last_valid_code])
                   eprint("Starting robot thread")
                   LoEV3goHandler.robot_thread.start()
-                  LoEV3goHandler.running = True
                   msg = "Drawing..."
                 else:
                   msg = "Cannot start, already running."
@@ -208,13 +210,17 @@ if __name__ == "__main__":
     help='which port to use')
   args = parser.parse_args()
 
-  # main exit switch: everyone should listen to this and exit gracefully
-  main_exit = threading.Event() # set this to stop gracefully
-
   handler_class = LoEV3goHandler
   # set class variables, "global vars" for the class and input args for our
   # handler
-  handler_class.main_exit = main_exit
+
+  # main exit switch: everyone should listen to this and exit gracefully
+  handler_class.main_exit = threading.Event() # set this to stop gracefully
+  handler_class.robot_should_stop = threading.Event()
+    # set this to stop running EV3 logo
+  handler_class.robot_is_stopped = threading.Event()
+    # read this to see if the robot is stopped
+
   handler_class.cmdline_args = args
   # Initialize drawing LOGO into SVG
   handler_class.lis = LogoIntoSVG.LogoIntoSVG()
@@ -222,7 +228,7 @@ if __name__ == "__main__":
     # Initialize handling IR requests for robot drawing:
     import SpeedableTrackerWithPen
     eprint("Creating tracker object")
-    t = SpeedableTrackerWithPen.SpeedableTrackerWithPen(main_exit)
+    t = SpeedableTrackerWithPen.SpeedableTrackerWithPen(handler_class.main_exit)
     eprint("Creating tracker thread")
     tracker_thread = threading.Thread(target=t.run, args=())
     #t.run()
@@ -232,16 +238,18 @@ if __name__ == "__main__":
   
     # Initialize handling LOGO scripts
     import LogoOntoCarpet
-    handler_class.loc = LogoOntoCarpet.LogoOntoCarpet(main_exit)
+    handler_class.loc = LogoOntoCarpet.LogoOntoCarpet(
+      handler_class.robot_should_stop,
+      handler_class.robot_is_stopped)
   else:
     eprint("Robot disabled, not starting it")
 
   eprint("Starting web server.")
   try:
-    run(main_exit, port=args.port, handler_class=handler_class)
+    run(handler_class.main_exit, port=args.port, handler_class=handler_class)
   finally:
     # everyone should totally stop, set the threading event
-    main_exit.set()
+    handler_class.main_exit.set()
     if tracker_thread is not None:
       tracker_thread.join()
     if LoEV3goHandler.robot_thread is not None:

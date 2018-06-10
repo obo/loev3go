@@ -9,3 +9,11 @@ fi
 export PYTHONPATH=$(pwd):$PYTHONPATH
 export DISPLAY=
 xvfb-run ./src/webserver.py "$@"
+
+# final cleanup: stopping motors
+if [ -e /sys/class/tacho-motor ]; then
+  for f in /sys/class/tacho-motor/*; do
+    echo -n "Stopping "; cat $f/address
+    echo reset > $f/command
+  done
+fi

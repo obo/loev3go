@@ -88,7 +88,7 @@ $(function() {
 $(document).ready(function() {
     $("#stop").click(function() {
         stop_motors();
-        alert("Stop sent");
+        /* alert("Stop sent"); */
     });
     $("#run").click(function() {
 	var scale = document.getElementById("scale").value;
@@ -165,7 +165,6 @@ $(document).ready(function(){
 
 <div id="code_box">
 <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
-speed 100
 penwidth 2
 pencolor "right
 pd
@@ -179,6 +178,7 @@ to square
   repeat 4 [ fd 10 rt 90 ]
 end
 square
+speed 100
 </textarea>
 </div>
 </div>
