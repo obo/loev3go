@@ -490,6 +490,31 @@ Working example: random-bits/report-mouse-moves.py
 Possibly simpler solutions:
 https://stackoverflow.com/questions/25848951/python-get-mouse-x-y-position-on-click
 
+## Mouse Odometry:
+
+http://www.ijcas.org/admin/paper/files/IJCAS_v2_n4_pp485-493.pdf
+...one mice could be enough??
+
+https://pdfs.semanticscholar.org/a219/ba7106fc63f4af5ddf7fac7b407c49af2b46.pdf
+...two mice needed!
+
+https://link.springer.com/chapter/10.1007/978-1-4020-5626-0_18
+...precise, but even more mice needed
+
+https://ieeexplore.ieee.org/document/1438090/
+...one or two mice
+
+## Visual Odometry:
+
+http://www.instructables.com/id/ROS-Visual-Odometry/
+...on raspberry pi
+
+https://github.com/uoip/monoVO-python
+...python and opencv2
+
+https://github.com/Transportation-Inspection/visual_odometry
+...another one in python
+
 ## Python Logo:
 Standard python turtle graphics:
 from turtle import *
@@ -744,9 +769,9 @@ full circle seems like 2098
 
 - webserver:
   - nabizi kod k editaci [done]
-  - pri stistku preview to vrati nakreslene SVG (nebo error log)
-  - kdyz nebezi vlakno malovani, nabidne spusteni kodu
-  - kdyz bezi vlakno, tak to naopak nabizi jen stop
+  - pri stisku preview to vrati nakreslene SVG (nebo error log) [done]
+  - po uspesnem preview je mozne spustit kod [done]
+  - propagace stavu robota do webu, aby se vedelo, jestli je mozny run nebo stop
   - tlacitko na robotovi udela stop
   - kdyz vyjede mimo bile, udela stop
   - infra se da jezdit nezavisle, ale smysl to ma jen, kdyz to nic nemaluje [done]
@@ -759,10 +784,33 @@ cd loev3go
 ```
 
 TODO:
-- speed choice in web page
-- motor polarity (jezdi pozadu)
+- speed choice in logo code ("speed 200")
+- motor polarity (jezdi pozadu) [done]
 - ladici robot, tj. jako ev3dev, ale jen ladici vypisy, aby se testovalo
-  zastavovani ap.
+  zastavovani ap. [done]
+- left and right pens are swapped
+- inaccuracies:
+  - should wait after pendown
+  - unclear that the squares seem sort of OK and the rotation by 20 degrees
+    between each red or black square does not add up 9*20*2 = 360
+    - should check level of shaking due to pen movements, once we have mouse in
+    - should check non-linearity of robot rotation, perhaps 90 degrees work
+      well but 20 do not.
+
+Code to check the non-linearity of rotation:
+... first a circle in one color, then a circle of alternating colors
+penwidth 2
+pencolor "right
+pd
+repeat 18 [ fd 10 lt 20 ]
+rt 180
+repeat 9 [
+  pencolor "right
+  fd 10 lt 20
+  pencolor "left
+  fd 10 lt 20
+]
+
 
 ## Setting up robot as wifi accesspoint
 
@@ -805,3 +853,6 @@ pencolor "right
 pd
 square pu fd 10 lt 20
 ]
+
+
+

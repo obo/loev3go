@@ -1,0 +1,13 @@
+#!/bin/bash
+# switch on or off the color sensor
+
+sens=/sys/class/lego-port/port1/mode
+
+mode=$(cat $sens)
+if [ "$mode" == "other-uart" ]; then
+  echo "Switching ON: $sens"
+  echo auto > $sens
+else
+  echo "Switching OFF: $sens"
+  echo other-uart > $sens
+fi

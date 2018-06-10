@@ -1,0 +1,12 @@
+penwidth 2
+to square
+  repeat 4 [ fd 10 rt 90 ]
+end
+repeat 9 [
+pencolor "left
+pd
+square pu fd 10 lt 20
+pencolor "right
+pd
+square pu fd 10 lt 20
+]
