@@ -16,7 +16,7 @@ from src.PenSelector import *
 #print('Connecting motors')
 left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
 right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
-polarity = 1
+# polarity = 1
   # polarity means where the 'head' of the robot is wrt to motor direction
 
 speed = 150 # rotation speed of each of the motors
@@ -63,6 +63,7 @@ class Turtle:
         self.right_motor = right_motor
         self.speed = speed
         self.scale = scale
+        self.polarity = 1
         self.angle_scale = angle_scale
         self.pen_down = False
         # assume we start with the pen up
@@ -102,13 +103,14 @@ class Turtle:
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
-        eprint("Forward %i called." % v)
+        eprint("Forward %i called, scale %i, polarity %i."
+          % (v, self.scale, self.polarity))
         self.check_stop()
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale*polarity,
+          position_sp = v*self.scale*self.polarity,
           stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale*polarity,
+          position_sp = v*self.scale*self.polarity,
           stop_action="hold")
         self.wait_until_not_moving_watching_for_stop(self.left_motor)
         eprint("  Forward %i done." % v)
@@ -129,10 +131,10 @@ class Turtle:
               # Rotating to face the beacon
               dir = sign(ir.value(0))
         self.left_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale*polarity,
+          position_sp = v*self.scale*self.polarity,
           stop_action="hold")
         self.right_motor.run_to_rel_pos(speed_sp=self.speed,
-          position_sp = v*self.scale*polarity,
+          position_sp = v*self.scale*self.polarity,
           stop_action="hold")
         # add_command(self.pen.forward, v)
         # add_command(get_canvas().update)
@@ -183,7 +185,9 @@ class Turtle:
     def pendown(self):
         eprint("Pen down called.")
         self.check_stop()
+        eprint("Pen down running.")
         PenSelector.static_set(self.pen_color)
+        eprint("Pen down done.")
         self.pen_down = True
         # add_command(self.pen.down)
 
@@ -191,6 +195,7 @@ class Turtle:
     def penwidth(self, rootframe, v):
         eprint("Pen width %i called." % v)
         self.check_stop()
+        eprint("Pen width done.")
         # add_command(self.pen.width, v)
 
     @logofunc(aliases=['pc', 'color'],

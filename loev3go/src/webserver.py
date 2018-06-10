@@ -109,7 +109,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return True # event has been handled
           elif action == 'run-last-valid-code':
-            scale = path[2]
+            scale = int(path[2])
             if self.cmdline_args.do_robot:
               if LoEV3goHandler.last_valid_code is not None:
                 if LoEV3goHandler.robot_is_stopped.is_set():

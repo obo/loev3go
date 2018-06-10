@@ -3,6 +3,12 @@
 # Synopsis:
 #  ... see __main__ below
 
+# dbg print
+from __future__ import print_function
+import sys
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 from pylogo import common
 from pylogo import Logo
 from pylogo import interpreter
@@ -51,7 +57,7 @@ class LogoOntoCarpet(object):
     except ev3_turtle.UserStoppedRobot as reason:
       pass
     except common.LogoError as e:
-      pass
+      eprint("Error:", e)
     finally:
         self.interp.pop_tokenizer()
         self.stopped.set()
