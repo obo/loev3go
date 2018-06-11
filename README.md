@@ -788,6 +788,8 @@ TODO:
 - motor polarity (jezdi pozadu) [done]
 - ladici robot, tj. jako ev3dev, ale jen ladici vypisy, aby se testovalo
   zastavovani ap. [done]
+- web-based "pen release" and "pen fix"
+- IR-follow
 - left and right pens are swapped
 - inaccuracies:
   - should wait after pendown
