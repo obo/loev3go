@@ -37,11 +37,11 @@ class LogoOntoCarpet(object):
     self.stopped = stopped
     self.stopped.set() # when we start, the robot is not running
 
-  def run_logo_robot(self, code, scale):
+  def run_logo_robot(self, code, scale, dryrun):
     self.stopped.clear()
       # indicate that we are running
     # create our logo-runner turtle with the python turtle
-    ev3_turtle.createturtle(self.interp, self.should_stop, scale)
+    ev3_turtle.createturtle(self.interp, self.should_stop, scale, dryrun)
     input = StringIO(code)
     input.name = '<string>'
     tokenizer = reader.FileTokenizer(reader.TrackingStream(input))

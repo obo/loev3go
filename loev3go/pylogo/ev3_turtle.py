@@ -18,18 +18,11 @@ left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
 left_motor.reset()
 right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
 right_motor.reset()
-# polarity = 1
-  # polarity means where the 'head' of the robot is wrt to motor direction
 
-speed = 150 # rotation speed of each of the motors
-# scale = 10 # how many tacho counts is one unit of "forward"
+hide_speed = 150 # rotation speed of each of the motors
 angle_scale = 2098/360
   # how much have both left and right motor roll (in opposite directions)
   # to get 1 degree of overall rotation
-
-# # for simplicity of calculations, we include polarity in travel speed
-# scale *= polarity
-
 
 # # automatic stopping when this unit is destroyed
 # import weakref
@@ -55,19 +48,20 @@ from pylogo.common import *
 eprint("ev3_turtle starting")
 
 class Turtle:
-    def __init__(self, robot_should_stop, scale=10):
+    def __init__(self, robot_should_stop, scale=10, dryrun=False):
         eprint("init, SCALE:", scale)
         global left_motor
         global right_motor
-        global speed
         self.robot_should_stop = robot_should_stop
         self.left_motor = left_motor
         self.right_motor = right_motor
-        self.speed = speed
+        self.travel_speed = 150
         self.scale = scale
+        self.dryrun = dryrun
         self.polarity = -1
         self.angle_scale = angle_scale
         self.pen_down = False
+        PenSelector.static_set(NO_PEN)
         # assume we start with the pen up
         self.pen_color = LEFT_PEN
 
@@ -98,20 +92,20 @@ class Turtle:
         self.check_stop()
         return self
 
-    @logofunc(arity=1, aliases=['speed'], aware=True)
+    @logofunc(arity=1, aliases=['speed']) #, aware=True)
     def speed(self, v):
         self.check_stop()
-        self.speed = v
+        self.travel_speed = v
 
     @logofunc(aliases=['fd'])
     def forward(self, v):
         eprint("Forward %i called, scale %i, polarity %i."
           % (v, self.scale, self.polarity))
         self.check_stop()
-        self.left_motor.run_to_rel_pos(speed_sp=self.speed,
+        self.left_motor.run_to_rel_pos(speed_sp=self.travel_speed,
           position_sp = v*self.scale*self.polarity,
           stop_action="hold")
-        self.right_motor.run_to_rel_pos(speed_sp=self.speed,
+        self.right_motor.run_to_rel_pos(speed_sp=self.travel_speed,
           position_sp = v*self.scale*self.polarity,
           stop_action="hold")
         self.wait_until_not_moving_watching_for_stop(self.left_motor)
@@ -132,10 +126,10 @@ class Turtle:
             else:
               # Rotating to face the beacon
               dir = sign(ir.value(0))
-        self.left_motor.run_to_rel_pos(speed_sp=self.speed,
+        self.left_motor.run_to_rel_pos(speed_sp=self.travel_speed,
           position_sp = v*self.scale*self.polarity,
           stop_action="hold")
-        self.right_motor.run_to_rel_pos(speed_sp=self.speed,
+        self.right_motor.run_to_rel_pos(speed_sp=self.travel_speed,
           position_sp = v*self.scale*self.polarity,
           stop_action="hold")
         # add_command(self.pen.forward, v)
@@ -155,10 +149,10 @@ class Turtle:
         rpos = self.right_motor.position
         eprint("Left %i called, going for %i from %i L, %i R." % (v, delta, lpos, rpos))
         self.check_stop()
-        self.left_motor.run_to_rel_pos(speed_sp=self.speed,
+        self.left_motor.run_to_rel_pos(speed_sp=self.travel_speed,
           position_sp = (-1.0)*delta,
           stop_action="hold")
-        self.right_motor.run_to_rel_pos(speed_sp=self.speed,
+        self.right_motor.run_to_rel_pos(speed_sp=self.travel_speed,
           position_sp = delta,
           stop_action="hold")
         ## Block the code until the movement is finished
@@ -185,11 +179,11 @@ class Turtle:
 
     @logofunc(aliases=['pd'])
     def pendown(self):
-        eprint("Pen down called.")
+        eprint("Pen down called, dryrun: ", self.dryrun)
         self.check_stop()
-        eprint("Pen down running.")
-        PenSelector.static_set(self.pen_color)
-        eprint("Pen down done.")
+        if not self.dryrun:
+          PenSelector.static_set(self.pen_color)
+        # internally, let's think the pen is down...
         self.pen_down = True
         # add_command(self.pen.down)
 
@@ -209,7 +203,7 @@ class Turtle:
           self.pen_color = LEFT_PEN
         elif color == "right":
           self.pen_color = RIGHT_PEN
-        if self.pen_down:
+        if self.pen_down and not self.dryrun:
           PenSelector.static_set(self.pen_color)
 
     @logofunc(aliases=['ht'])
@@ -326,8 +320,8 @@ def allturtles():
     return [t() for t in Turtle._all_turtles if t()]
 
 @logofunc(aware=True)
-def createturtle(interp, robot_should_stop, scale):
-    t = Turtle(robot_should_stop, scale=scale)
+def createturtle(interp, robot_should_stop, scale, dryrun):
+    t = Turtle(robot_should_stop, scale=scale, dryrun=dryrun)
     interp.push_actor(t)
 
 def sign(x):

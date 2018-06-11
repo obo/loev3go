@@ -785,17 +785,17 @@ cd loev3go
 
 TODO:
 - stav baterky
-- prepinac dry-run, aby obrazek projel bez pokladani pera
+- prepinac dry-run, aby obrazek projel bez pokladani pera [done]
 - stop_motors nejak otoci polaritu, zkousim tedy pridat reset
   .... fixed, ale je prohozeny levy a pravy motor
   ... pero je spravne leve je cerne a je to LEFT
-- speed choice in logo code ("speed 200")
+- speed choice in logo code ("speed 200") [done]
 - motor polarity (jezdi pozadu) [done]
 - ladici robot, tj. jako ev3dev, ale jen ladici vypisy, aby se testovalo
   zastavovani ap. [done]
 - web-based "pen release" and "pen fix" (staci jedna vec: stop_motors, clovek ji zmackne jednou, nastavi vypnuta pera, zmackne podruhe, aby zresetoval stav, musi se asi taky zmenit stav na PEN_UP
 - IR-follow
-- left and right pens are swapped
+- left and right pens are swapped [done]
 - inaccuracies:
   - should wait after pendown, this is critical!
   - dangerous are also rotations there and immediately back

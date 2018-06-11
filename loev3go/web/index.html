@@ -92,6 +92,7 @@ $(document).ready(function() {
     });
     $("#run").click(function() {
 	var scale = document.getElementById("scale").value;
+	var dryrun = document.getElementById("dryrun").checked;
 	if (isNaN(scale) || scale < 1 || scale > 100) {
           alert("Wrong scale: "+scale+"\nExpecting a number between 1 and 100");
 	} else if (valid_code == "") {
@@ -102,7 +103,7 @@ $(document).ready(function() {
               cache: false,
               dataType: 'text',
               async: true,
-              url: "/run-last-valid-code/"+scale
+              url: "/run-last-valid-code/"+scale+"/"+dryrun
           });
           moving = 1;
         }
@@ -162,6 +163,7 @@ $(document).ready(function(){
 <button id="run">Run</button>
 
 Scale: <input type="text" id="scale" name="scale" value="10"/>
+| <input type="checkbox" id="dryrun" name="dryrun" checked/> Dry
 
 <div id="code_box">
 <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
