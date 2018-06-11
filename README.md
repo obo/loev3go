@@ -784,15 +784,22 @@ cd loev3go
 ```
 
 TODO:
+- stav baterky
+- prepinac dry-run, aby obrazek projel bez pokladani pera
+- stop_motors nejak otoci polaritu, zkousim tedy pridat reset
+  .... fixed, ale je prohozeny levy a pravy motor
+  ... pero je spravne leve je cerne a je to LEFT
 - speed choice in logo code ("speed 200")
 - motor polarity (jezdi pozadu) [done]
 - ladici robot, tj. jako ev3dev, ale jen ladici vypisy, aby se testovalo
   zastavovani ap. [done]
-- web-based "pen release" and "pen fix"
+- web-based "pen release" and "pen fix" (staci jedna vec: stop_motors, clovek ji zmackne jednou, nastavi vypnuta pera, zmackne podruhe, aby zresetoval stav, musi se asi taky zmenit stav na PEN_UP
 - IR-follow
 - left and right pens are swapped
 - inaccuracies:
-  - should wait after pendown
+  - should wait after pendown, this is critical!
+  - dangerous are also rotations there and immediately back
+  - the 20 degrees themselves are probably OK
   - unclear that the squares seem sort of OK and the rotation by 20 degrees
     between each red or black square does not add up 9*20*2 = 360
     - should check level of shaking due to pen movements, once we have mouse in
@@ -855,6 +862,41 @@ pencolor "right
 pd
 square pu fd 10 lt 20
 ]
+
+
+## Colors of carpet etc
+
+v seru v zelenem pokoji:
+
+tmavy kusovy koberec:
+Sum: 68, Red: 28, Green: 34, Blue: 6
+
+bily papir
+Sum: 616, Red: 233, Green: 259, Blue: 124
+
+cara na bilem papire:
+Sum: 588, Red: 221, Green: 248, Blue: 119
+
+svetly zeleny koberec:
+Sum: 182, Red: 76, Green: 82, Blue: 24
+
+koberec v obyvaku:
+  svetly bod:
+  Sum: 78, Red: 42, Green: 29, Blue: 7
+  tmavsi cast:
+  Sum: 35, Red: 18, Green: 13, Blue: 4
+  Sum: 24, Red: 11, Green: 10, Blue: 3
+  Sum: 9, Red: 3, Green: 4, Blue: 2
+  nejtmavsi cast:
+  Sum: 12, Red: 4, Green: 5, Blue: 3
+  svetla cast koberce:
+  Sum: 111, Red: 56, Green: 44, Blue: 11
+
+bily papir ve svetle v obyvaku:
+  Sum: 582, Red: 222, Green: 247, Blue: 113
+
+  a hneda caranice na nem:
+  Sum: 254, Red: 117, Green: 97, Blue: 40
 
 
 
