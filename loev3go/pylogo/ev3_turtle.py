@@ -15,7 +15,9 @@ from src.PenSelector import *
 # the device is connected using the 'connected' property.
 #print('Connecting motors')
 left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
+left_motor.reset()
 right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
+right_motor.reset()
 # polarity = 1
   # polarity means where the 'head' of the robot is wrt to motor direction
 
@@ -63,7 +65,7 @@ class Turtle:
         self.right_motor = right_motor
         self.speed = speed
         self.scale = scale
-        self.polarity = 1
+        self.polarity = -1
         self.angle_scale = angle_scale
         self.pen_down = False
         # assume we start with the pen up
