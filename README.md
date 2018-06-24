@@ -476,6 +476,7 @@ m.run_to_abs_pos(speed_sp=80, position_sp=60, stop_action="hold")
 
 ## Mouse in python:
 
+
 >>> import evdev
 >>> device = evdev.InputDevice('/dev/input/by-id/usb-04d9_0499-event-mouse')
 >>> device.capabilities()
@@ -899,4 +900,17 @@ bily papir ve svetle v obyvaku:
   Sum: 254, Red: 117, Green: 97, Blue: 40
 
 
+### Mouse in USB hub:
+
+Mouse devices: /dev/input/by-id/usb-13ba_Barcode_Reader-if01-event-mouse
+
+15:30 [644] random-bits$./report-mouse-moves.py 
+Device:  Barcode Reader 
+D:  device /dev/input/event3, name "Barcode Reader ", phys "usb-ohci-da8xx-1.4/input1"
+Device:  Barcode Reader 
+D:  device /dev/input/event2, name "Barcode Reader ", phys "usb-ohci-da8xx-1.4/input0"
+Device:  EV3 Brick Buttons
+D:  device /dev/input/event1, name "EV3 Brick Buttons", phys "gpio-keys/input0"
+Device:  LEGO MINDSTORMS EV3 Speaker
+D:  device /dev/input/event0, name "LEGO MINDSTORMS EV3 Speaker", phys ""
 
