@@ -395,3 +395,14 @@ _T=20180624_10:15:28_3183	 vim README.md
 _T=20180624_10:15:34_3183	 vim README.md
 _T=20180624_10:15:39_3183	 source githublog
 _T=20180624_10:15:43_3183	 git pull
+_T=20180624_10:15:47_3183	 git commit -a
+_T=20180624_10:15:56_3183	 git push
+_T=20180624_10:16:13_3183	 . chd bibl
+_T=20180624_20:50:57_6845	 ls
+_T=20180624_21:43:57_6978	 vim random-bits/
+_T=20180624_21:44:03_6978	 vim ~/clip
+_T=20180624_21:45:26_6978	 labelledxychart --data=1,2,0,'',linespoints < ~/clip | gpsandbox
+_T=20180624_21:45:27_6978	 bg
+_T=20180624_21:46:13_6978	 labelledxychart --data=1,2,0,'',linespoints < ~/clip | gpsandbox
+_T=20180624_21:46:14_6978	 bg
+_T=20180703_22:39:20_11289	 ls
