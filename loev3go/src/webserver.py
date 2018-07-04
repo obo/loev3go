@@ -33,6 +33,7 @@ import threading, signal
 import LogoIntoSVG
 import pylogo.common
 import logging
+import json
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +60,10 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """
-        If the request is for a known file type serve the file (or send a 404) and return True
+        If the request is for a known file type serve the file (or send a 404)
+        and return True.
+        If the request does not contain '.' in the path, assume it is a
+        command.
         """
 
         eprint("GOT:", self.path)
@@ -95,9 +99,9 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                 return True
         else:
           # Handle request
-          path = re.split("[\?/]", self.path)
-          eprint("SPLIT:", path)
-          action = path[1]
+          request = re.split("[\?/]", self.path, 2)
+          eprint("SPLIT:", request)
+          action = request[1]
           if action == 'stop':
             if self.cmdline_args.do_robot:
               eprint("Stopping robot")
@@ -109,8 +113,14 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return True # event has been handled
           elif action == 'run-last-valid-code':
-            scale = int(path[2])
-            dryrun = (path[3] != "false")
+            robotconfig = urllib.parse.parse_qs(request[2])
+            eprint("GOT REQUEST CONFIG: ", robotconfig)
+            robotconfigdata = json.loads(robotconfig["data"][0])
+            # Interpret integers:
+            for varname in ['polarity', 'scale', 'travel_speed',
+                'angle_scale_travel']:
+              robotconfigdata[varname] = int(robotconfigdata[varname])
+            eprint("GOT REQUEST CONFIG DATA: ", robotconfigdata)
             if self.cmdline_args.do_robot:
               if LoEV3goHandler.last_valid_code is not None:
                 if LoEV3goHandler.robot_is_stopped.is_set():
@@ -126,7 +136,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                   ## threaded run:
                   LoEV3goHandler.robot_thread = threading.Thread(
                     target=LoEV3goHandler.loc.run_logo_robot,
-                    args = [LoEV3goHandler.last_valid_code, scale, dryrun])
+                    args = [LoEV3goHandler.last_valid_code, robotconfigdata])
                   eprint("Starting robot thread")
                   LoEV3goHandler.robot_thread.start()
                   msg = "Drawing..."

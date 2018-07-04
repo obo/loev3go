@@ -42,6 +42,16 @@ textarea
   max-width: 640px;
   max-height: 260px;        
 }
+
+#polarity {
+  width:2em;
+}
+#travel_speed {
+  width:3em;
+}
+#angle_scale_travel {
+  width:4em;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link href="jquery-linedtextarea/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
@@ -80,12 +90,21 @@ $(document).ready(function() {
 	} else if (valid_code == "") {
           alert("You must first pass a Preview.");
         } else {
+	  robotconfig = {
+	    scale: scale,
+	    dryrun: dryrun,
+	    right_motor_connected_to_b: document.getElementById("right_motor_connected_to_b").checked,
+	    travel_speed: document.getElementById("travel_speed").value,
+	    polarity: document.getElementById("polarity").value,
+	    angle_scale_travel: document.getElementById("angle_scale_travel").value
+	  };
           $.ajax({
               type: "GET",
               cache: false,
               dataType: 'text',
+	      data: {data: JSON.stringify(robotconfig)},
               async: true,
-              url: "/run-last-valid-code/"+scale+"/"+dryrun
+              url: "/run-last-valid-code",
           });
           moving = 1;
         }
@@ -178,6 +197,31 @@ speed 100
   </div>
 </div>
 
+<div class="clearfix"></div>
+
+Detailed robot settings:
+<table>
+<tr>
+<td>Right motor connected to:</td>
+<td>
+<input type="radio" id="right_motor_connected_to_b" name="right_motor_connected_to" value="B" checked/> B
+|
+<input type="radio" id="right_motor_connected_to_c" name="right_motor_connected_to" value="C"/> C
+</td>
+</tr>
+<tr>
+<td>Motor polarity</td>
+<td><input type="text" name="polarity" id="polarity" value="-1"/></td>
+</tr>
+<tr>
+<td>For 360 rotation, travel motors by:</td>
+<td><input type="text" name="angle_scale_travel" id="angle_scale_travel" value="2098"/></td>
+</tr>
+<tr>
+<td>Default travel speed:</td>
+<td><input type="text" name="travel_speed" id="travel_speed" value="150"/></td>
+</tr>
+</table>
 
 <!-- 
 <p id="demo"></p>

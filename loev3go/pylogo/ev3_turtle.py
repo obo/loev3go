@@ -11,27 +11,28 @@ from ev3dev.auto import *
 
 from src.PenSelector import *
 
+# Here is global code, run only during initialization:
+eprint("ev3_turtle starting")
+
 # Connect two large motors on output ports B and C and check that
 # the device is connected using the 'connected' property.
 #print('Connecting motors')
-left_motor = LargeMotor(OUTPUT_B);  assert left_motor.connected
-left_motor.reset()
-right_motor = LargeMotor(OUTPUT_C); assert right_motor.connected
-right_motor.reset()
+b_motor = LargeMotor(OUTPUT_B);  assert b_motor.connected
+b_motor.reset()
+c_motor = LargeMotor(OUTPUT_C); assert c_motor.connected
+c_motor.reset()
 
-hide_speed = 150 # rotation speed of each of the motors
 angle_scale = 2098/360
-  # how much have both left and right motor roll (in opposite directions)
-  # to get 1 degree of overall rotation
 
 # # automatic stopping when this unit is destroyed
+# # This is now hopefully handled by __del__ for the Turtle object
 # import weakref
 # class Ev3_Turtle_Object:
 #   pass
 # alive=Ev3_Turtle_Object()
 # def finalizer:
-#   left_motor.stop()
-#   right_motor.stop()
+#   b_motor.stop()
+#   c_motor.stop()
 # weakref.finalize(alive, finalizer)
 
 # custom exception
@@ -45,21 +46,32 @@ import sys
 
 from pylogo.common import *
 
-eprint("ev3_turtle starting")
-
 class Turtle:
-    def __init__(self, robot_should_stop, scale=10, dryrun=False):
-        eprint("init, SCALE:", scale)
-        global left_motor
-        global right_motor
+    # This class is instantiated at every Run
+    def __init__(self, robot_should_stop,
+          scale=10, dryrun=False,
+          right_motor_connected_to_b=True,
+          travel_speed=150,
+          polarity=-1,
+          angle_scale_travel=2098
+          # how much have both left and right motor roll (in opposite
+          # directions) to get 1 degree of overall rotation
+        ):
+        eprint("initing ev3_turtle Turtle, SCALE:", scale)
         self.robot_should_stop = robot_should_stop
-        self.left_motor = left_motor
-        self.right_motor = right_motor
-        self.travel_speed = 150
+        global b_motor
+        global c_motor
+        if right_motor_connected_to_b:
+          self.left_motor = c_motor
+          self.right_motor = b_motor
+        else:
+          self.left_motor = b_motor
+          self.right_motor = c_motor
+        self.travel_speed = travel_speed
         self.scale = scale
         self.dryrun = dryrun
-        self.polarity = -1
-        self.angle_scale = angle_scale
+        self.polarity = polarity
+        self.angle_scale = angle_scale_travel / 360
         self.pen_down = False
         PenSelector.static_set(NO_PEN)
         # assume we start with the pen up
@@ -69,10 +81,10 @@ class Turtle:
         return '<%s %i>' % (self.__class__.__name__,
                             self._count)
     def __del__(self):
-        global left_motor
-        global right_motor
-        left_motor.stop()
-        right_motor.stop()
+        global b_motor
+        global c_motor
+        b_motor.stop()
+        c_motor.stop()
 
     def set_scale(self, new_scale):
       self.scale = new_scale
@@ -95,6 +107,8 @@ class Turtle:
     @logofunc(arity=1, aliases=['speed']) #, aware=True)
     def speed(self, v):
         self.check_stop()
+        eprint("Setting travel speed to %i, previous was %i."
+          % (v, self.travel_speed))
         self.travel_speed = v
 
     @logofunc(aliases=['fd'])
@@ -320,8 +334,8 @@ def allturtles():
     return [t() for t in Turtle._all_turtles if t()]
 
 @logofunc(aware=True)
-def createturtle(interp, robot_should_stop, scale, dryrun):
-    t = Turtle(robot_should_stop, scale=scale, dryrun=dryrun)
+def createturtle(interp, robot_should_stop, robotconfig):
+    t = Turtle(robot_should_stop, **robotconfig)
     interp.push_actor(t)
 
 def sign(x):
