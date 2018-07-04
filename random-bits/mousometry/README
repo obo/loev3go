@@ -27,17 +27,19 @@ The files sample-left-rotation.txt and sample-forward-movement.txt are excerpts
 from that complete trajectory that I will use for finding out the necessary
 "unrotation".
 
+Here is how to rotate the plot manually by 8 degrees:
+
 cat first-sample-trajectory.txt \
 | ./rot-xy.py 8 \
 | labelledxychart --data=1,2,0,'',linespoints --set='size ratio -1' \
 | gpsandbox
 
-Python commands for trajectory rotation:
+Leaving out the 8 will search for the best angle automatically, *for a flat part* of the trajectory:
 
-#!/usr/bin/env python3
-import numpy as np
-d=np.loadtxt("/dev/stdin")
-r=10; c=np.cos(np.radians(r)); s=np.sin(np.radians(r)); m=np.array([[c,-s],[s,c]])
-np.savetxt("/dev/stdout", np.transpose(np.matmul(m, np.transpose(d))), delimiter="\t")
+cat sample-forward-movement.txt \
+| ./rot-xy.py 8 \
+| labelledxychart --data=1,2,0,'',linespoints --set='size ratio -1' \
+| gpsandbox
+-> Found best rotation angle: 7.11561792739
 
 
