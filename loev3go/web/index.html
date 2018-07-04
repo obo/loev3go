@@ -2,63 +2,45 @@
 <head>
 <title>LoEV3go: LOGO Drawing with EV3 Robot</title>
 <style>
-#canvas_box {
-    width: 640px;
-    height: 480px;
-    display: table;
-    background-color: #ccc;         
+/* inline block layout for putting code and preview next to each other */
+.iLB {
+  display: inline-block;
+  vertical-align: top;
 }
-#canvas_box #img_container {
-    text-align: center;
-    vertical-align: middle;
-    display: table-cell;
+/* clearing the placement of boxes next to each other */
+.clearfix{
+  clear:both
 }
-#canvas_box #img_container img {
-    max-width: 640px;
-    max-height: 480px;        
+
+/* the field for setting forward motion scale */
+#scale {
+  width:2em;
 }
+
+/* the only textarea with logo code */
 textarea
 {
   border:1px solid #999999;
-  width:640px;
+  width: 640px;
+  height: 260px;
 }
 
-#scale {
-  width:3em;
-}
 
-/**
-#wrapper {
-    border: 1px solid blue;
-    vertical-align: top;
-}
-#code_box {
-    display: inline-block;
-    border: 1px solid red;
-}
+/* the area for drawing preview */
 #canvas_box {
-    display: inline-block;
-    border: 1px solid green;
+  width: 641.667px; /* linenos in the textare make the area bigger */
+  height: 269.667px; /* linenos in the textare make the area bigger */
+  display: table;
+  background-color: #ccc;         
 }
-*/
-#wrapper {
-    display: table;
-    table-layout: fixed;
-    
-    width:90%;
-    height:480px;
-    background-color:Gray;
+#canvas_box #img_container {
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
 }
-#wrapper div {
-    display: table-cell;
-    height:480px;
-}
-
-#one {
-    background-color:green
-}
-#two {
-    background-color:blue
+#canvas_box #img_container img {
+  max-width: 640px;
+  max-height: 260px;        
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -165,14 +147,19 @@ $(document).ready(function(){
 Scale: <input type="text" id="scale" name="scale" value="10"/>
 | <input type="checkbox" id="dryrun" name="dryrun" checked/> Dry
 
-<div id="code_box">
-<textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
+<div class="clearfix"></div>
+
+<div class="iLB">
+  <div id="code_box">
+    <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
 penwidth 2
 pencolor "right
 pd
 to gen :lo :hi :step
   make "x []
-  while [ :lo < (:hi+1) ] [ make "x lput :lo :x make "lo :lo + :step ]
+  while [ :lo < (:hi+1) ] [
+    make "x lput :lo :x make "lo :lo + :step
+  ]
   output :x
 end
 for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]
@@ -181,21 +168,16 @@ to square
 end
 square
 speed 100
-</textarea>
-</div>
-</div>
-<div id="canvas_box">
-<div id="img_container">
-<img id="the_image" src=""/>
-</div>
+    </textarea>
+  </div>
+</div><div class="iLB">
+  <div id="canvas_box">
+    <div id="img_container">
+      <img id="the_image" src=""/>
+    </div>
+  </div>
 </div>
 
-<div id="wrapper">
-<div id="one">
-B
-</div>
-<div id="two">B</div>
-</div>
 
 <!-- 
 <p id="demo"></p>
