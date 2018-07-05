@@ -1,10 +1,6 @@
-repeat 4 [
-  repeat 5 [
-    pencolor "left
-    pd
-    lt 160 fd 16
-    pencolor "right
-    rt 160 fd 16
-  ]
-  rt 90
-]
+speed 200
+pd
+to star
+  repeat 5 [ fd 100 rt 144 ]
+end
+star

@@ -1,6 +1,11 @@
-speed 200
+penwidth 2
+pencolor "right
 pd
-to square
-  repeat 4 [ fd 10 rt 90 ]
+to gen :lo :hi :step
+  make "x []
+  while [ :lo < (:hi+1) ] [
+    make "x lput :lo :x make "lo :lo + :step
+  ]
+  output :x
 end
-square
+for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]

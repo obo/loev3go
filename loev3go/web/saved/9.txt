@@ -1,11 +1,6 @@
 speed 200
-penwidth 2
-repeat 30 [
-  pencolor "right
-  pd
-  fd 10
-  lt 6
-  pencolor "left
-  fd 10
-  lt 6
-]
+pd
+to star
+  repeat 5 [ fd 38 pu fd 24 pd fd 38 rt 144 ]
+end
+star

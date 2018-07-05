@@ -1,6 +1,16 @@
-speed 200
 pd
-to square
-  repeat 4 [ fd 10 rt 90 ]
+to koch :x 
+  repeat 3 [triline :x rt 120]
 end
-square
+to triline :x 
+  if :x < 20 [fd :x stop]
+  triline :x/3
+  lt 60
+  triline :x/3
+  rt 120
+  triline :x/3
+  lt 60
+  triline :x/3
+end
+pd
+koch 180

@@ -1,8 +1,10 @@
-speed 200
-penwidth 2
-pencolor "right
-pd
-fd 100
-lt 90
-pencolor "left
-fd 50
+repeat 4 [
+  repeat 5 [
+    pencolor "left
+    pd
+    lt 160 fd 16
+    pencolor "right
+    rt 160 fd 16
+  ]
+  rt 90
+]

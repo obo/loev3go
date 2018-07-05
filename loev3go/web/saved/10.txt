@@ -1,6 +1,7 @@
 speed 200
+pencolor "right
 pd
-to square
-  repeat 4 [ fd 10 rt 90 ]
+to star
+  repeat 5 [ fd 38 lt 72 fd 38 rt 144 ]
 end
-square
+star

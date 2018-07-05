@@ -33,6 +33,7 @@ class Turtle:
         turtle.tracer(False) # this affects the *global* turtle, not use_turtle
         turtle.ht() # this affects the *global* turtle, not use_turtle
         self.pen.speed(0)
+        self.pen.left(90) # face north!
         self.pen.up() # assume we start with the pen up
         # I don't know why more turtles should be supported:
         self._all_turtles.append(weakref.ref(self))
