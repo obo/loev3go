@@ -1,0 +1,6 @@
+speed 200
+pd
+to square
+  repeat 4 [ fd 10 rt 90 ]
+end
+square

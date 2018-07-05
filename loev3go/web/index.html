@@ -43,6 +43,30 @@ textarea
   max-height: 260px;        
 }
 
+/* saved images */
+.saved_row {
+  width: 641.667px;
+  height: 64.1667px;
+  background-color: #ccc;         
+  display: inline-block;
+  vertical-align: top;
+}
+.saved_box {
+  width: 64.1667px;
+  height: 64.1667px;
+  display: inline-block;
+  background-color: #ccc;         
+}
+.saved_box .saved_inner {
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
+}
+.saved_box .saved_inner img {
+  max-width: 64px;
+  max-height: 64px;        
+}
+
 #polarity {
   width:2em;
 }
@@ -71,6 +95,39 @@ function stop_motors() {
     });
     moving = 0;
 }
+
+
+function savedClick(event, id)
+{
+  if (event.ctrlKey) {
+    if (valid_code == "") {
+      alert("In order to save as image "+id+", first Preview the image.");
+    } else {
+      $.ajax({
+          type: "GET",
+          cache: false,
+          dataType: 'text',
+          async: false,
+          url: "/save-last-previewed-as",
+  	data: {data: JSON.stringify({saveId:id})},
+      });
+      /* force refresh the image */
+      forceRefreshURL = 'saved/'+id+'.svg#'+ new Date().getTime();
+      document.getElementById('saved_'+id).src = forceRefreshURL;
+    }
+  } else {
+    $.ajax({
+      type: "GET",   
+      url: "/saved/"+id+".txt",   
+      async: false,
+      success : function(savedCode) {
+        document.getElementById('logocode').value = savedCode;
+      }
+    });
+  }
+}
+
+
 
 $(function() {
   // show line numbers in my textarea
@@ -171,23 +228,15 @@ Scale: <input type="text" id="scale" name="scale" value="10"/>
 <div class="iLB">
   <div id="code_box">
     <textarea cols=100 rows=18 id="logocode" placeholder="Type LOGO code here...">
+speed 200
 penwidth 2
 pencolor "right
 pd
-to gen :lo :hi :step
-  make "x []
-  while [ :lo < (:hi+1) ] [
-    make "x lput :lo :x make "lo :lo + :step
-  ]
-  output :x
-end
-for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]
 to square
   repeat 4 [ fd 10 rt 90 ]
 end
 square
-speed 100
-    </textarea>
+</textarea>
   </div>
 </div><div class="iLB">
   <div id="canvas_box">
@@ -196,6 +245,99 @@ speed 100
     </div>
   </div>
 </div>
+
+<div class="clearfix"></div>
+
+<div class="iLB">
+<div class="saved_row">
+  <div class="saved_box" onmousedown="savedClick(event, 1)">
+    <div class="saved_inner">
+      <img id="saved_1" src="saved/1.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 2)">
+    <div class="saved_inner">
+      <img id="saved_2" src="saved/2.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 3)">
+    <div class="saved_inner">
+      <img id="saved_3" src="saved/3.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 4)">
+    <div class="saved_inner">
+      <img id="saved_4" src="saved/4.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 5)">
+    <div class="saved_inner">
+      <img id="saved_5" src="saved/5.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 6)">
+    <div class="saved_inner">
+      <img id="saved_6" src="saved/6.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 7)">
+    <div class="saved_inner">
+      <img id="saved_7" src="saved/7.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 8)">
+    <div class="saved_inner">
+      <img id="saved_8" src="saved/8.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 9)">
+    <div class="saved_inner">
+      <img id="saved_9" src="saved/9.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 10)">
+    <div class="saved_inner">
+      <img id="saved_10" src="saved/10.svg"/>
+    </div>
+  </div>
+</div>
+</div><div class="saved_row">
+  <div class="saved_box" onmousedown="savedClick(event, 11)">
+    <div class="saved_inner">
+      <img id="saved_11" src="saved/11.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 12)">
+    <div class="saved_inner">
+      <img id="saved_12" src="saved/12.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 13)">
+    <div class="saved_inner">
+      <img id="saved_13" src="saved/13.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 14)">
+    <div class="saved_inner">
+      <img id="saved_14" src="saved/14.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 15)">
+    <div class="saved_inner">
+      <img id="saved_15" src="saved/15.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 16)">
+    <div class="saved_inner">
+      <img id="saved_16" src="saved/16.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 17)">
+    <div class="saved_inner">
+      <img id="saved_17" src="saved/17.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 18)">
+    <div class="saved_inner">
+      <img id="saved_18" src="saved/18.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 19)">
+    <div class="saved_inner">
+      <img id="saved_19" src="saved/19.svg"/>
+    </div>
+  </div><div class="saved_box" onmousedown="savedClick(event, 20)">
+    <div class="saved_inner">
+      <img id="saved_20" src="saved/20.svg"/>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
 
 <div class="clearfix"></div>
 

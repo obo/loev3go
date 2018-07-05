@@ -22,6 +22,7 @@ def eprint(*args, **kwargs):
 import pdb
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from shutil import copyfile
 import os
 import urllib
 import base64
@@ -35,6 +36,8 @@ import pylogo.common
 import logging
 import json
 
+previewfilename = "output.svg"
+
 log = logging.getLogger(__name__)
 
 class LoEV3goHandler(BaseHTTPRequestHandler):
@@ -45,6 +48,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'svg'  : 'image/svg+xml',
         'gif'  : 'image/gif',
         'html' : 'text/html',
+        'txt'  : 'text/plain',
         'ico'  : 'image/x-icon',
         'jpg'  : 'image/jpg',
         'js'   : 'application/javascript',
@@ -112,6 +116,24 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
             return True # event has been handled
+          elif action == 'save-last-previewed-as':
+            args = urllib.parse.parse_qs(request[2])
+            args2 = json.loads(args["data"][0])
+            saveId = args2["saveId"]
+            msg = None
+            if LoEV3goHandler.last_valid_code is not None:
+              with open(("saved/%i.txt"%saveId), "w") as text_file:
+                text_file.write(LoEV3goHandler.last_valid_code)
+              copyfile(previewfilename, ("saved/%i.svg"%saveId))
+              msg = "Saved"
+            else:
+              msg = "Not saving, please first run Preview"
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            eprint(msg)
+            self.wfile.write(msg.encode("utf-8"))
+            return True # event has been handled
           elif action == 'run-last-valid-code':
             robotconfig = urllib.parse.parse_qs(request[2])
             eprint("GOT REQUEST CONFIG: ", robotconfig)
@@ -168,11 +190,10 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         obj = urllib.parse.parse_qs(post_data)
         code = obj['code'][0]
         eprint(code)
-        outfile="output.svg"
         try:
-          LoEV3goHandler.lis.run_logo_emit_svg(code, outfile)
-          eprint("Saved into:", outfile)
-          with open(outfile, 'r') as myfile:
+          LoEV3goHandler.lis.run_logo_emit_svg(code, previewfilename)
+          eprint("Saved into:", previewfilename)
+          with open(previewfilename, 'r') as myfile:
             rawsvg = myfile.read()
           output = b"Odata:image/svg+xml;base64,"+stringToBase64(rawsvg);
           LoEV3goHandler.last_valid_code = code

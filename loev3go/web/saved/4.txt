@@ -1,0 +1,8 @@
+speed 200
+penwidth 2
+pencolor "right
+pd
+fd 100
+lt 90
+pencolor "left
+fd 50

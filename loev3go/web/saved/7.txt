@@ -1,0 +1,3 @@
+pd
+pencolor "right
+repeat 4 [repeat 5 [lt 160 fd 16 rt 160 fd 16] rt 90]
