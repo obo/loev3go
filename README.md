@@ -35,3 +35,5 @@ backwards...
 #### Loading and saving
 
 #### Detailed settings
+
+<font size="1">LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.</font> 
