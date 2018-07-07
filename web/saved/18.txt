@@ -16,7 +16,7 @@ pencolor "right
 pendown
 forward 40
 rt 110
-forward 108
+forward 106
 lt 110
 forward 40
 penup
@@ -29,9 +29,9 @@ bk 100
 pencolor "left
 pd
 fd 100
-rt 160
+rt 150
 fd 50
-lt 140
+lt 120
 fd 50
-rt 160
+rt 150
 fd 100
