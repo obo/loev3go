@@ -3,13 +3,26 @@
 # LoEV3go: A LOGO language interpreter for LEGO EV3 robot
 Ondřej Bojar, bojar@ufal.mff.cuni.cz
 
-This LOGO interpreter is based on [pylogo](http://pylogo.sourceforge.net/) ported to python3. It runs on the [EV3 intelligent brick](https://shop.lego.com/en-US/EV3-Intelligent-Brick-45500)
+51 years after the [LOGO language](https://en.wikipedia.org/wiki/Logo_(programming_language))
+was designed, a physical LOGO turtle finally arrives: **LoEV3go**!
+
+LoEV3go is a LOGO interpreter is based on [pylogo](http://pylogo.sourceforge.net/) ported to python3. It runs on the [EV3 intelligent brick](https://shop.lego.com/en-US/EV3-Intelligent-Brick-45500)
 under Linux, [EV3DEV](http://ev3dev.org/). On the outside, it looks as a:
 
 - IR-controlled turtle (pacifists don't play with tanks, do they).
   - with two felt-tip pens (switchable with the beacon button)
 - Web server for entering a LOGO program.
   - After a preview, the robot turtle will draw the LOGO program on the <s>carpet</s> canvas underneath.
+
+Build your turtle (building instructions will hopefully come one day), run LoEV3go, open a web browser,
+write your LOGO code and watch the turtle draw on the ground.
+
+## Features
+
+- Only 31313 EV3 Mindstorms Basic Set is needed (and an SD card for EV3).
+- Two felt-tip pens supported, to choose from two colors as you go.
+- IR controlled, if you want to "draw by hand".
+- On-board web server to interpret, preview and execute your LOGO code.
 
 ## Wishlist
 
