@@ -1,6 +1,0 @@
-#!/bin/bash
-
-for f in /sys/class/tacho-motor/*; do
-  echo -n "Stopping "; cat $f/address
-  echo reset > $f/command
-done

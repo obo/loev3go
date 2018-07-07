@@ -1,3 +1,0 @@
-#!/bin/bash
-
-cat /sys/class/power_supply/lego-ev3-battery/voltage_now
