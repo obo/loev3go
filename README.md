@@ -19,6 +19,8 @@ write your LOGO code and watch the turtle draw on the ground.
 
 ## Features
 
+<img width="150" align="right" src="screenshots/loev3go-in-action.jpg"/>
+
 - Only 31313 EV3 Mindstorms Basic Set is needed (and an SD card for EV3).
 - Two felt-tip pens supported, to choose from two colors as you go.
 - IR controlled, if you want to "draw by hand".
