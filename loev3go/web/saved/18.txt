@@ -1,6 +1,37 @@
-speed 200
 pd
-to square
-  repeat 4 [ fd 10 rt 90 ]
-end
-square
+forward 100
+back 50
+rt 90
+forward 40
+lt 90
+forward 50
+back 100
+penup
+
+rt 90
+forward 20
+forward 40
+rt 180
+pencolor "right
+pendown
+forward 40
+rt 110
+forward 108
+lt 110
+forward 40
+penup
+
+rt 180
+fd 40
+fd 20
+lt 90
+bk 100
+pencolor "left
+pd
+fd 100
+rt 160
+fd 50
+lt 140
+fd 50
+rt 160
+fd 100
