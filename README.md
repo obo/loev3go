@@ -39,7 +39,13 @@ backwards...
 
 ### Running without EV3 robot
 
-(todo)
+The following code will run LoEV3go with "Fake3EV", a crippled ev3dev python bindings that don't try to really use any of the motors or sensors. Sensor data is meaningless and motor operations are just dummy sleep commands. LoEV3go can be however nicely debugged on a normal and fast computer.
+
+```bash
+  git clone ... # clone LoEV3go using the Clone link above
+  cd loev3go
+  ./loev3go.sh --fake3dev
+```
 
 ### Using the web page
 
