@@ -24,6 +24,20 @@
   clear:both
 }
 
+/* the top row with buttons */
+#top_row {
+  width: 641.667px;
+  font-family: sans-serif;
+  font-size: 90%;
+}
+#loev3go-title {
+  float: right;
+}
+#loev3go-title a:link, #loev3go-title a:visited {
+  text-decoration: none;
+  color: black;
+}
+
 /* the field for setting forward motion scale */
 #scale {
   width:2em;
@@ -227,6 +241,7 @@ $(document).ready(function(){
 </head>
 <body>
 
+<div id="top_row">
 <button id="stop">Stop</button>
 
 <button id="preview">Preview</button>
@@ -235,6 +250,10 @@ $(document).ready(function(){
 
 Scale: <input type="text" id="scale" name="scale" value="10"/>
 | <input type="checkbox" id="dryrun" name="dryrun" checked/> Dry
+
+<span id="loev3go-title">
+<a href="https://github.com/obo/loev3go">LoEV3go <img src="favicomatic/favicon-16x16.png" alt=""/></a></span>
+</div>
 
 <div class="clearfix"></div>
 
