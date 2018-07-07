@@ -37,16 +37,42 @@ backwards...
 
 ## Usage
 
-(todo)
-
 ### Running without EV3 robot
+
+(todo)
 
 ### Using the web page
 
+Here is a screenshot of the web page served by the robot:
+<center>
+<img src="screenshots/web-server.png"/>
+</center>
+
 #### Preview, Scale, Dry Run, Draw
+
+To draw with LoEV3go, follow these steps:
+1. Type your LOGO code into the text area.
+2. Click **Preview** and wait for the robot to interpret the code. Remember, EV3 brick is slow...
+3. Click **Run**. The robot will run the last previewed code.
+  - With **Dry** run check box checked, all ```pendown``` commands will be ignored.
+  - The **Scale** determines the scaling of forward and backward movements.
+  - It is wise to run the code in dry run, modify scaling as needed, move the robot back to the starting position, dry run again etc. until you are happy with the space occupied.
+  - Finally, uncheck **Dry** run box, click **Run** and watch.
 
 #### Loading and saving
 
+LoEV3go comes with 20 slots for saved LOGO code, see the thumbnails underneath the preview pane.
+
+To load one of the saved programs, click the thumbnail. **You current code in the textarea will be replaced** without any undo option!
+
+To save a LOGO program under one of the thumbnails:
+1. Write the code in the text area.
+2. **Preview** it.
+3. **CTRL-click** the thumbnail. The last previewed code will be saved at that position.
+
 #### Detailed settings
 
+(todo)
+
+<hr/>
 <font size="1">LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.</font> 
