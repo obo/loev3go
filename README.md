@@ -1,4 +1,4 @@
-<img align="right" src="loev3go.svg"/>
+<img align="right" src="web/loev3go.svg"/>
 
 # LoEV3go: A LOGO language interpreter for LEGO EV3 robot
 Ondřej Bojar, bojar@ufal.mff.cuni.cz

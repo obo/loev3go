@@ -180,7 +180,7 @@ $(document).ready(function() {
     });
     $("#preview").click(function() {
         $('#the_image').remove();
-        $('#img_container').append('<p id="the_image">...rendering...</p>');
+        $('#img_container').append('<p id="the_image"><img src="loev3go.svg" width="100"/><br/>...rendering...</p>');
         // get the code
         var logocode = $('#logocode').val();
         // run the code in web server
@@ -253,7 +253,7 @@ square
 </div><div class="iLB">
   <div id="canvas_box">
     <div id="img_container">
-      <img id="the_image" src=""/>
+      <img id="the_image" src="loev3go.svg" width="150"/>
     </div>
   </div>
 </div>
@@ -372,7 +372,7 @@ Detailed robot settings:
 </td>
 </tr>
 <tr>
-<td>Motor polarity</td>
+<td>Motors polarity</td>
 <td><input type="text" name="polarity" id="polarity" value="-1"/></td>
 </tr>
 <tr>

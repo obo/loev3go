@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-From https://gist.github.com/bradmontgomery/2219997
-and from ev3dev-lang-python/ev3dev/webserver.py
+LoEV3go -- LOGO language interpreter running on EV3 LEGO brick
+Ondrej Bojar, bojar@ufal.mff.cuni.cz
 
-Very simple HTTP server in python.
-Usage::
-    ./dummy-web-server.py [<port>]
-Send a GET request::
-    curl http://localhost
-Send a HEAD request::
-    curl -I http://localhost
-Send a POST request::
-    curl -d "foo=bar&bin=baz" http://localhost
+It is easier to start this using ../loev3go.sh wrapper because:
+- headless X window server has to be provided
+- PYTHONPATH has to be set correctly.
+
+Based on:
+  https://gist.github.com/bradmontgomery/2219997
+  ev3dev-lang-python/ev3dev/webserver.py
 """
 # dbg print
 from __future__ import print_function
