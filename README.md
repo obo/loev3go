@@ -28,9 +28,10 @@ write your LOGO code and watch the turtle draw on the ground.
 
 ## Wishlist
 
-- Precision, precision, precision. Obviously, precision is troublesome. I am now working on mousometry, but any global positioning is highly desirable.
+- Precision, precision, precision. Obviously, precision is troublesome. See the [square pearls](https://raw.github.com/obo/loev3go/master/screenshots/first-loev3go-run-results.jpg) that I had to run 3x in a row to reach the full circle (and the circle did not close anyway).
+  I originally thought that mousometry (an optical mouse attached to LoEV3go providing more precise odometry) would help but a more plausible technique seems global positioning, see the [arucoloc subdirectory](https://github.com/obo/loev3go/tree/master/arucoloc).
 
-- The robot could have "security" feature: the LOGO program will stop immediately
+- The robot could have a "security" feature: the LOGO program will stop immediately
 when the color sensor does not see enough white or when the touch sensor hits
 something. Obviously, you can still damage your floor if the turtle runs
 backwards...

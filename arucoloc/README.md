@@ -1,14 +1,17 @@
 # Global Positioning using Aruco Markers
 
 The plan is to equip LoEV3go with global positioning using Aruco markers placed
-around the canvas on which LoEV3go is drawing as sketched here:
+around the canvas on which LoEV3go is drawing, as sketched here:
 
-<img src="arucoloc-idea.png"/>
+<img align="center" src="arucoloc-idea.png"/>
 
-LoEV3go would start by turning around, perhaps moving to two locations and
-taking e.g. 12--20 pictures. Then at runtime, LoEV3go would regularly take a
-picture, run Marker Mapper to find its location based on the markers it sees at
-the moment.
+LoEV3go would start by turning around, perhaps moving to two locations,
+taking e.g. 12--20 pictures and creating the map with Marker Mapper. Then at
+runtime, LoEV3go would regularly take a
+picture, run Aruco tools to find its true location based on the markers it sees
+at
+the moment and apply any necessary small movements to hopefully move to the
+real location given its assumed location.
 
 ## Steps Needed
 
@@ -30,8 +33,8 @@ the moment.
 ## Aruco and MarkerMapper on EV3
 
 Download Aruco and MarkerMapper:
-- https://sourceforge.net/projects/markermapper/?source=typ_redirect
 - https://sourceforge.net/projects/aruco/files/?source=navbar
+- https://sourceforge.net/projects/markermapper/files/?source=navbar
 
 Compile and install Aruco without root access:
 
@@ -45,7 +48,7 @@ make
 make install
 ```
 
-*Minor fix needed in Aruco*: replace ``#endifxx`` with ``#endif`` in
+**Minor fix needed in Aruco**: replace ``#endifxx`` with ``#endif`` in
 ``aruco-3.0.11/utils_calibration/dirreader.h``, line 1168.
 
 
@@ -60,13 +63,13 @@ cmake ..
 make
 ```
 
-*Minor fix needed in MarkerMapper*: Replace:
+**Minor fix needed in MarkerMapper**: Replace:
 ```C
   auto p2=center+vp*markersize/2;
 ```
 with
 ```C
-    auto p2=center+markersize/2 * vp;
+  auto p2=center+markersize/2 * vp;
 ```
 in ``marker_mapper1.0.12/utils/sglviewer.h``, line 68.
 
