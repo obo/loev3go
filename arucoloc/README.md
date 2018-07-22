@@ -19,10 +19,12 @@ real location given its assumed location.
 - Webcam calibrated
 - Aruco and MarkerMapper compiled on EV3 [in process]
 - MarkerMapper speed tested on EV3
+- Using MarkerMapper to create the map. [done]
+- Using Aruco to find camera position given a new picture [done]
 - Physical layout of markers around the canvas, number of pictures needed for
   the map.
-- Maybe only Aruco and not MarkerMapper will be needed to find out the location once the map is constructed, see [Use my map for tracking](http://www.uco.es/investiga/grupos/ava/node/57)
 - LoEV3go integration
+  - Consider storing more pictures and re-generating the map as more are collected, could be useful esp. in corners.
 
 ## Webcam Calibration
 
@@ -73,7 +75,7 @@ with
 ```
 in ``marker_mapper1.0.12/utils/sglviewer.h``, line 68.
 
-## Understanding MarkerMapper Outputs
+## Creating Marker Map
 
 Following [MarkerMapper Usage Instructions](http://www.uco.es/investiga/grupos/ava/node/57), I ran the following on the suggested [example dataset](https://sourceforge.net/projects/markermapper/files/test_data/).
 
@@ -82,12 +84,49 @@ marker_mapper1.0.12/build/utils/mapper_from_images \
   sample_markers_test sample_markers_test/cam.yml 0.123 ARUCO out
 ```
 
+Args:
+- ``sample_markers`` is the directory with images
+- ``cam.yml`` is the camera calibration file.
+- 0.123 is the physical size of the markers in whichever unit, here meters
+- ``ARUCO`` is the dictionary of markers used
+- ``out`` is the prefix for output files
+
+A file called ``out.yml`` will be created, this is what we need and we will
+call it ``marker_map.yml`` in the following.
+
 The ``out.log`` reports camera locations for each used image in the format
 described under [Ground Truth Trajectories](https://vision.in.tum.de/data/datasets/rgbd-dataset/file_formats).
 I still need to figure out how to get the robot heading angle from the unit
 quaternion notation but the location is straightforward.
 
 One can hack the ``out.yml`` map and add fake markers to indicate the positions of the camera for each of the image.
+
+## Using Aruco to Locate the Robot Given Marker Map
+
+I simplified ``aruco/utils_markermap/aruco_test_markermap.cpp`` into ``aruco_locate_one.cpp`` for my needs.
+
+```bash
+../aruco_locate_one sample-with-markers.jpg marker_map.yml cam.yml -save sample-with-markers.annotated.jpg
+```
+
+This will emit the location of the camera and optionally the picture annotated
+with the known markers found in it.
+
+TODO: Consider adding ``-server`` mode in which it would listen to stdin and
+for ever newline, read the camera picture again (from camera or a given
+filename) to save some initialization time, if that time is significant.
+
+## Camera Calibration
+
+Description and board to print here:
+
+https://docs.opencv.org/3.3.1/da/d13/tutorial_aruco_calibration.html
+
+https://docs.opencv.org/3.1.0/df/d4a/tutorial_charuco_detection.html
+
+https://longervision.github.io/2017/03/16/OpenCV/opencv-internal-calibration-chessboard/
+
+https://longervision.github.io/2017/03/12/OpenCV/opencv-external-posture-estimation-ArUco-board/
 
 ## Thoughts on LoEV3go Global Positioning
 
