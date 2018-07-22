@@ -118,7 +118,14 @@ filename) to save some initialization time, if that time is significant.
 
 ## Camera Calibration
 
-Description and board to print here:
+All the following is done in the subdirectory ``camera-calibration/``.
+
+1. Print ``printed_pattern_chessboard.png`` on A4 sheet.
+2. Run ``./calibrate-with-chessboard.py`` and show the sheet to the camera several times (10 by default).
+
+When the calibration says "Calibrated", you will have a file ``calibration.yaml`` in the current directory.
+
+Older description and boards to print:
 
 https://docs.opencv.org/3.3.1/da/d13/tutorial_aruco_calibration.html
 
