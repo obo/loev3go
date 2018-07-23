@@ -32,7 +32,11 @@ real location given its assumed location.
 
 ...except I don't understand where the actual application is in opencv.
 
-## Aruco and MarkerMapper on EV3
+## Aruco and MarkerMapper
+
+Best documentation of Aruco and MarkerMapper is here:
+- https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit#heading=h.sxfg1jh7nibb
+- I downloaded it as PDF here: ``ArUco_Library_Documentation.pdf``
 
 Download Aruco and MarkerMapper:
 - https://sourceforge.net/projects/aruco/files/?source=navbar
@@ -134,6 +138,40 @@ https://docs.opencv.org/3.1.0/df/d4a/tutorial_charuco_detection.html
 https://longervision.github.io/2017/03/16/OpenCV/opencv-internal-calibration-chessboard/
 
 https://longervision.github.io/2017/03/12/OpenCV/opencv-external-posture-estimation-ArUco-board/
+
+## Issues with Aruco Dictionaries
+
+I printed ``printed-board_aruco_57-markers-from-6x6_250.png`` without knowing from which dictionary it comes. It turned out to be ``cv2.aruco.DICT_6X6_250``.
+
+When I test it with ``./test-aruco-search.py``, all images are found, with IDs 0-34.
+
+When I test it with ``aruco_test live:1`` from the aruco C library, it finds
+only sporadically only a few markers, with IDs: 11 162 211 239 92.
+
+Clearly, there is a dictionary mismatch.
+
+OK, I fixed this by emiting the dictionary from python2 aruco version, see ``emit-dictionary.py``, in to ``DICT_6x6_250.dict``.
+
+I confirmed that the C aruco can now find all my markers printed in ``printed-board_aruco_57-markers-from-6x6_250.png``:
+
+```bash
+aruco-3.0.11/build/utils/aruco_test live:1 -d DICT_6x6_250.dict
+```
+
+## Marker Map Creation
+
+Finally, with the custom dictionary, I was able to create my first marker map:
+
+```bash
+d=shots-ARUCO_MIP_36h12;
+marker_mapper1.0.12/build/utils/mapper_from_images \
+  shots-ARUCO_MIP_36h12 \
+  shots-ARUCO_MIP_36h12/calibration.yaml \
+  0.04 DICT_6x6_250.dict \
+  shots-ARUCO_MIP_36h12.map
+```
+
+
 
 ## Thoughts on LoEV3go Global Positioning
 

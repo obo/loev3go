@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Downloaded from
 # https://raw.githubusercontent.com/LongerVision/Examples_OpenCV/master/01_internal_camera_calibration/chessboard.py
+# Changed output YAML file for the C aruco library by Ondrej Bojar
 
 # python print to stderr (most portable and flexible)
 from __future__ import print_function
@@ -97,36 +98,13 @@ eprint("Calibrating")
 
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
-eprint("Calibrated")
+outfile="calibration.yaml"
 
-## Tip from: http://www.morethantechnical.com/2016/03/02/opencv-python-yaml-persistance/
-## A yaml constructor is for loading from a yaml node.
-## This is taken from: http://stackoverflow.com/a/15942429
-#def opencv_matrix_constructor(loader, node):
-#    mapping = loader.construct_mapping(node, deep=True)
-#    mat = np.array(mapping["data"])
-#    mat.resize(mapping["rows"], mapping["cols"])
-#    return mat
-#yaml.add_constructor(u"tag:yaml.org,2002:opencv-matrix", opencv_matrix_constructor)
- 
-# # A yaml representer is for dumping structs into a yaml node.
-# # So for an opencv_matrix type (to be compatible with c++'s FileStorage) we save the rows, cols, type and flattened-data
-# def opencv_matrix_representer(dumper, mat):
-#     mapping = {'rows': mat.shape[0], 'cols': mat.shape[1], 'dt': 'd', 'data': mat.reshape(-1).tolist()}
-#     return dumper.represent_mapping(u"tag:yaml.org,2002:opencv-matrix", mapping)
-# yaml.add_representer(np.ndarray, opencv_matrix_representer)
-# 
-# data = {
-#   'image_width': 640,
-#   'image_height': 480,
-#   'test': np.zeros((10,10))
-#   'camera_matrix': mtx,
-#   'distortion_coefficients': dist
-# }
-#'camera_matrix': np.asarray(mtx).tolist(), 'dist_coeff': np.asarray(dist).tolist()}
+def flatten(matrix):
+  return [i for row in matrix for i in row]
 
-with open("calibration.yaml", "w") as f:
-    f.write("%YAML:1.0")
+eprint("Calibrated, saving:", outfile)
+with open(outfile, "w") as f:
     f.write("""
 %YAML:1.0
 image_width: 640
@@ -136,20 +114,12 @@ camera_matrix: !!opencv-matrix
    cols: 3
    dt: d
    data: """)
-    f.write(str(np.asarray(mtx).tolist()))
+    f.write(str(flatten(np.asarray(mtx).tolist())))
     f.write("""
 distortion_coefficients: !!opencv-matrix
    rows: 1
    cols: 5
    dt: d
    data:  """)
-    f.write(str(np.asarray(dist).tolist()))
-    #yaml.dump(data, f)
-
-
-# You can use the following 4 lines of code to load the data in file "calibration.yaml"
-# with open('calibration.yaml') as f:
-#     loadeddict = yaml.load(f)
-# mtxloaded = loadeddict.get('camera_matrix')
-# distloaded = loadeddict.get('dist_coeff')
+    f.write(str(flatten(np.asarray(dist).tolist())))
 
