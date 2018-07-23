@@ -1,0 +1,12 @@
+diff -u -r marker_mapper1.0.12/utils/sglviewer.h ../marker_mapper1.0.12/utils/sglviewer.h
+--- marker_mapper1.0.12/utils/sglviewer.h	2018-04-23 13:14:36.000000000 +0200
++++ ../marker_mapper1.0.12/utils/sglviewer.h	2018-07-10 20:59:34.824751748 +0200
+@@ -65,7 +65,7 @@
+             vp*=1/cv::norm(vp);
+             //now, compute second point of the line
+             float markersize=cv::norm(v1);
+-            auto p2=center+vp*markersize/2;
++            auto p2=center+markersize/2 * vp;
+ 
+             Scn.drawLine((sgl::Point3*)&center,(sgl::Point3*)&p2,{255,0,255},width);
+ 

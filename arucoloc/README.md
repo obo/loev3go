@@ -79,6 +79,27 @@ with
 ```
 in ``marker_mapper1.0.12/utils/sglviewer.h``, line 68.
 
+## Compiling Aruco and MarkerMapper on EV3
+
+```bash
+mkdir src
+cd src
+# now obtain aruco-3.0.11.zip and marker_mapper1.0.12.zip
+unzip aruco-3.0.11.zip
+unzip marker_mapper1.0.12.zip
+# patch both packages for my needs
+patch -p 0 < ../aruco-and-markermapper-compilation/aruco-3.0.11.patch
+patch -p 0 < ../aruco-and-markermapper-compilation/marker_mapper1.0.12.patch
+# compile and install aruco to ~/opt/aruco-3.0.11
+cd aruco-3.0.11
+mkdir build
+cd build
+mkdir -p $HOME/opt/
+cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME/opt/aruco-3.0.11 ..
+make
+make install
+```
+
 ## Creating Marker Map
 
 Following [MarkerMapper Usage Instructions](http://www.uco.es/investiga/grupos/ava/node/57), I ran the following on the suggested [example dataset](https://sourceforge.net/projects/markermapper/files/test_data/).
