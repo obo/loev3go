@@ -163,14 +163,35 @@ aruco-3.0.11/build/utils/aruco_test live:1 -d DICT_6x6_250.dict
 Finally, with the custom dictionary, I was able to create my first marker map:
 
 ```bash
-d=shots-ARUCO_MIP_36h12;
+d=shots-DICT_6x6_250;
 marker_mapper1.0.12/build/utils/mapper_from_images \
-  shots-ARUCO_MIP_36h12 \
-  shots-ARUCO_MIP_36h12/calibration.yaml \
+  shots-DICT_6x6_250 \
+  shots-DICT_6x6_250/calibration.yaml \
   0.04 DICT_6x6_250.dict \
-  shots-ARUCO_MIP_36h12.map
+  shots-DICT_6x6_250.map
 ```
 
+The files related to the map are also pushed to the repo here.
+
+## Marker Map Use
+
+With the custom dictionary, custom map and my ``aruco_locate_one``, I finally got the estimated camera position:
+
+```bash
+aruco-3.0.11/build/utils_markermap/aruco_locate_one \
+  shots-DICT_6x6_250/shot-01.jpg \
+  shots-DICT_6x6_250.map.yml \
+  shots-DICT_6x6_250/calibration.yaml
+```
+
+...emited this output:
+
+```
+Camera position as getRvec, getTvec: [2.174823, 2.0144002, -0.48945314] [0.20740934, -0.11405521, 0.84579444]
+Camera position as TUM RGBD: 0 0.372795 -0.115674 0.78679 0.722148 0.66888 -0.162522 -0.0684754
+```
+
+Note that the ``map.yml`` contains the name of the custom dictionary, so I had to make the file visible under another name, too: ``ln -s DICT_6x6_250.dict aruco.DICT_6X6_250``.
 
 
 ## Thoughts on LoEV3go Global Positioning
