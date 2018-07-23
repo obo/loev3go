@@ -90,6 +90,8 @@ unzip marker_mapper1.0.12.zip
 # patch both packages for my needs
 patch -p 0 < ../aruco-and-markermapper-compilation/aruco-3.0.11.patch
 patch -p 0 < ../aruco-and-markermapper-compilation/marker_mapper1.0.12.patch
+# compilation prerequisities:
+sudo apt-get install cmake
 # compile and install aruco to ~/opt/aruco-3.0.11
 cd aruco-3.0.11
 mkdir build
@@ -98,6 +100,14 @@ mkdir -p $HOME/opt/
 cmake -DCMAKE_INSTALL_PREFIX:PATH=$HOME/opt/aruco-3.0.11 ..
 make
 make install
+cd ..
+# compile markermapper, don't even install it
+cd marker_mapper1.0.12
+mkdir build
+cd build
+export aruco_DIR=$HOME/opt/aruco-3.0.11/
+cmake ..
+make
 ```
 
 ## Creating Marker Map
