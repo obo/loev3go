@@ -1,3 +1,7 @@
+## EXTREMELY SLOW TO RUN
+## makes one step every x minutes, perhaps the floating point operations
+## or the long pre-generated list is killing it?
+## But the rendering was reasonably "fast"...
 penwidth 2
 pencolor "right
 pd
