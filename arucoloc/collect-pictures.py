@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Grab one picture
+# Grab and save a picture at every return key
+# Exit on ESC
 
 # python print to stderr (most portable and flexible)
 from __future__ import print_function
