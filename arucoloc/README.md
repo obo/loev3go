@@ -110,6 +110,14 @@ cmake ..
 make
 ```
 
+The compilation is extremely challenging because EV3 is slow, has too small memory and also there is some system instability under such heavy load. So sometimes the same file compiles and sometimes it fails. I spent like 3x full batteries and I am at 11% of aruco compilation only.
+
+Cross-compilation will be necessary, or serious source code reduction, e.g. seriously limit the built-in dictionaries.
+
+Links for cross-compilation:
+- https://www.ev3dev.org/docs/tutorials/using-docker-to-cross-compile/
+- https://hub.docker.com/r/ev3dev/debian-jessie-cross/
+
 ## Creating Marker Map
 
 Following [MarkerMapper Usage Instructions](http://www.uco.es/investiga/grupos/ava/node/57), I ran the following on the suggested [example dataset](https://sourceforge.net/projects/markermapper/files/test_data/).
