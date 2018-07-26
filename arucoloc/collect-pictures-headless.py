@@ -26,3 +26,4 @@ while True:
     eprint("Saving ", ofn)
     cv2.imwrite(ofn, img)
     i += 1
+vc.release()
