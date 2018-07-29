@@ -251,4 +251,8 @@ Note that the ``map.yml`` contains the name of the custom dictionary, so I had t
   different position, which should be the globally correct one, and to have a
   slightly different heading afterwards, which should be the globally correct
   one.
+- Use smaller and larger markers, to work from close and far away.
 
+## Other Relevant Links
+
+- https://github.com/goodrobots/vision_landing
