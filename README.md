@@ -83,5 +83,10 @@ To save a LOGO program under one of the thumbnails:
 
 (todo)
 
+## Bugs and TODO
+
+- get rid of dependence on jquery, if robot not connected to Internet, nothing
+  works
+
 <hr/>
 <font size="1">LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.</font> 
