@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Grab and save a picture at every return key
 # Exit on ESC
 
@@ -12,7 +12,7 @@ import numpy as np
 import cv2
 import yaml
 
-vc = cv2.VideoCapture(1)
+vc = cv2.VideoCapture(0)
 k = -1 & 0xff
 i = 0
 while k != 27:

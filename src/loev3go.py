@@ -74,8 +74,8 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
             self.path = "/index.html"
 
         # Serve a file (image, css, html, etc)
-        if '.' in self.path:
-            extension = self.path.split('.')[-1]
+        extension = self.path.split('.')[-1]
+        if extension in self.mimetype:
             mt = self.mimetype.get(extension)
 
             if mt:

@@ -104,7 +104,8 @@ textarea
   width:4em;
 }
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+<script src="jquery.min.js"></script>
 <link href="jquery-linedtextarea/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
 <script src="jquery-linedtextarea/jquery-linedtextarea.js"></script>
 <script>
@@ -180,7 +181,8 @@ $(document).ready(function() {
 	    right_motor_connected_to_b: document.getElementById("right_motor_connected_to_b").checked,
 	    travel_speed: document.getElementById("travel_speed").value,
 	    polarity: document.getElementById("polarity").value,
-	    angle_scale_travel: document.getElementById("angle_scale_travel").value
+	    angle_scale_travel: document.getElementById("angle_scale_travel").value,
+	    camera_output_dir: document.getElementById("camera_output_dir").value
 	  };
           $.ajax({
               type: "GET",
@@ -220,6 +222,7 @@ $(document).ready(function() {
         });
     });
 });
+// alert("Syntax OK.");
 </script>
 <!--
 $(document).ready(function(){
@@ -402,6 +405,10 @@ Detailed robot settings:
 <tr>
 <td>Default travel speed:</td>
 <td><input type="text" name="travel_speed" id="travel_speed" value="150"/></td>
+</tr>
+<tr>
+<td>Output directory to save one camera image after every move:</td>
+<td><input type="text" name="camera_output_dir" id="camera_output_dir" value=""/></td>
 </tr>
 </table>
 

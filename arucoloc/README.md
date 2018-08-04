@@ -34,7 +34,7 @@ real location given its assumed location.
 
 ## Aruco and MarkerMapper
 
-Best documentation of Aruco and MarkerMapper is here:
+The best documentation of Aruco and MarkerMapper is here:
 - https://docs.google.com/document/d/1QU9KoBtjSM2kF6ITOjQ76xqL7H0TEtXriJX5kwi9Kgc/edit#heading=h.sxfg1jh7nibb
 - I downloaded it as PDF here: ``ArUco_Library_Documentation.pdf``
 

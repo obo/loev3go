@@ -53,9 +53,11 @@ class Turtle:
           right_motor_connected_to_b=True,
           travel_speed=150,
           polarity=-1,
-          angle_scale_travel=2098
+          angle_scale_travel=2098,
           # how much have both left and right motor roll (in opposite
           # directions) to get 1 degree of overall rotation
+          camera_output_dir="",
+          camera_id=0
         ):
         eprint("initing ev3_turtle Turtle, SCALE:", scale)
         self.robot_should_stop = robot_should_stop
@@ -75,7 +77,12 @@ class Turtle:
         self.pen_down = False
         PenSelector.static_set(NO_PEN)
         # assume we start with the pen up
-        self.pen_color = LEFT_PEN
+        self.pen_color = LEFT_PEN,
+        self.camera_output_dir = camera_output_dir
+        self.camera_id = camera_id
+        self.camera_count = 0
+        self.vc = None
+        self.check_stop() # check stop even before starting
 
     def __repr__(self):
         return '<%s %i>' % (self.__class__.__name__,
@@ -90,11 +97,28 @@ class Turtle:
       self.scale = new_scale
 
     def check_stop(self):
+      if self.camera_output_dir != "":
+        outdir = "recorded_pictures/"+self.camera_output_dir
+        try: os.makedirs(outdir)
+        except FileExistsError: pass
+        outfn = "%s/pic%04i.jpg" % (outdir, self. camera_count)
+        self.camera_count += 1
+        eprint("Taking one picture:", outfn),
+        import numpy as np
+        import cv2
+        import yaml
+        if self.vc is None:
+          self.vc = cv2.VideoCapture(self.camera_id)
+        retval, img = self.vc.read() # Capture frame-by-frame
+        eprint("retval:", retval)
+        eprint("Saving ", outfn)
+        cv2.imwrite(outfn, img)
+
       if self.robot_should_stop.is_set():
         raise UserStoppedRobot("Stopped through web interface")
 
     def wait_until_not_moving_watching_for_stop(self, motor):
-      ## Block until come movement is finished,
+      ## Block until the current movement is finished,
       ## checking for stop request every 0.5s
       while not motor.wait_until_not_moving(500):
         self.check_stop()
