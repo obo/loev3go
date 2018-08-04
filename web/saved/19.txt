@@ -1,6 +1,7 @@
 speed 200
+repeat 15 [ rt 24 ]
 pd
 to square
-  repeat 4 [ fd 10 rt 90 ]
+  repeat 4 [ fd 20 rt 90 ]
 end
 square
