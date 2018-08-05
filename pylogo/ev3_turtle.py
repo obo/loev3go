@@ -104,7 +104,7 @@ class Turtle:
         outfn = "%s/pic%04i.jpg" % (outdir, self. camera_count)
         self.camera_count += 1
         eprint("Taking one picture:", outfn),
-        import numpy as np
+        #import numpy as np
         import cv2
         import yaml
         if self.vc is None:
