@@ -104,15 +104,16 @@ class Turtle:
         outfn = "%s/pic%04i.jpg" % (outdir, self. camera_count)
         self.camera_count += 1
         eprint("Taking one picture:", outfn),
-        import numpy as np
-        import cv2
-        import yaml
-        if self.vc is None:
-          self.vc = cv2.VideoCapture(self.camera_id)
-        retval, img = self.vc.read() # Capture frame-by-frame
-        eprint("retval:", retval)
-        eprint("Saving ", outfn)
-        cv2.imwrite(outfn, img)
+        os.system("~/aruco/aruco/bin/take_one_picture "+outfn)
+        #import numpy as np
+        #import cv2
+        #import yaml
+        #if self.vc is None:
+        #  self.vc = cv2.VideoCapture(self.camera_id)
+        #retval, img = self.vc.read() # Capture frame-by-frame
+        #eprint("retval:", retval)
+        #eprint("Saving ", outfn)
+        #cv2.imwrite(outfn, img)
 
       if self.robot_should_stop.is_set():
         raise UserStoppedRobot("Stopped through web interface")
