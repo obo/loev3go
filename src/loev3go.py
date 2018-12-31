@@ -50,7 +50,8 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         'ico'  : 'image/x-icon',
         'jpg'  : 'image/jpg',
         'js'   : 'application/javascript',
-        'png'  : 'image/png'
+        'png'  : 'image/png',
+        'avi'  : 'video/avi'
     }
     last_valid_code = None
     robot_thread = None
