@@ -1,0 +1,42 @@
+diff -ur marker_mapper1.0.12/CMakeLists.txt marker_mapper1.0.12.worked/CMakeLists.txt
+--- marker_mapper1.0.12/CMakeLists.txt	2018-04-23 13:14:36.000000000 +0200
++++ marker_mapper1.0.12.worked/CMakeLists.txt	2019-01-01 11:44:25.383988894 +0100
+@@ -49,7 +49,7 @@
+ # ----------------------------------------------------------------------------
+ #   Find Dependencies
+ # ----------------------------------------------------------------------------
+-find_package(OpenCV REQUIRED)
++find_package(OpenCV REQUIRED NO_DEFAULT_PATH)
+ find_package(aruco REQUIRED)
+ SET(REQUIRED_LIBRARIES ${REQUIRED_LIBRARIES} ${OpenCV_LIBS} ${aruco_LIBS} )
+ INCLUDE_DIRECTORIES(${aruco_DIR})
+diff -ur marker_mapper1.0.12/utils/CMakeLists.txt marker_mapper1.0.12.worked/utils/CMakeLists.txt
+--- marker_mapper1.0.12/utils/CMakeLists.txt	2018-04-23 13:14:36.000000000 +0200
++++ marker_mapper1.0.12.worked/utils/CMakeLists.txt	2019-01-01 08:52:41.058173740 +0100
+@@ -2,10 +2,11 @@
+ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
+ LINK_LIBRARIES(${PROJECT_NAME})
+ 
+-ADD_EXECUTABLE(mapper_from_video mapper_from_video.cpp)
++#ADD_EXECUTABLE(mapper_from_video mapper_from_video.cpp)
+ ADD_EXECUTABLE(mapper_from_images mapper_from_images.cpp)
+ #ADD_EXECUTABLE(mapper_live mapper_live.cpp)
+-ADD_EXECUTABLE(mapper_viewer mapper_viewer.cpp sgl.h  sglviewer.h)
++#ADD_EXECUTABLE(mapper_viewer mapper_viewer.cpp sgl.h  sglviewer.h)
+ #ADD_EXECUTABLE(mapper_dummygame mapper_dummygame.cpp sgl.h  sglviewer.h)
+ 
+-INSTALL(TARGETS mapper_from_images mapper_from_video   mapper_viewer     RUNTIME DESTINATION bin)
++#INSTALL(TARGETS mapper_from_images mapper_from_video   mapper_viewer     RUNTIME DESTINATION bin)
++INSTALL(TARGETS mapper_from_images RUNTIME DESTINATION bin)
+diff -ur marker_mapper1.0.12/utils/sglviewer.h marker_mapper1.0.12.worked/utils/sglviewer.h
+--- marker_mapper1.0.12/utils/sglviewer.h	2018-04-23 13:14:36.000000000 +0200
++++ marker_mapper1.0.12.worked/utils/sglviewer.h	2018-12-31 23:25:14.882179947 +0100
+@@ -65,7 +65,7 @@
+             vp*=1/cv::norm(vp);
+             //now, compute second point of the line
+             float markersize=cv::norm(v1);
+-            auto p2=center+vp*markersize/2;
++            auto p2=center+markersize/2 * vp;
+ 
+             Scn.drawLine((sgl::Point3*)&center,(sgl::Point3*)&p2,{255,0,255},width);
+ 

@@ -57,14 +57,14 @@ patch -p 0 < opencv-2.4.13.6.patch
 ```
 
 Build without GUI and 1394 camera support (these did not compile for me and I
-don't need them):
+don't need them), and install it to ``compiled-for-robot/``:
 
 ```bash
 cd opencv-2.4.13.6
 mkdir build
 cd build
 cmake -DWITH_QT=OFF -DWITH_GTK=OFF -DWITH_1394=OFF \
-  -DCMAKE_INSTALL_PREFIX:PATH=...full.path.to...compiled-for-robot/opencv \
+  -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/../../../compiled-for-robot/opencv \
   ..
 make -j3
 make install
@@ -80,6 +80,7 @@ Download Aruco and MarkerMapper:
 - https://sourceforge.net/projects/aruco/files/?source=navbar
 - https://sourceforge.net/projects/markermapper/files/?source=navbar
 
+Follow these steps to get the tools cross-compiled:
 
 ```bash
 cd sources
@@ -88,22 +89,28 @@ unzip aruco-3.0.11.zip
 unzip marker_mapper1.0.12.zip
 # patch both packages for my needs
 patch -p 0 < ../aruco-3.0.11.patch
-patch -p 0 < marker_mapper1.0.12.patch
-# compile and install aruco to ~/opt/aruco-3.0.11
+patch -p 0 < ../marker_mapper1.0.12.patch
+# compile and install aruco to compiled-for-robot/aruco
 cd aruco-3.0.11
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=...full.path.to...compiled-for-robot/aruco
+cmake -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/../../../compiled-for-robot/aruco
 make
 make install
 cd ..
-###### the rest has not been checked yet
 # compile markermapper
 cd marker_mapper1.0.12
 mkdir build
 cd build
-export aruco_DIR=$HOME/opt/aruco-3.0.11/
-cmake ..
+cmake -DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc \
+      -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++ \
+      -DUSE_MMX=OFF -DUSE_SSE=OFF -DUSE_SSE2=OFF -DUSE_SSE3=OFF \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DOpenCV_DIR=`pwd`/../../../compiled-for-robot/opencv/share/OpenCV \
+      -Daruco_DIR=`pwd`/../../../compiled-for-robot/aruco/share/aruco \
+      -DCMAKE_INSTALL_PREFIX=`pwd`/../../../compiled-for-robot/markermapper \
+      ..
 make
+make install
 ```
 
