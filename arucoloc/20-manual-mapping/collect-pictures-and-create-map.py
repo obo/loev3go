@@ -17,15 +17,19 @@ import cv2
 import os
 import re
 import subprocess
+import time
 
+camera = 1
 calibration_file = "calibration.yaml"
 dictfile = "DICT_6x6_250.dict"
 map_every = 3 # try marker_mapper every 5 saved pictures
 max_shots = 10 # don't collect any more pictures if we have a map
+min_delay = 2000/1000 # seconds between accepted frames
 wait = False # wait for keypress
 
 silencing_redirect = "" if verbose else ">/dev/null 2>/dev/null"
 bar_width = 30 # when presenting the numbers
+show_shots = True # show shots in a window
 
 # create timestamped directory
 d = datetime.datetime.now() 
@@ -34,7 +38,7 @@ dirname = "shots-"+ts
 os.mkdir(dirname)
 
 # prepare image capturing
-vc = cv2.VideoCapture(0)
+vc = cv2.VideoCapture(camera)
 
 # prepare detection of aruco markers
 dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
@@ -131,6 +135,7 @@ def find_my_position(calibration_file, map_file, image_file):
 
 i = 0
 have_map = False # we don't have any map at hand yet
+save_only_at = time.time() + min_delay
 while True:
     if wait:
       try:
@@ -141,21 +146,28 @@ while True:
     eprint("Smile, taking one picture.")
     retval, img = vc.read()
     # Check if it contains markers
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     eprint("Checking if it contains markers.")
-    res = cv2.aruco.detectMarkers(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
-                                  dictionary)
+    res = cv2.aruco.detectMarkers(gray, dictionary)
     found = len(res[0])
     if found > 1 or (found==1 and have_map):
       ofn = '%s/shot-%02i.jpg' % (dirname, i)
       eprint("Saving ", ofn, ", it contained ", found, " markers.")
       cv2.imwrite(ofn, img)
+      # show the image with markers
+      if show_shots:
+        cv2.aruco.drawDetectedMarkers(img,res[0],res[1])
+        cv2.imshow('frame',img)
       # if we already have a map, find our position
       if have_map:
         find_my_position(calibration_file, dirname+"/map.yml", ofn)
       # consider recording this picture
-      if found > 1 and (not have_map or i < max_shots):
-        # only record more pictures with 2+ markers and if we still don't have the map
+      if found > 1 and (not have_map or i < max_shots) and time.time() > save_only_at:
+        # only record more pictures with 2+ markers and if we still don't have
+        # the map and sufficient time has passed between the shots
         i += 1
+        save_only_at = time.time() + min_delay;
+        sys.stderr.write(".")
         # run marker mapper every now and then, to improve the map
         if i % map_every == 0:
           eprint("========= RUNNING MAPPER")
@@ -164,7 +176,12 @@ while True:
           eprint("========= Have map? ", have_map)
     else:
       eprint("Not saving, only ", found, " markers.")
+      # Draw it for debugging
+      if show_shots:
+        cv2.imshow('frame',img)
     # fi
+    if show_shots:
+      cv2.waitKey(1) # to update displays
 vc.release()
 
 if (i % map_every != 0):

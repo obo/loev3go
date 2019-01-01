@@ -230,7 +230,16 @@ Camera position as getRvec, getTvec: [2.174823, 2.0144002, -0.48945314] [0.20740
 Camera position as TUM RGBD: 0 0.372795 -0.115674 0.78679 0.722148 0.66888 -0.162522 -0.0684754
 ```
 
-Note that the ``map.yml`` contains the name of the custom dictionary, so I had to make the file visible under another name, too: ``ln -s DICT_6x6_250.dict aruco.DICT_6X6_250``.
+Note that the ``map.yml`` contains the name of the custom dictionary, so I had to make the file visible under another name, too: ``ln -s DICT_6x6_250.dict aruco.DICT_6X6_250``. In 20-manual-mapping/collect-pictures-and-create-map.py, I am modifying the generated map file to point to the correct dictionary file.
+
+## Interpreting Output of ``aruco_locate_one``
+
+getRvec and getTvec are: XXX todo
+
+TUM RGBD is described here: https://vision.in.tum.de/data/datasets/rgbd-dataset/file_formats
+
+
+
 
 
 ## Thoughts on LoEV3go Global Positioning
