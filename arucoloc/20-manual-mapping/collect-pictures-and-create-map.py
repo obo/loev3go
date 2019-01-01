@@ -131,6 +131,13 @@ def find_my_position(calibration_file, map_file, image_file):
   # 03: angle in transversal plane (rotation around vertical axis)
   # 04: angle in sagital plane (rotation up and down)
   # 05: anterior-posterior (distance from the board)
+  #
+  # I could not find any other. That's because 00--05 and 07--13 are
+  # equivalent to each other and each of them alone expresses the 3D pose of
+  # the camera with respect to some random coordinate system.
+  # What I need to figure out is how to do a diff of two camera poses, i.e.
+  # when setting one of the poses as "home", how to express the other one
+  # with respect to this home.
 
 
 i = 0
