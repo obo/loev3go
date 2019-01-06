@@ -7,12 +7,13 @@
 # python print to stderr (most portable and flexible)
 from __future__ import print_function
 import sys
-verbose = False
+verbose = True
 debug = True
 def eprint(*args, **kwargs):
     if verbose: print(*args, file=sys.stderr, **kwargs)
 def dprint(*args, **kwargs):
     if debug: print(*args, file=sys.stderr, **kwargs)
+show_shots = False # show shots in a window
 
 import datetime
 import numpy as np
@@ -22,7 +23,7 @@ import re
 import subprocess
 import time
 
-camera = 1
+camera = 0
 calibration_file = "calibration.yaml"
 dictfile = "DICT_6x6_250.dict"
 map_every = 3 # try marker_mapper every 5 saved pictures
@@ -31,9 +32,7 @@ min_delay = 2000/1000 # seconds between accepted frames
 wait = False # wait for keypress
 
 silencing_redirect = "" if verbose else ">/dev/null 2>/dev/null"
-silencing_redirect = ""
 bar_width = 30 # when presenting the numbers
-show_shots = True # show shots in a window
 
 # check if prerequisites are found
 assert(os.system("which mapper_from_images") == 0)

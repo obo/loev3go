@@ -1,0 +1,24 @@
+_T=20190106_20:00:17_1671	 ls
+_T=20190106_20:01:29_1671	 vim robot_env.bash
+_T=20190106_20:01:33_1671	 chmod 755 robot_env.bash
+_T=20190106_20:01:35_1671	 git add robot_env.bash
+_T=20190106_20:01:43_1671	 git add .history-robot
+_T=20190106_20:01:55_1671	 source robot_env.bash
+_T=20190106_20:02:02_1671	 aruco_locate_one
+_T=20190106_20:02:31_1671	 aruco_locate_one
+_T=20190106_20:02:32_1671	 ls
+_T=20190106_20:02:39_1671	 vim robot_env.bash
+_T=20190106_20:02:54_1671	 vim robot_env.bash
+_T=20190106_20:03:30_1671	 vim collect-pictures-and-create-map.py /
+_T=20190106_20:05:53_1671	 ./collect-pictures-and-create-map.py
+_T=20190106_20:06:04_1671	 ./collect-pictures-and-create-map.py
+_T=20190106_20:09:01_1671	 time ./collect-pictures-and-create-map.py
+_T=20190106_20:09:12_1671	 source robot_env.bash
+_T=20190106_20:09:23_2095	 vim collect-pictures-and-create-map.py
+_T=20190106_20:09:36_2095	 source robot_env.bash
+_T=20190106_20:10:57_1671	 time ./collect-pictures-and-create-map.py
+_T=20190106_20:10:57_2095	 d=shots-20190106-005718; time mapper_from_images $d calibration.yaml 0.04 DICT_6x6_250.dict $d.map
+_T=20190106_20:13:42_1671	 fg
+_T=20190106_20:22:10_1671	 time xvfb-run ./collect-pictures-and-create-map.py
+_T=20190106_20:23:09_1671	 lt
+_T=20190106_20:23:15_1671	 pwd
