@@ -240,6 +240,16 @@ TUM RGBD is described here: https://vision.in.tum.de/data/datasets/rgbd-dataset/
 
 
 
+This code https://github.com/aliyasineser/GraduationProjectII/blob/master/RelativePositionTest.py and the corresponding post http://answers.opencv.org/question/191153/aruco-relative-marker-position-and-rvectvec-inversion/ seem to show it.
+
+
+...now implemented in 20-manual-mapping/collect-pictures-and-create-map.py
+Usage:
+- scan space, marker_mapper will be run 3x, possibly use ESC to close it
+- place camera to home
+- press space to save home position
+- observe the numbers as they report the position relative to home
+  - the numbers should be yaw, pitch and roll, followed by translation
 
 
 ## Thoughts on LoEV3go Global Positioning
