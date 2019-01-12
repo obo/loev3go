@@ -252,8 +252,9 @@ Usage:
   - the numbers should be yaw, pitch and roll, followed by translation
 
 
-Another useful tip:
+Another useful tips and guides:
 http://answers.opencv.org/question/161369/retrieve-yaw-pitch-roll-from-rvec/
+https://www.mrpt.org/tutorials/programming/maths-and-geometry/2d_3d_geometry/
 
 
 
