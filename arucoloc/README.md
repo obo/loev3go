@@ -252,6 +252,26 @@ Usage:
   - the numbers should be yaw, pitch and roll, followed by translation
 
 
+Another useful tip:
+http://answers.opencv.org/question/161369/retrieve-yaw-pitch-roll-from-rvec/
+
+
+
+### First test of collect-pictures-and-create-map.py on robot
+
+- Python is terribly slow, takes 45% of memory, startup takes considerably more than one minute.
+- It seems to be able to take 1 picture every 3 seconds; for some reason, it reports older images when taking pictures. The first picture seems to be taken a few times, although the camera was moved quite a bit already...
+- I need to modify marker mapper, currently it dies:
+
+```
+  Reading...shots-20190106-201834/.
+  Reading...shots-20190106-201834/shot-04.jpg
+  OpenCV Error: Unspecified error (The function is not implemented. Rebuild the library with Windows, GTK+ 2.x or Carbon support. If you are on Ubuntu or Debian, install libgtk2.0-dev and pkg-config, then re-run cmake or configure script) in cvShowImage, file /home/bojar/notes/lego/loev3go/arucoloc/cross-compiling-opencv-aruco-and-marker-mapper/sources/opencv-2.4.13.6/modules/highgui/src/window.cpp, line 501
+  /home/bojar/notes/lego/loev3go/arucoloc/cross-compiling-opencv-aruco-and-marker-mapper/sources/opencv-2.4.13.6/modules/highgui/src/window.cpp:501: error: (-2) The function is not implemented. Rebuild the library with Windows, GTK+ 2.x or Carbon support. If you are on Ubuntu or Debian, install libgtk2.0-dev and pkg-config, then re-run cmake or configure script in function cvShowImage
+```
+
+
+
 ## Thoughts on LoEV3go Global Positioning
 
 - LoEV3go has to be aware of its assumed global position
