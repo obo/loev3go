@@ -13,7 +13,7 @@ def eprint(*args, **kwargs):
     if verbose: print(*args, file=sys.stderr, **kwargs)
 def dprint(*args, **kwargs):
     if debug: print(*args, file=sys.stderr, **kwargs)
-show_shots = False # show shots in a window
+show_shots = True # show shots in a window
 
 import datetime
 import numpy as np
@@ -23,7 +23,7 @@ import re
 import subprocess
 import time
 
-camera = 0
+camera = 1
 calibration_file = "calibration.yaml"
 dictfile = "DICT_6x6_250.dict"
 map_every = 3 # try marker_mapper every 5 saved pictures
@@ -160,6 +160,7 @@ def find_my_position(calibration_file, map_file, image_file):
       # assume the format was correct, get rvec
       rvec = numbers[0:3]
       tvec = numbers[3:6]
+      print("position found, use <space> to save it as home\n", file=sys.stderr)
       return Pose(np.array(rvec), np.array(tvec))
   except subprocess.CalledProcessError, e:
     print(("with error: %s" % e.output), file=sys.stderr)
