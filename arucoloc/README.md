@@ -291,7 +291,12 @@ https://www.mrpt.org/tutorials/programming/maths-and-geometry/2d_3d_geometry/
   different position, which should be the globally correct one, and to have a
   slightly different heading afterwards, which should be the globally correct
   one.
-- Use smaller and larger markers, to work from close and far away.
+- Use smaller and larger markers, to work from close and far away. (But this
+won't work with the standard aruco and markermapper libraries, they expect
+markers of the same size. Only running two separate ones with separate
+dictionaries would do.)
+- Get a very wide angle webcam!
+  - One option could be ELP USB with Camera 2.1mm Lens 1080p HD (https://www.amazon.com/ELP-Camera-Megapixel-Windows-Android/dp/B00KA7WSSU?ref_=bl_dp_s_web_7973205011)
 
 ## Other Relevant Links
 
