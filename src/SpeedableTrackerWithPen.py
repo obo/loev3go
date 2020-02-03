@@ -90,12 +90,12 @@ class RemoteControlledTank(Tank):
 
     if not self.remote.connected:
       log.error("%s is not connected" % self.remote)
-      sys.exit(1)
-
-    self.remote.on_red_up = self.make_move(self.left_motor, self.speed_sp)
-    self.remote.on_red_down = self.make_move(self.left_motor, self.speed_sp * -1)
-    self.remote.on_blue_up = self.make_move(self.right_motor, self.speed_sp)
-    self.remote.on_blue_down = self.make_move(self.right_motor, self.speed_sp * -1)
+      self.remote = None # won't respond to remote
+    else:
+      self.remote.on_red_up = self.make_move(self.left_motor, self.speed_sp)
+      self.remote.on_red_down = self.make_move(self.left_motor, self.speed_sp * -1)
+      self.remote.on_blue_up = self.make_move(self.right_motor, self.speed_sp)
+      self.remote.on_blue_down = self.make_move(self.right_motor, self.speed_sp * -1)
 
   def make_move(self, motor, dc_sp):
     def move(state):
@@ -106,21 +106,20 @@ class RemoteControlledTank(Tank):
     return move
 
   def process(self):
-    self.remote.process()
+    if self.remote:
+      self.remote.process()
 
   def main(self, done):
-
-    try:
-      while not done.is_set():
-        self.remote.process()
-        time.sleep(0.01)
-
-    # Exit cleanly so that all motors are stopped
-    except (KeyboardInterrupt, Exception) as e:
-      log.exception(e)
-
-      for motor in ev3.list_motors():
-        motor.stop()
+    if self.remote:
+      try:
+        while not done.is_set():
+          self.remote.process()
+          time.sleep(0.01)
+      # Exit cleanly so that all motors are stopped
+      except (KeyboardInterrupt, Exception) as e:
+        log.exception(e)
+        for motor in ev3.list_motors():
+          motor.stop()
 
 
 class TRACK3R(RemoteControlledTank):
@@ -142,7 +141,8 @@ class TRACK3RWithPen(TRACK3R):
 
     def __init__(self, pen_selector, left_motor=OUTPUT_B, right_motor=OUTPUT_C, speed_sp=400, channel=1):
         TRACK3R.__init__(self, left_motor, right_motor, speed_sp=speed_sp, channel=channel)
-        self.remote.on_change = self.handle_changed_buttons
+        if self.remote:
+          self.remote.on_change = self.handle_changed_buttons
         self.pen_selector = pen_selector
         # self.remote.on_beacon = self.toggle_pen
         # we can't use the on_beacon because beacon gets dropped whenever we move
