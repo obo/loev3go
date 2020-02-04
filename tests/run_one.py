@@ -47,8 +47,8 @@ end
 for "l (gen 10 80 5) [repeat 5 [repeat 8 [fd :l rt 45] rt 72]]
 """
 
-# interp = interpreter.RootFrame()
-interp = Logo
+interp = interpreter.RootFrame()
+# interp = Logo
 interp.import_module(builtins)
 interp.import_module(oobuiltins)
 #from pylogo import builtins

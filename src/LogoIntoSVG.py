@@ -15,6 +15,8 @@ from pylogo import builtins
 
 from io import StringIO
 
+import pdb
+
 import turtle
 import tkinter as tk
 import src.canvasvg as canvasvg
@@ -31,17 +33,25 @@ class LogoIntoSVG(object):
 
   def run_logo_emit_svg(self, code, outfile):
     # create a new canvas
+    pdb.set_trace();
     f = tk.Frame(None).pack()
+    pdb.set_trace();
     cv = tk.Canvas(master=f,width=500,height=500)
+    pdb.set_trace();
     cv.pack()
     # create a python turtle on it
+    pdb.set_trace();
     t = turtle.RawTurtle(cv, shape='square', visible=False)
     # run that turtle superfast
+    pdb.set_trace();
     t._tracer(0, None)
     # create our logo-runner turtle with the python turtle
+    pdb.set_trace();
     ps_turtle.createturtle(self.interp, t)
+    pdb.set_trace();
     # tokenize the given code
     input = StringIO(code)
+    pdb.set_trace();
     input.name = '<string>'
     tokenizer = reader.FileTokenizer(reader.TrackingStream(input))
     self.interp.push_tokenizer(tokenizer)
@@ -53,9 +63,13 @@ class LogoIntoSVG(object):
             val = self.interp.expr_top()
     finally:
         self.interp.pop_tokenizer()
+    pdb.set_trace();
     t.screen.update()
     #cv = turtle.getcanvas()
+    pdb.set_trace();
     canvasvg.saveall(outfile, cv)
+    pdb.set_trace();
     print("Closing.")
+    pdb.set_trace();
     cv.destroy()
     print("Destroyed.")

@@ -70,6 +70,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         """
 
         eprint("GOT:", self.path)
+        # pdb.set_trace();
 
         if self.path == "/":
             self.path = "/index.html"
@@ -153,13 +154,13 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
                   LoEV3goHandler.robot_should_stop.clear();
                     # so that anyone can notify the robot to stop
                   ## run without threads:
-                  # LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
+                  LoEV3goHandler.loc.run_logo_robot(LoEV3goHandler.last_valid_code)
                   ## threaded run:
-                  LoEV3goHandler.robot_thread = threading.Thread(
-                    target=LoEV3goHandler.loc.run_logo_robot,
-                    args = [LoEV3goHandler.last_valid_code, robotconfigdata])
-                  eprint("Starting robot thread")
-                  LoEV3goHandler.robot_thread.start()
+                  #LoEV3goHandler.robot_thread = threading.Thread(
+                  #  target=LoEV3goHandler.loc.run_logo_robot,
+                  #  args = [LoEV3goHandler.last_valid_code, robotconfigdata])
+                  #eprint("Starting robot thread")
+                  #LoEV3goHandler.robot_thread.start()
                   msg = "Drawing..."
                 else:
                   msg = "Cannot start, already running."
@@ -184,6 +185,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
         # return one of:
         #   O...and.the.rendered.image...
         #   E...and.the.LOGO.error...
+        eprint("GOT POST request, the only one is 'preview', so previewing...")
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length).decode('utf-8')
         obj = urllib.parse.parse_qs(post_data)
@@ -198,7 +200,7 @@ class LoEV3goHandler(BaseHTTPRequestHandler):
           LoEV3goHandler.last_valid_code = code
         except Exception as e: #pylogo.common.LogoNameError as e:
           eprint("Error:", e)
-          #pdb.set_trace()
+          # pdb.set_trace()
           output = b"E"+str(e).encode("utf-8")
           LoEV3goHandler.last_valid_code = None
         self._set_headers()
