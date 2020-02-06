@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 # Run two hardcoded LOGO programs using and save the canvas afterwards.
+# Run me in xvfb to avoid the need for a running X server:
+#   xvfb-run ./test_logo_into_svg.py
 
 import src.LogoIntoSVG
 
