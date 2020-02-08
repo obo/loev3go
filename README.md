@@ -26,6 +26,37 @@ write your LOGO code and watch the turtle draw on the ground.
 - IR controlled, if you want to "draw by hand".
 - On-board web server to interpret, preview and execute your LOGO code.
 
+## Requirements
+
+
+### Handy Tip: SSH KeepAlive
+
+Add this to ``.ssh/config``:
+
+```
+Host robot
+	Hostname robot
+	User robot
+	Port 22
+	KeepAlive yes
+```
+
+Your ssh connections should then survive the long installation.
+
+### Install All the Needed Bits
+
+The following takes a lot of time, make sure your battery is still strong.
+
+```
+sudo apt-get update
+sudo apt-get install python3-tk
+sudo apt-get install xvfb
+# the following is extremely slow, 57 packages, so ssh connection often dies
+sudo apt-get install python3-pip
+sudo pip3 install future
+```
+
+
 ## Wishlist
 
 - Precision, precision, precision. Obviously, precision is troublesome. See the [square pearls](https://raw.github.com/obo/loev3go/master/screenshots/first-loev3go-run-results.jpg) that I had to run 3x in a row to reach the full circle (and the circle did not close anyway).
